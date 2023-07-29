@@ -37,9 +37,11 @@ final Uri updateAddressApi = Uri.parse('${baseUrl}update_address');
 final Uri placeOrderApi = Uri.parse('${baseUrl}place_order');
 final Uri validatePromoApi = Uri.parse('${baseUrl}validate_promo_code');
 final Uri getOrderApi = Uri.parse('${baseUrl}get_orders');
+final Uri ecomTrackOrder = Uri.parse('${ecomExpressUrl}');
 final Uri updateOrderApi = Uri.parse('${baseUrl}update_order_status');
 final Uri updateOrderItemApi = Uri.parse('${baseUrl}update_order_item_status');
 final Uri paypalTransactionApi = Uri.parse('${baseUrl}get_paypal_link');
+final Uri phonePayTransactionApi = Uri.parse('${baseUrl}initiate_phone_payment');
 final Uri addTransactionApi = Uri.parse('${baseUrl}add_transaction');
 final Uri getJwtKeyApi = Uri.parse('${baseUrl}get_jwt_key');
 final Uri getOfferImageApi = Uri.parse('${baseUrl}get_offer_images');
@@ -131,6 +133,7 @@ const String FREE_AMT = 'minimum_free_delivery_order_amount';
 const String ISFROMBACK = 'isfrombackground$appName';
 
 const String LIMIT = 'limit';
+
 const String OFFSET = 'offset';
 const String PRIVACY_POLLICY = 'privacy_policy';
 const String TERM_COND = 'terms_conditions';
@@ -175,6 +178,7 @@ const String CITY = 'city';
 const String DOB = 'dob';
 const String AREA = 'area';
 const String PASSWORD = 'password';
+const String AWB = 'awb';
 const String STREET = 'street';
 const String PINCODE = 'pincode';
 const String FCM_ID = 'fcm_id';

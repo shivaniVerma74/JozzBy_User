@@ -205,6 +205,8 @@
   "WRITE_REVIEW_LBL" : "Проверка записи ",
   "REVIEW_HINT_LBL" : "Напиши свой обзор ... ",
   "DWNLD_INVOICE" : "Загрузить накладную ",
+  "TRACK_ORDER" : "Отследить ваш заказ",
+
   "INVOICE_PATH" : "Проверьте папку загрузки-   ",
   "OK_LBL" : "OK ",
   "SYSTEM_DEFAULT" : "По умолчанию для ",

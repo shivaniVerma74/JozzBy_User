@@ -764,7 +764,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
           ),
           onSelected: (bool selected) {
             if (mounted) {
-              Navigator.push(
+              /*Navigator.push(
                   context,
                   CupertinoPageRoute(
                     builder: (context) => ProductList(
@@ -772,7 +772,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                       tag: true,
                       fromSeller: false,
                     ),
-                  ));
+                  ));*/
             }
           },
         );

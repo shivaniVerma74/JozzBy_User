@@ -18,7 +18,7 @@ class StringValidation {
   }
 
   static String? validateMob(String value, String? msg1, String? msg2) {
-    if (value.isEmpty) {
+    if (value.isEmpty ) {
       return msg1;
     }
     if (value.length < 6) {

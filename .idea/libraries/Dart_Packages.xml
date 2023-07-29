@@ -1395,6 +1395,13 @@
             </list>
           </value>
         </entry>
+        <entry key="xml2json">
+          <value>
+            <list>
+              <option value="$USER_HOME$/Desktop/Development/flutter/.pub-cache/hosted/pub.dartlang.org/xml2json-5.3.5/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="youtube_player_flutter">
           <value>
             <list>
@@ -1599,6 +1606,7 @@
       <root url="file://$USER_HOME$/Desktop/Development/flutter/.pub-cache/hosted/pub.dartlang.org/win32-3.1.1/lib" />
       <root url="file://$USER_HOME$/Desktop/Development/flutter/.pub-cache/hosted/pub.dartlang.org/xdg_directories-0.2.0+2/lib" />
       <root url="file://$USER_HOME$/Desktop/Development/flutter/.pub-cache/hosted/pub.dartlang.org/xml-6.1.0/lib" />
+      <root url="file://$USER_HOME$/Desktop/Development/flutter/.pub-cache/hosted/pub.dartlang.org/xml2json-5.3.5/lib" />
       <root url="file://$USER_HOME$/Desktop/Development/flutter/.pub-cache/hosted/pub.dartlang.org/youtube_player_flutter-8.1.2/lib" />
       <root url="file://$USER_HOME$/Desktop/Development/flutter/bin/cache/pkg/sky_engine/lib" />
       <root url="file://$USER_HOME$/Desktop/Development/flutter/packages/flutter/lib" />

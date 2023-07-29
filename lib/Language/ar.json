@@ -206,6 +206,8 @@
   "WRITE_REVIEW_LBL" : "مراجعة الكتابة ",
   "REVIEW_HINT_LBL" : "اكتب مراجعتك هنا ",
   "DWNLD_INVOICE" : "تحميل الفاتورة ",
+  "TRACK_ORDER" : "أتبع طلبك ",
+
   "INVOICE_PATH" : "التحقق من حافظة التحميل-   ",
   "OK_LBL" : "طيب ",
   "SYSTEM_DEFAULT" : "System المفترض ",

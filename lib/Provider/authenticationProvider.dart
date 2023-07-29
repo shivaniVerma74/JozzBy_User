@@ -133,10 +133,11 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   //for singUp
-  Future<Map<String, dynamic>> getSingUPData() async {
+  Future<Map<String, dynamic>> getSingUPData( String? mobile) async {
+
     try {
       var parameter = {
-        MOBILE: mobilennumberPara,
+        MOBILE: mobile,
         NAME: name,
         EMAIL: singUPemail,
         PASSWORD: sinUpPassword,
@@ -145,6 +146,8 @@ class AuthenticationProvider extends ChangeNotifier {
         FRNDCODE: friendCode,
         GSTKEY: gst
       };
+
+      print('___________${parameter}__________');
 
       var result = await AuthRepository.fetchSingUpData(parameter: parameter);
       return result;

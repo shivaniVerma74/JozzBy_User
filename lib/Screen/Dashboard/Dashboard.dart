@@ -455,7 +455,7 @@ class _DashboardPageState extends State<Dashboard>
                       ? 'dark_active_cart'
                       : 'light_active_cart',
                   'cart',
-                  2,
+                  3,
                   'CART',
                 ),
               ),
@@ -467,7 +467,7 @@ class _DashboardPageState extends State<Dashboard>
                       ? 'dark_active_profile'
                       : 'light_active_profile',
                   'profile',
-                  3,
+                  4,
                   'PROFILE',
                 ),
               ),

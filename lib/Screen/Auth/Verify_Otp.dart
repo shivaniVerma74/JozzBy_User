@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:eshop_multivendor/Helper/Color.dart';
 import 'package:eshop_multivendor/Provider/SettingProvider.dart';
+import 'package:eshop_multivendor/Provider/authenticationProvider.dart';
 import 'package:eshop_multivendor/Screen/Auth/Set_Password.dart';
 import 'package:eshop_multivendor/Screen/Auth/SignUp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,9 +19,10 @@ import '../Language/languageSettings.dart';
 import '../../widgets/networkAvailablity.dart';
 
 class VerifyOtp extends StatefulWidget {
-  final String? mobileNumber, countryCode, title,responseOtp;
+  final String? mobileNumber, countryCode, title;
+  String? responseOtp ;
 
-  const VerifyOtp(
+   VerifyOtp(
       {Key? key,
       required String this.mobileNumber,
       this.countryCode,
@@ -49,6 +51,7 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    print('___________${widget.mobileNumber}_____sfsfs_____');
     getUserDetails();
     getSingature();
     _onVerifyCode();
@@ -179,6 +182,8 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
       };
     }
 
+
+
     PhoneVerificationFailed verificationFailed() {
       return (FirebaseAuthException authException) {
         if (mounted) {
@@ -246,7 +251,7 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
       if (widget.title == getTranslated(context, 'SEND_OTP_TITLE')) {
         Future.delayed(const Duration(seconds: 2)).then((_) {
           Navigator.pushReplacement(context,
-              CupertinoPageRoute(builder: (context) => const SignUp()));
+              CupertinoPageRoute(builder: (context) =>  SignUp(mobileNumber: widget.mobileNumber,)));
         });
       } else if (widget.title ==
           getTranslated(context, 'FORGOT_PASS_TITLE')) {
@@ -430,7 +435,8 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
           InkWell(
             onTap: () async {
               await buttonController!.reverse();
-              checkNetworkOtp();
+              resendOTP() ;
+             // checkNetworkOtp();
             },
             child: Text(
               getTranslated(context, 'RESEND_OTP')!,
@@ -442,6 +448,30 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
             ),
           )
         ],
+      ),
+    );
+  }
+
+  Future <void> resendOTP() async{
+    Future.delayed(Duration.zero).then(
+          (value) => context.read<AuthenticationProvider>().getVerifyUser().then(
+            (
+            value,
+            ) async {
+          bool? error = value['error'];
+          String? msg = value['message'];
+          int? receivedOTP = value['data'] ;
+          await buttonController!.reverse();
+
+          if (!error!) {
+            widget.responseOtp =  receivedOTP.toString() ;
+            setState(() {});
+            setSnackbar(msg!, context);
+          } else {
+            setSnackbar(msg!, context);
+          }
+
+        },
       ),
     );
   }

@@ -14,6 +14,7 @@ import '../../../Provider/Order/UpdateOrderProvider.dart';
 import '../../../widgets/desing.dart';
 import '../../Language/languageSettings.dart';
 import '../../../widgets/snackbar.dart';
+import 'OrderTrackDataSheet.dart';
 import 'SingleProduct.dart';
 
 class GetOrderDetails extends StatelessWidget {
@@ -318,6 +319,8 @@ class GetOrderDetails extends StatelessWidget {
     );
   }
 
+
+
   dwnInvoice(
     Future<List<Directory>?>? _externalStorageDirectories,
     OrderModel model,
@@ -412,7 +415,29 @@ class GetOrderDetails extends StatelessWidget {
   }
 
 
-
+Widget trackYourOrder (BuildContext context) {
+    return Card(child: InkWell(
+      onTap: (){
+showBottomSheet(context: context, builder: (context) => OrderTrackDataBottomSheet(awb: '1057847214' ),);
+    },child: ListTile(
+      dense: true,
+      trailing: const Icon(
+        Icons.keyboard_arrow_right,
+        color: colors.primary,
+      ),
+      leading: const Icon(
+        Icons.traffic_outlined,
+        color: colors.primary,
+      ),
+      title: Text(
+        getTranslated(context, 'TRACK_ORDER')!,
+        style: Theme.of(context)
+            .textTheme
+            .subtitle2!
+            .copyWith(color: Theme.of(context).colorScheme.lightBlack),
+      ),
+    ),),);
+}
 
   bankTransfer(OrderModel model, BuildContext context, String id) {
     return model.payMethod == 'Bank Transfer'
@@ -616,6 +641,7 @@ class GetOrderDetails extends StatelessWidget {
                     ),
                   )
                 : Container(),
+
             showNote(model, context),
             bankTransfer(model, context, model.id!),
             GetSingleProduct(
@@ -629,6 +655,7 @@ class GetOrderDetails extends StatelessWidget {
               model,
               updateNow,
             ),
+            trackYourOrder(context),
             model.itemList![0].productType != 'digital_product'
                 ? shippingDetails(
                     context,

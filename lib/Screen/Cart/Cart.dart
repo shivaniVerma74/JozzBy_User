@@ -16,6 +16,7 @@ import 'package:my_fatoorah/my_fatoorah.dart';
 import 'package:paytm/paytm.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Helper/Color.dart';
 import '../../Helper/String.dart';
 import '../StripeService/Stripe_Service.dart';
@@ -362,18 +363,25 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
             deliveryChargeList = value['deliveryCharge'];
             //context.read<CartProvider>().deliveryChargeList = value['deliveryCharge'];
 
+
             if(context.read<CartProvider>().oriPrice < double.parse(deliveryChargeList.first.maximum ?? '0.0')){
               context.read<CartProvider>().deliveryCharge = double.parse(deliveryChargeList.first.deliveryCharge ??'0.0');
               context.read<CartProvider>().totalPrice =
                   context.read<CartProvider>().deliveryCharge +
                       context.read<CartProvider>().oriPrice;
 
-              print('___________${context.read<CartProvider>().deliveryCharge}__________');
+             // print('___________${context.read<CartProvider>().deliveryCharge}__________');
+            //  print('___________${context.read<CartProvider>().totalPrice}__________');
 
+            }else {
+              context.read<CartProvider>().totalPrice =
+                  context.read<CartProvider>().deliveryCharge +
+                      context.read<CartProvider>().oriPrice ;
+              setState(() {
+
+              });
             }
-            setState(() {
 
-            });
           }
         },
       );
@@ -399,9 +407,11 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
             context.read<CartProvider>().taxPer =
                 double.parse(getdata[TAX_PER]);
 
+
             /*context.read<CartProvider>().totalPrice =
                 context.read<CartProvider>().deliveryCharge +
                     context.read<CartProvider>().oriPrice;*/
+
             await getDeliveryCharge();
 
            List<SectionModel> cartList = (data as List)
@@ -1871,9 +1881,14 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
           getTranslated(context, 'PAYPAL_LBL')) {
         payVia = 'PayPal';
       } else if (context.read<CartProvider>().payMethod ==
-          getTranslated(context, 'PAYUMONEY_LBL')) {
+          getTranslated(context, 'PHONE_PAY')) {
         payVia = 'PayUMoney';
-      } else if (context.read<CartProvider>().payMethod ==
+      }
+      else if (context.read<CartProvider>().payMethod ==
+          getTranslated(context, 'PHONE_PAY')) {
+        payVia = 'Phone Pay';
+      }
+      else if (context.read<CartProvider>().payMethod ==
           getTranslated(context, 'RAZORPAY_LBL')) {
         payVia = 'RazorPay';
       } else if (context.read<CartProvider>().payMethod ==
@@ -1992,7 +2007,11 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
             } else if (context.read<CartProvider>().payMethod ==
                 getTranslated(context, 'PAYPAL_LBL')) {
               paypalPayment(orderId);
-            } else if (context.read<CartProvider>().payMethod ==
+
+            } /*else if (context.read<CartProvider>().payMethod ==
+                getTranslated(context, 'PHONE_PAY')) {
+             // getPhonpayURL();
+            }*/ else if (context.read<CartProvider>().payMethod ==
                 getTranslated(context, 'STRIPE_LBL')) {
               // stripePayment(context.read<CartProvider>().stripePayId, orderId,
               //     tranId == 'succeeded' ? PLACED : WAITING, msg, true);
@@ -2080,6 +2099,35 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
       setSnackbar(getTranslated(context, 'somethingMSg')!, _checkscaffoldKey);
     }
   }
+
+  String? mobile;
+  String url = '' ;
+  String? merchantId ;
+  String? merchantTransactionId  ;
+
+
+/*  Future<void> getPhonpayURL() async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    mobile = preferences.getString("mobile");
+    var parameter = {
+      'user_id': CUR_USERID,
+      'mobile': "${mobile}",
+      'amount': ;d
+      // context.read<CartProvider>().totalPrice
+    };
+    print('____hhhhhhhhhhh_______${parameter}__________');
+    apiBaseHelper.postAPICall(phonePayPaymentIntiat, parameter).then((value) {
+      print('___________${value['error']}__________');
+      url = value['data']['data']['instrumentResponse']['redirectInfo']['url'];
+      merchantId = value['data']['data']['merchantId'];
+      merchantTransactionId = value['data']['data']['merchantTransactionId'];
+
+      print('_____merchantTransactionId______${merchantTransactionId}_____${merchantId}_____');
+      print(url);
+
+    });
+
+  }*/
 
   Future<void> addTransaction(
     String? tranId,

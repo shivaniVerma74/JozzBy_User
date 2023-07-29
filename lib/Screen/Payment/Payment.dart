@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:eshop_multivendor/Provider/UserProvider.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    getPhonpayURL ();
+     // getPhonpayURL();
     context.read<PaymentProvider>().payModel.clear();
     context.read<PaymentProvider>().getdateTime(context, setStateNow);
     context.read<PaymentProvider>().timeSlotList.length = 0;
@@ -72,8 +73,8 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
               : getTranslated(context, 'GPAY'),
           getTranslated(context, 'COD_LBL'),
           getTranslated(context, 'PAYPAL_LBL'),
-
-          getTranslated(context, 'PAYUMONEY_LBL'),
+          getTranslated(context, 'PHONE_PAY'),
+          // getTranslated(context, 'PHONE_PAY'),
           getTranslated(context, 'RAZORPAY_LBL'),
           getTranslated(context, 'PAYSTACK_LBL'),
           getTranslated(context, 'FLUTTERWAVE_LBL'),
@@ -411,6 +412,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                                                 .paymentMethodList
                                                 .length,
                                             itemBuilder: (context, index) {
+
                                               if (index == 1 &&
                                                   context
                                                       .read<PaymentProvider>()
@@ -427,14 +429,22 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                                               } else if (index == 3 &&
                                                   context
                                                       .read<PaymentProvider>()
-                                                      .paumoney) {
+                                                      .phonepay) {
                                                 return paymentItem(index);
-                                              } else if (index == 4 &&
+                                              }
+                                              // else if (index == 3 &&
+                                              //     context
+                                              //         .read<PaymentProvider>()
+                                              //         .paumoney) {
+                                              //   return paymentItem(index);
+                                              //
+                                              // }
+                                              else if (index == 4 &&
                                                   context
                                                       .read<PaymentProvider>()
                                                       .razorpay) {
                                                 return paymentItem(index);
-                                              } else if (index == 5 &&
+                                              }else if (index == 5 &&
                                                   context
                                                       .read<PaymentProvider>()
                                                       .paystack) {
@@ -474,7 +484,8 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                                                       .read<PaymentProvider>()
                                                       .myfatoorah) {
                                                 return paymentItem(index);
-                                              } else {
+                                              }
+                                              else {
                                                 return Container();
                                               }
                                             },
@@ -490,15 +501,16 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                                                double percent = double.parse(ADVANCE_PERCENT ?? '0.0');
                                                 deductAmount = context.read<CartProvider>().totalPrice*percent /100 ;
                                                openCheckout();
+                                              // initiatePayment();
                                                setState(() {});
 
                                              }, child: Text('Pay ${deductAmount ?? ''}'))
                                            ],),),
                                          ) : SizedBox(),
-                                          /*paymentIndex ==1 ?
-                                          InkWell(
-                                            onTap: initiatePayment,
-                                              child: const Text('PhonePay')) : SizedBox(),*/
+                                          // paymentIndex ==1 ?
+                                          // InkWell(
+                                          //   onTap: initiatePayment,
+                                          //     child: const Text('PhonePay')) : SizedBox(),
 
                                         ],
                                       ),
@@ -514,9 +526,11 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                         title: getTranslated(context, 'DONE'),
                         onBtnSelected: paymentIndex==1 && isAdvancePaymentSuccess ? (){
                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please pay advance amount first')));
-                        } : () {
+                        } : paymentIndex== 3 && (isPhonePayPaymentSuccess ?? false) ? (){
+                                         Routes.pop(context);
+                                     } :  paymentIndex== 3  && !(isPhonePayPaymentSuccess ?? false) ? initiatePayment : (){
                           Routes.pop(context);
-                        },
+                        }
                       ),
                     ],
                   ),
@@ -528,11 +542,14 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
             ),
     );
   }
+  bool? isPhonePayPaymentSuccess ;
+  String url = '' ;
+
 
   void initiatePayment() {
     // Replace this with the actual PhonePe payment URL you have
     String phonePePaymentUrl = url;
-     callBackUrl = "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/${merchantId}/${merchantTransactionId}";
+     callBackUrl = "https://alphawizzserver.com/jozzby_bazar_new/home/phonepay_success";
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -544,20 +561,37 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
             initialUrlRequest: URLRequest(url: Uri.parse(phonePePaymentUrl)),
             onWebViewCreated: (controller) {
               _webViewController = controller;
-
             },
+            onLoadStart: ((controller, url) {
+
+            }),
             onLoadStop: (controller, url) async {
-              if (url.toString().startsWith(callBackUrl ?? '')) {
+
+              if (url.toString().contains(callBackUrl!)) {
                 // Extract payment status from URL
-                String? paymentStatus = extractPaymentStatusFromUrl(url.toString());
+               /// String? paymentStatus = extractPaymentStatusFromUrl(url.toString());
+                ///
+                _handlePaymentStatus(url.toString());
+
+                print('___________${_paymentStatus}__________');
+
+                await _webViewController?.stopLoading();
+
+                if(await _webViewController?.canGoBack() ?? false){
+                  await _webViewController?.goBack();
+                }else {
+                  Navigator.pop(context);
+                }
+
+
 
                 // Update payment status
-                setState(() {
+                /*setState(() {
                   _paymentStatus = paymentStatus!;
-                });
+                });*/
                 // Stop loading and close WebView
-                await _webViewController?.stopLoading();
-                await _webViewController?.goBack();
+
+
               }
             },
           ),
@@ -566,47 +600,110 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
     );
   }
 
+  void _handlePaymentStatus(String url) async{
+    Map<String, dynamic> responseData = await fetchDataFromUrl() ;
+    print('___________${responseData.toString()}__________');
+
+    String isError = responseData['data'][0]['error'];
+
+    print('___________${isError}__________');
+
+    if (isError == 'true' ) {
+      // Payment success
+      _paymentStatus = 'Payment Failure';
+      isPhonePayPaymentSuccess= false ;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Payment Failure')));
+
+    } else {
+      isAdvancePaymentSuccess = false ;
+      context.read<CartProvider>().totalPrice = context.read<CartProvider>().totalPrice - deductAmount!;
+      setState(() {
+      });
+      // Payment failure
+      _paymentStatus = 'Payment Success';
+      isPhonePayPaymentSuccess= true;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Payment Success')));
+
+    }
+    print('___________${_paymentStatus}____vssdfff______');
+
+    setState(() {});
+  }
+
+
  String?  callBackUrl;
  String?  merchantId;
  String?  merchantTransactionId;
-
-  String? extractPaymentStatusFromUrl(String url) {
-    // Parse the URL and extract the payment status
-    // Example: extract payment status from query parameters or response HTML
-    // Return the extracted payment status
-    Uri uri = Uri.parse(url);
-
-    // Extract the value of the "status" query parameter
-    String? paymentStatus = uri.queryParameters['status'];
-
-    // Return the payment status
-    return paymentStatus;
+  Future<Map<String, dynamic>> fetchDataFromUrl() async {
+    final response = await http.post(Uri.parse("${baseUrl}/check_phonepay_status"),body: {"transaction_id" : merchantTransactionId});
+    if (response.statusCode == 200) {
+      // If the request is successful, parse the JSON response and return it
+      return json.decode(response.body);
+    } else {
+      // If the request fails, throw an exception or handle the error accordingly
+      throw Exception('Failed to load data from the URL');
+    }
   }
 
 
-String url = '' ;
-  Future<void> getPhonpayURL () async{
-SharedPreferences preferences = await SharedPreferences.getInstance();
-mobile = preferences.getString("mobile");
-    var parameter = {
-      'user_id': CUR_USERID,
-      'mobile': "${mobile}",
-      'amount':"1"
-      // context.read<CartProvider>().totalPrice
+
+
+  getPhonpayURL({int? i}) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    mobile = preferences.getString("mobile");
+    var headers = {
+      'Cookie': 'ci_session=21a0cce4198ce39adcae5825f47e9ae7fb206970; ekart_security_cookie=66d94dbdccb45e35b890fe9e55cb162e'
     };
-    print('____hhhhhhhhhhh_______${parameter}__________');
-    apiBaseHelper.postAPICall(phonePayPaymentIntiat, parameter).then((value) {
-      print('___________${value['error']}__________');
-      url = value['data']['data']['instrumentResponse']['redirectInfo']['url'];
-      merchantId = value['data']['data']['merchantId'];
-      merchantTransactionId = value['data']['data']['merchantTransactionId'];
-
-      print('_____merchantTransactionId______${merchantTransactionId}_____${merchantId}_____');
-      print(url);
-
+    var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/initiate_phone_payment'));
+    request.fields.addAll({
+      'user_id': CUR_USERID.toString(),
+      'mobile': mobile.toString(),
+      'amount': i != null  ? '${deductAmount}'
+          : '${context.read<CartProvider>().totalPrice}'
     });
+    print('_______request.fields____${request.fields}__________');
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+    var result =   await response.stream.bytesToString();
+    var finalResult =  jsonDecode(result);
+    url = finalResult['data']['data']['instrumentResponse']['redirectInfo']['url'];
+    merchantId = finalResult['data']['data']['merchantId'];
+    merchantTransactionId = finalResult['data']['data']['merchantTransactionId'];
+    print('_____merchantTransactionId______${merchantTransactionId}_____${merchantId}_____');
+    print("aaaaaaaaaaaaaaaaaaaaaa${url}");
+
+    }
+    else {
+    print(response.reasonPhrase);
+    }
 
   }
+
+//   Future<void> getPhonpayURL () async{
+// SharedPreferences preferences = await SharedPreferences.getInstance();
+// mobile = preferences.getString("mobile");
+//     var parameter = {
+//       'user_id': CUR_USERID,
+//       'mobile': "${mobile}",
+//       'amount':"2"
+//       // context.read<CartProvider>().totalPrice
+//     };
+//     print('____hhhhhhhhhhh_______${parameter}__________');
+//     apiBaseHelper.postAPICall(phonePayPaymentIntiat, parameter).then((value) {
+//       print('___________${value['error']}__________');
+//       url = value['data']['data']['instrumentResponse']['redirectInfo']['url'];
+//       merchantId = value['data']['data']['merchantId'];
+//       merchantTransactionId = value['data']['data']['merchantTransactionId'];
+//
+//       print('_____merchantTransactionId______${merchantTransactionId}_____${merchantId}_____');
+//       print("aaaaaaaaaaaaaaaaaaaaaa${url}");
+//
+//     });
+//
+//   }
 
 
   dateCell(int index) {
@@ -770,7 +867,6 @@ mobile = preferences.getString("mobile");
   }
 
   Widget paymentItem(int index) {
-    print('${index}____________');
     return InkWell(
       onTap: () {
         if (mounted) {
@@ -788,8 +884,14 @@ mobile = preferences.getString("mobile");
               context.read<PaymentProvider>().payModel[index].isSelected = true;
 
               if(index == 1){
-                paymentIndex= index ;
+                paymentIndex = index ;
+                getPhonpayURL(i: index) ;
               }
+              if(index == 3){
+                paymentIndex = index ;
+                getPhonpayURL() ;
+              }
+
             },
           );
         }
@@ -800,13 +902,13 @@ mobile = preferences.getString("mobile");
             context.read<PaymentProvider>().payModel[index],
 
           ),
-          if (index == 4 && (context.read<PaymentProvider>().payModel[index].isSelected ?? false)) InkWell(
+          if (index == 3 && (context.read<PaymentProvider>().payModel[index].isSelected ?? false)) InkWell(
             onTap: (){
               bool userIsAvailable = true ;
               if(userIsAvailable){
                 if(int.parse(availableCredit ?? '0') < context.read<CartProvider>().totalPrice){
-
                   context.read<CartProvider>().totalPrice = context.read<CartProvider>().totalPrice - int.parse(availableCredit ?? '0') ;
+                  // initiatePayment();
                   openCheckout(amount: context.read<CartProvider>().totalPrice);
                 }
               }

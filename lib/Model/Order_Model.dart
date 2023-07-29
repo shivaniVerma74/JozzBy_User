@@ -31,7 +31,8 @@ class OrderModel {
       delDate,
       delTime,
       userAddressName,
-      note;
+      note,
+      awbNumber;
 
   List<Attachment>? attachList = [];
   List<OrderItem>? itemList;
@@ -73,6 +74,7 @@ class OrderModel {
     this.attachList,
     this.userAddressName,
     this.note,
+    this.awbNumber
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> parsedJson) {
@@ -96,6 +98,7 @@ class OrderModel {
 
     return OrderModel(
       id: parsedJson[ID],
+      awbNumber: parsedJson['awb_number'],
       name: parsedJson[USERNAME],
       mobile: parsedJson[MOBILE],
       delCharge: parsedJson[DEL_CHARGE],

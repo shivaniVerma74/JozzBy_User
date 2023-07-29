@@ -1380,12 +1380,19 @@ packages:
     source: hosted
     version: "0.2.0+2"
   xml:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.0"
+  xml2json:
+    dependency: "direct main"
+    description:
+      name: xml2json
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.3.5"
   youtube_player_flutter:
     dependency: "direct main"
     description:

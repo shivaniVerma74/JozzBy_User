@@ -41,6 +41,7 @@ class CartProvider extends ChangeNotifier {
   bool isAvailable = true;
   String? razorpayId,
       paystackId,
+      phoneID,
       stripeId,
       stripeSecret,
       stripeMode = 'test',

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:eshop_multivendor/Helper/Color.dart';
 import 'package:eshop_multivendor/Provider/SettingProvider.dart';
 import 'package:eshop_multivendor/Provider/homePageProvider.dart';
 import 'package:eshop_multivendor/Screen/IntroSlider/Intro_Slider.dart';
@@ -73,6 +74,7 @@ class _SplashScreen extends State<Splash> with TickerProviderStateMixin {
           Image.asset(
             DesignConfiguration.setPngPath('doodle'),
             fit: BoxFit.fill,
+            color: colors.grad1Color,
             width: double.infinity,
             height: double.infinity,
           ),

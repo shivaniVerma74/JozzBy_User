@@ -213,6 +213,7 @@ class StateMyOrder extends State<MyOrder> with TickerProviderStateMixin {
                   Consumer<OrderProvider>(
                     builder: (context, value, child) {
                       if (value.getCurrentStatus == OrderStatus.isSuccsess) {
+
                         return Expanded(
                           child: value.OrderList.isEmpty
                               ? Center(
@@ -232,7 +233,7 @@ class StateMyOrder extends State<MyOrder> with TickerProviderStateMixin {
                                     controller: scrollController,
                                     padding: const EdgeInsetsDirectional.only(
                                         top: 5.0),
-                                    itemCount: value.OrderList.length,
+                                    itemCount: value.OrderList.length ?? 0,
                                     physics:
                                         const AlwaysScrollableScrollPhysics(),
                                     itemBuilder: (context, index) {
@@ -273,8 +274,8 @@ class StateMyOrder extends State<MyOrder> with TickerProviderStateMixin {
                                   ),
                                 ),
                         );
-                      } else if (value.getCurrentStatus ==
-                          OrderStatus.isFailure) {
+                      }
+                      else if (value.getCurrentStatus == OrderStatus.isFailure) {
                         return Center(
                           child: Text(
                             value.errorMessage,

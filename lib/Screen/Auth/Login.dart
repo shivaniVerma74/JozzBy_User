@@ -532,6 +532,7 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
           keyboardType: TextInputType.number,
           controller: mobileController,
           focusNode: monoFocus,
+          maxLength: 10,
           textInputAction: TextInputAction.next,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           decoration: InputDecoration(

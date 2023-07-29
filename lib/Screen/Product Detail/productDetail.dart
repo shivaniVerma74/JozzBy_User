@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:eshop_multivendor/Helper/ApiBaseHelper.dart';
 import 'package:eshop_multivendor/Provider/homePageProvider.dart';
@@ -549,6 +550,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    log('___________${widget.model?.desc}__________');
     deviceHeight = MediaQuery.of(context).size.height;
     deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(

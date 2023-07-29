@@ -329,9 +329,9 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                                                 fontSize: textFontSize8),
                                             textAlign: TextAlign.center,
                                           ),
-                                          Text(
+                                          const Text(
                                             'Please check your Mail for instruction',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                                 fontSize: textFontSize8),
                                             textAlign: TextAlign.center,
                                           ),

@@ -23,4 +23,24 @@ class OrderRepository {
       throw ApiException('$errorMesaage${e.toString()}');
     }
   }
+
+  static Future<Map<String, dynamic>> fetchOrderStatusTrcak({
+    required Map<String, dynamic> parameter,
+  }) async {
+    try {
+      var orderList = await ApiBaseHelper().postAPICall(ecomTrackOrder, parameter);
+
+      return {
+        'error': orderList['error'] as bool,
+        'totalOrder': orderList['total'].toString(),
+        'orderList': (orderList['data'] as List)
+            .map((orderData) => (OrderModel.fromJson(orderData)))
+            .toList()
+      };
+    } on Exception catch (e) {
+
+      throw ApiException('$errorMesaage${e.toString()}');
+    }
+  }
+
 }

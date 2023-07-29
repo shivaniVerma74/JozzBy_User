@@ -268,6 +268,7 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
           getTranslated(context, 'MOB_REQUIRED'),
           getTranslated(context, 'VALID_MOB')),
       onSaved: (String? value) {
+        print('___________${value}__________');
         context.read<AuthenticationProvider>().setMobileNumber(value);
         mobile = value;
       },

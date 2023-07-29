@@ -51,16 +51,20 @@ class OrderProvider extends ChangeNotifier {
             USER_ID: CUR_USERID,
             SEARCH: searchText.trim(),
           };
+
           if (activeStatus != null) {
             if (activeStatus == awaitingPayment) activeStatus = 'awaiting';
             parameter[ACTIVE_STATUS] = activeStatus;
           }
 
-          Map<String, dynamic> result =
+            Map<String, dynamic> result =
               await OrderRepository.fetchOrder(parameter: parameter);
           bool error = result['error'];
+          print('___________${result['error']}__________');
+
           isGettingdata = false;
           if (OrderOffset == 0) isNodata = error;
+          print('___________${parameter}__________');
           if (!error) {
             if (result.isNotEmpty) {
               List<OrderModel> allitems = [];
@@ -100,6 +104,7 @@ class OrderProvider extends ChangeNotifier {
       }
     } catch (e) {
       errorMessage = e.toString();
+      print('___________${e.toString()}__________');
 
       changeStatus(OrderStatus.isFailure);
     }

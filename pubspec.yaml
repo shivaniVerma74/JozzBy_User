@@ -62,6 +62,8 @@ dependencies:
   flutter_html: ^3.0.0-alpha.6
   flutter_inappwebview: ^5.7.2+3
   my_fatoorah: ^3.1.0
+  xml: 6.1.0
+  xml2json: 5.3.5
 
   webview_flutter: ^3.0.0
 

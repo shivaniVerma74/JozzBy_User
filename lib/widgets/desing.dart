@@ -51,7 +51,7 @@ class DesignConfiguration {
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [colors.grad1Color, colors.grad2Color],
+        colors: [colors.whiteTemp, colors.whiteTemp], //[colors.grad1Color, colors.grad2Color],
         stops: [0, 1],
       ),
     );

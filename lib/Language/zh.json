@@ -205,6 +205,8 @@
   "WRITE_REVIEW_LBL" : "写复审",
   "REVIEW_HINT_LBL" : "在此处写入您的复审 ...",
   "DWNLD_INVOICE" : "下载发票",
+  "TRACK_ORDER" : "追踪您的订单",
+
   "INVOICE_PATH" : "检查您的下载文件夹 - ",
   "OK_LBL" : "好的",
   "SYSTEM_DEFAULT" : "系统缺省值",

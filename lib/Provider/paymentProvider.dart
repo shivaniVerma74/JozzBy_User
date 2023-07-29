@@ -24,7 +24,7 @@ class PaymentProvider extends ChangeNotifier {
     Platform.isIOS ? 'applepay' : 'gpay',
     'cod_payment',
     'paypal',
-    'payu',
+    'PhonePe',
     'rozerpay',
     'paystack',
     'flutterwave',
@@ -39,6 +39,7 @@ class PaymentProvider extends ChangeNotifier {
   String? startingDate;
   String? bankName, bankNo, acName, acNo, exDetails;
   late bool cod,
+      phonepay,
       paypal,
       razorpay,
       paumoney,
@@ -63,6 +64,7 @@ class PaymentProvider extends ChangeNotifier {
         Map<String, dynamic> result =
             await PaymentRepository.getDataTimeSettings(parameter: parameter);
         bool error = result['error'];
+        print('___________${parameter}__________');
 
         if (!error) {
           var data = result['data'];
@@ -72,6 +74,7 @@ class PaymentProvider extends ChangeNotifier {
               timeSlot['is_time_slots_enabled'] == '1' ? true : false;
           startingDate = timeSlot['starting_date'];
           codAllowed = data['is_cod_allowed'] == '1' ? true : false;
+
 
           print('${data['is_cod_allowed']}______fhfg______');
 
@@ -144,11 +147,10 @@ class PaymentProvider extends ChangeNotifier {
           var payment = data['payment_method'];
           print('___________${payment['cod_method']}__________');
           cod = codAllowed
-              ? payment['cod_method'] == '1'
-                  ? true
-                  : false
+              ? payment['cod_method'] == '1' ? true : false
               : false;
           paypal = payment['paypal_payment_method'] == '1' ? true : false;
+          phonepay = payment['phone_oay'] == '1' ? true : false;
           paumoney = payment['payumoney_payment_method'] == '1' ? true : false;
           flutterwave =
               payment['flutterwave_payment_method'] == '1' ? true : false;
@@ -190,10 +192,15 @@ class PaymentProvider extends ChangeNotifier {
             context.read<CartProvider>().razorpayId =
                 payment['razorpay_key_id'];
           }
+          if (phonepay) {
+            context
+                .read<CartProvider>()
+                .phoneID =
+            payment['phone_oay'];
+          }
           if (paystack) {
             context.read<CartProvider>().paystackId =
                 payment['paystack_key_id'];
-
             paystackPlugin.initialize(
                 publicKey: context.read<CartProvider>().paystackId!);
           }

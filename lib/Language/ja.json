@@ -204,6 +204,8 @@
   "WRITE_REVIEW_LBL" : "レビューの作成",
   "REVIEW_HINT_LBL" : "ここにレビューを作成 ...",
   "DWNLD_INVOICE" : "請求のダウンロード",
+  "TRACK_ORDER" : "注文を追跡する",
+
   "INVOICE_PATH" : "ダウンロード・フォルダーの確認 - ",
   "OK_LBL" : "オク",
   "SYSTEM_DEFAULT" : "システム・デフォルト",
