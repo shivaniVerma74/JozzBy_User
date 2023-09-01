@@ -287,6 +287,7 @@ class StatePromoCode extends State<PromoCode> with TickerProviderStateMixin {
     deviceHeight = MediaQuery.of(context).size.height;
     deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: colors.primary1,
       appBar: getSimpleAppBar(getTranslated(context, 'YOUR_PROM_CO')!, context),
       body: Consumer<PromoCodeProvider>(
         builder: (context, value, child) {

@@ -93,6 +93,11 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
           .productList[index]
           .prVarientList![0]
           .disPrice!);
+      double margin =double.parse(context.read<ExploreProvider>().productList[index].prVarientList![0].price!) - double.parse(context
+          .read<ExploreProvider>()
+          .productList[index]
+          .prVarientList![0]
+          .disPrice!) ;
       if (price == 0) {
         price = double.parse(context
             .read<ExploreProvider>()
@@ -175,18 +180,34 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
                       start: 10.0,
                       top: 5,
                     ),
-                    child: Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Price: ${DesignConfiguration.getPriceFormat(context, price)!}',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.blue,
+                                fontSize: textFontSize14,
+                                fontWeight: FontWeight.w700,
+                                fontStyle: FontStyle.normal,
+                                fontFamily: 'ubuntu',
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5,),
                         Text(
-                          ' ${DesignConfiguration.getPriceFormat(context, price)!}',
+                          'Margin: ${DesignConfiguration.getPriceFormat(context, margin)!}',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.blue,
+                            color: Theme.of(context).colorScheme.green,
                             fontSize: textFontSize14,
                             fontWeight: FontWeight.w700,
                             fontStyle: FontStyle.normal,
                             fontFamily: 'ubuntu',
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ),
@@ -210,7 +231,7 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
                                             .prVarientList![0]
                                             .disPrice!) !=
                                         0
-                                    ? '${DesignConfiguration.getPriceFormat(context, double.parse(context.read<ExploreProvider>().productList[index].prVarientList![0].price!))}'
+                                    ? 'MRP: ${DesignConfiguration.getPriceFormat(context, double.parse(context.read<ExploreProvider>().productList[index].prVarientList![0].price!))}'
                                     : '',
                                 style: Theme.of(context)
                                     .textTheme

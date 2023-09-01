@@ -84,7 +84,7 @@ void main() async {
         String? theme = prefs.getString(APP_THEME);
 
         if (theme == DARK) {
-          ISDARK = 'true';
+          ISDARK = 'false';
         } else if (theme == LIGHT) {
           ISDARK = 'false';
         }
@@ -97,7 +97,7 @@ void main() async {
           return ThemeNotifier(ThemeMode.system);
         }
 
-        return ThemeNotifier(theme == LIGHT ? ThemeMode.light : ThemeMode.dark);
+        return ThemeNotifier(theme == LIGHT ? ThemeMode.light : ThemeMode.light);
       },
       child: MyApp(sharedPreferences: prefs),
     ),

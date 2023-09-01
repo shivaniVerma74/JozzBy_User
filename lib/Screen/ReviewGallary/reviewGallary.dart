@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../Helper/Color.dart';
 import '../../Helper/routes.dart';
 import '../../Model/Section_Model.dart';
 import '../../Provider/ReviewGallleryProvider.dart';
@@ -25,6 +26,7 @@ class _ReviewImageState extends State<ReviewGallary> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:colors.primary1,
       appBar: getAppBar(
           getTranslated(context, 'REVIEW_BY_CUST')!, context, setStateNow),
       body: Selector<ReviewGallaryProvider, Product?>(

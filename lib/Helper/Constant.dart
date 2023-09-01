@@ -34,9 +34,9 @@ const int perPage = 10;
 const double textFontSize7 = 7;
 const double textFontSize8 = 8;
 const double textFontSize9 = 9;
-const double textFontSize10 = 10;
+const double textFontSize10 =11;
 const double textFontSize11 = 11;
-const double textFontSize12 = 12;
+const double textFontSize12 =13;
 const double textFontSize13 = 13;
 const double textFontSize14 = 14;
 const double textFontSize15 = 15;
@@ -46,10 +46,10 @@ const double textFontSize20 = 20;
 const double textFontSize23 = 23;
 const double textFontSize30 = 30;
 //Radius
-const double circularBorderRadius1 = 1;
+const double circularBorderRadius1 = 5;
 const double circularBorderRadius3 = 3;
 const double circularBorderRadius4 = 4;
-const double circularBorderRadius5 = 5;
+const double circularBorderRadius5 = 30;
 const double circularBorderRadius7 = 7;
 const double circularBorderRadius8 = 8;
 const double circularBorderRadius10 = 10;
@@ -75,6 +75,7 @@ const String bankDetail =
 ApiBaseHelper apiBaseHelper = ApiBaseHelper();
 
 // for demo panels
+const String imageUrl = 'https://alphawizzserver.com/jozzby_bazar_new/';
 const String baseUrl = 'https://alphawizzserver.com/jozzby_bazar_new/app/v1/api/';
 const String ecomExpressUrl = 'https://clbeta.ecomexpress.in/track_me/api/mawbd/';
 const String jwtKey = 'https://alphawizzserver.com/';

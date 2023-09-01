@@ -17,6 +17,7 @@ import '../../../widgets/networkAvailablity.dart';
 import '../../../widgets/snackbar.dart';
 import '../../../widgets/star_rating.dart';
 import '../../Product Detail/productDetail.dart';
+import '../../star_rating.dart';
 
 class FavProductData extends StatefulWidget {
   int? index;
@@ -408,192 +409,291 @@ class _FavProductDataState extends State<FavProductData> {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                Card(
-                  elevation: 0.1,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(circularBorderRadius10),
-                    splashColor: colors.primary.withOpacity(0.2),
-                    onTap: () {
-                      Product model = widget.favList[widget.index!];
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => ProductDetail(
-                            model: model,
-                            secPos: 0,
-                            index: widget.index!,
-                            list: true,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Hero(
-                          tag:
-                              '$heroTagUniqueString${widget.index}!${widget.favList[widget.index!].id}${widget.index} ${widget.favList[widget.index!].name}',
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(circularBorderRadius4),
-                              bottomLeft:
-                                  Radius.circular(circularBorderRadius4),
+                Column(
+                  children: [
+                    Card(
+                      elevation: 0.1,
+                      child: InkWell(
+                        borderRadius:
+                            BorderRadius.circular(circularBorderRadius10),
+                        splashColor: colors.primary.withOpacity(0.2),
+                        onTap: () {
+                          Product model = widget.favList[widget.index!];
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => ProductDetail(
+                                model: model,
+                                secPos: 0,
+                                index: widget.index!,
+                                list: true,
+                              ),
                             ),
-                            child: Stack(
-                              children: [
-                                DesignConfiguration.getCacheNotworkImage(
-                                  context: context,
-                                  boxFit: BoxFit.cover,
-                                  heightvalue: 100.0,
-                                  widthvalue: 100.0,
-                                  placeHolderSize: 125,
-                                  imageurlString:
-                                      widget.favList[widget.index!].image!,
-                                ),
-                                Positioned.fill(
-                                  child: widget.favList[widget.index!]
-                                              .availability ==
-                                          '0'
-                                      ? Container(
-                                          height: 55,
-                                          color: colors.white70,
-                                          padding: const EdgeInsets.all(2),
-                                          child: Center(
-                                            child: Text(
-                                              getTranslated(
-                                                  context, 'OUT_OF_STOCK_LBL')!,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .caption!
-                                                  .copyWith(
-                                                    fontFamily: 'ubuntu',
-                                                    color: colors.red,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
-                                ),
-                                off != 0
-                                    ? GetDicountLabel(discount: off)
-                                    : Container(),
-                              ],
-                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            // color: colors.primary,
                           ),
-                        ),
-                        Expanded(
-                          child: Stack(
-                            children: [
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsetsDirectional.only(
-                                      top: 15.0,
-                                      start: 15.0,
-                                    ),
-                                    child: Text(
-                                      widget.favList[widget.index!].name!,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle2!
-                                          .copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .lightBlack,
-                                            fontFamily: 'ubuntu',
-                                            fontWeight: FontWeight.w400,
-                                            fontStyle: FontStyle.normal,
-                                            fontSize: textFontSize12,
-                                          ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Hero(
+                                tag:
+                                    '$heroTagUniqueString${widget.index}!${widget.favList[widget.index!].id}${widget.index} ${widget.favList[widget.index!].name}',
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft:
+                                        Radius.circular(circularBorderRadius4),
+                                    bottomLeft:
+                                        Radius.circular(circularBorderRadius4),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsetsDirectional.only(
-                                      start: 15.0,
-                                      top: 8.0,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          DesignConfiguration.getPriceFormat(
-                                              context, price)!,
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .blue,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'ubuntu',
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 3,
-                                        ),
-                                        Text(
-                                          double.parse(widget
-                                                      .favList[widget.index!]
-                                                      .prVarientList![0]
-                                                      .disPrice!) !=
-                                                  0
-                                              ? DesignConfiguration
-                                                  .getPriceFormat(
-                                                  context,
-                                                  double.parse(
-                                                    widget
-                                                        .favList[widget.index!]
-                                                        .prVarientList![0]
-                                                        .price!,
+                                  child: Stack(
+                                    children: [
+                                      DesignConfiguration.getCacheNotworkImage(
+                                        context: context,
+                                        boxFit: BoxFit.cover,
+                                        heightvalue: 100.0,
+                                        widthvalue: 100.0,
+                                        placeHolderSize: 125,
+                                        imageurlString: widget
+                                            .favList[widget.index!].image!,
+                                      ),
+                                      Positioned.fill(
+                                        child: widget.favList[widget.index!]
+                                                    .availability ==
+                                                '0'
+                                            ? Container(
+                                                height: 55,
+                                                color: colors.white70,
+                                                padding:
+                                                    const EdgeInsets.all(3),
+                                                child: Center(
+                                                  child: Text(
+                                                    getTranslated(context,
+                                                        'OUT_OF_STOCK_LBL')!,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .caption!
+                                                        .copyWith(
+                                                          fontFamily: 'ubuntu',
+                                                          color: colors.red,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                    textAlign: TextAlign.center,
                                                   ),
-                                                )!
-                                              : '',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .overline!
-                                              .copyWith(
-                                                fontFamily: 'ubuntu',
-                                                decoration:
-                                                    TextDecoration.lineThrough,
-                                                decorationColor:
-                                                    colors.darkColor3,
-                                                decorationStyle:
-                                                    TextDecorationStyle.solid,
-                                                decorationThickness: 2,
-                                                letterSpacing: 0,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
+                                                ),
+                                              )
+                                            : Container(),
+                                      ),
+                                    ],
                                   ),
-                                  widget.favList[widget.index!].rating! !=
-                                          '0.00'
-                                      ? Padding(
+                                ),
+                              ),
+                              Expanded(
+                                child: Stack(
+                                  children: [
+                                    Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        off != 0
+                                            ? Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.green,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15)),
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 5,
+                                                    ),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          vertical: 4,
+                                                          horizontal: 10),
+                                                      child: Text(
+                                                        'new',
+                                                        style: const TextStyle(
+                                                          color:
+                                                              colors.whiteTemp,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontFamily: 'ubuntu',
+                                                          fontSize:
+                                                              textFontSize10,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                      padding:
+                                                          EdgeInsets.all(5),
+                                                      child: GetDicountLabel(
+                                                          discount: off)),
+                                                ],
+                                              )
+                                            : Container(),
+                                        Padding(
                                           padding:
                                               const EdgeInsetsDirectional.only(
-                                            top: 8.0,
                                             start: 15.0,
                                           ),
-                                          child: StarRating(
-                                            noOfRatings: widget
-                                                .favList[widget.index!]
-                                                .noOfRating!,
-                                            totalRating: widget
-                                                .favList[widget.index!].rating!,
-                                            needToShowNoOfRatings: true,
+                                          child: Text(
+                                            widget.favList[widget.index!].name!,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .lightBlack,
+                                                  fontFamily: 'ubuntu',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontStyle: FontStyle.normal,
+                                                  fontSize: textFontSize12,
+                                                ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                        )
-                                      : Container(),
-                                  context
-                                              .read<FavoriteProvider>()
-                                              .controllerText[widget.index!]
-                                              .text !=
-                                          '0'
-                                      ? Row(
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsetsDirectional.only(
+                                            start: 15.0,
+                                            top: 8.0,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                double.parse(widget
+                                                            .favList[
+                                                                widget.index!]
+                                                            .prVarientList![0]
+                                                            .disPrice!) !=
+                                                        0
+                                                    ? 'MRP:${DesignConfiguration.getPriceFormat(
+                                                        context,
+                                                        double.parse(
+                                                          widget
+                                                              .favList[
+                                                                  widget.index!]
+                                                              .prVarientList![0]
+                                                              .price!,
+                                                        ),
+                                                      )!}'
+                                                    : '',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .overline!
+                                                    .copyWith(
+                                                      fontFamily: 'ubuntu',
+                                                      decoration: TextDecoration
+                                                          .lineThrough,
+                                                      decorationColor:
+                                                          Theme.of(context)
+                                                              .colorScheme
+                                                              .blue,
+                                                      decorationStyle:
+                                                          TextDecorationStyle
+                                                              .solid,
+                                                      decorationThickness: 1,
+                                                      letterSpacing: 0,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .blue,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                    ),
+                                              ),
+                                              const SizedBox(
+                                                width: 3,
+                                              ),
+                                              Text(
+                                                'Price : ${DesignConfiguration.getPriceFormat(context, price)!}',
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontFamily: 'ubuntu',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsetsDirectional.only(
+                                            start: 15.0,
+                                            top: 8.0,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                  double.parse(widget
+                                                              .favList[
+                                                                  widget.index!]
+                                                              .prVarientList![0]
+                                                              .disPrice!) !=
+                                                          0
+                                                      ? 'Margin: ${off}%'
+                                                      : '',
+                                                  style: TextStyle(
+                                                    color: Colors.green,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    fontFamily: 'ubuntu',
+                                                  )),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                'Profit : ${int.parse(DesignConfiguration.getPriceFormat(
+                                                      context,
+                                                      double.parse(
+                                                        widget
+                                                            .favList[
+                                                                widget.index!]
+                                                            .prVarientList![0]
+                                                            .price!,
+                                                      ),
+                                                    )!.substring(1)) - int.parse(DesignConfiguration.getPriceFormat(context, price)!.substring(1))}',
+                                                style: TextStyle(
+                                                  color: Colors.green,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontFamily: 'ubuntu',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        // widget.favList[widget.index!].rating! !=
+                                        //         '0.00'
+                                        //     ?
+                                        // Container(
+                                        //        margin: EdgeInsets.only(left:20,top: 20),
+                                        //         child: StarRating(
+                                        //           noOfRatings: widget
+                                        //               .favList[widget.index!]
+                                        //               .noOfRating!,
+                                        //           totalRating: widget
+                                        //               .favList[widget.index!].rating!,
+                                        //           needToShowNoOfRatings: true,
+                                        //         ),
+                                        //       ),
+                                        // : Container(),
+                                        Row(
                                           children: [
                                             widget.favList[widget.index!]
                                                         .availability ==
@@ -602,291 +702,265 @@ class _FavProductDataState extends State<FavProductData> {
                                                 : cartBtnList
                                                     ? Row(
                                                         children: <Widget>[
-                                                          Row(
-                                                            children: <Widget>[
-                                                              InkWell(
-                                                                child: Card(
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                      circularBorderRadius50,
-                                                                    ),
-                                                                  ),
-                                                                  child:
-                                                                      const Padding(
-                                                                    padding:
-                                                                        EdgeInsets
-                                                                            .all(
-                                                                      8.0,
-                                                                    ),
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .remove,
-                                                                      size: 15,
-                                                                    ),
-                                                                  ),
+                                                          // SizedBox(height: 50,),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 18.0,
+                                                                    top: 10,
+                                                                    bottom: 10),
+                                                            child: Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: colors
+                                                                        .blackTemp),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          5),
                                                                 ),
-                                                                onTap: () {
-                                                                  if (int.parse(context
-                                                                          .read<
-                                                                              FavoriteProvider>()
-                                                                          .controllerText[
-                                                                              widget.index!]
-                                                                          .text) >
-                                                                      0) {
-                                                                    removeFromCart(
-                                                                      widget
-                                                                          .index!,
-                                                                      widget
-                                                                          .favList,
-                                                                      context,
-                                                                    );
-                                                                  }
-                                                                },
                                                               ),
-                                                              SizedBox(
-                                                                width: 26,
-                                                                height: 20,
-                                                                child: Stack(
-                                                                  children: [
-                                                                    Selector<
-                                                                        CartProvider,
-                                                                        Tuple2<
-                                                                            List<String?>,
-                                                                            String?>>(
-                                                                      builder: (context,
-                                                                          data,
-                                                                          child) {
-                                                                        return TextField(
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                          readOnly:
-                                                                              true,
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                textFontSize12,
-                                                                            color:
-                                                                                Theme.of(context).colorScheme.fontColor,
-                                                                          ),
-                                                                          controller: context
-                                                                              .read<FavoriteProvider>()
-                                                                              .controllerText[widget.index!],
-                                                                          decoration:
-                                                                              const InputDecoration(
-                                                                            border:
-                                                                                InputBorder.none,
-                                                                          ),
-                                                                        );
-                                                                      },
-                                                                      selector: (_, provider) => Tuple2(
-                                                                          provider
-                                                                              .cartIdList,
-                                                                          provider.qtyList(
-                                                                              widget.favList[widget.index!].id!,
-                                                                              widget.favList[widget.index!].prVarientList![widget.favList[widget.index!].selVarient!].id!)),
-                                                                    ),
-                                                                    PopupMenuButton<
-                                                                        String>(
-                                                                      tooltip:
-                                                                          '',
-                                                                      icon:
-                                                                          const Icon(
-                                                                        Icons
-                                                                            .arrow_drop_down,
-                                                                        size: 1,
+                                                              child: Row(
+                                                                children: <
+                                                                    Widget>[
+                                                                  InkWell(
+                                                                    child:
+                                                                        Container(
+                                                                      child:
+                                                                          const Padding(
+                                                                        padding:
+                                                                            EdgeInsets.all(
+                                                                          8.0,
+                                                                        ),
+                                                                        child:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .remove,
+                                                                          size:
+                                                                              15,
+                                                                          color:
+                                                                              colors.blackTemp,
+                                                                        ),
                                                                       ),
-                                                                      onSelected:
-                                                                          (String
-                                                                              value) {
-                                                                        addToCart(
-                                                                          value,
-                                                                          2,
+                                                                    ),
+                                                                    onTap: () {
+                                                                      if (int.parse(context
+                                                                              .read<FavoriteProvider>()
+                                                                              .controllerText[widget.index!]
+                                                                              .text) >
+                                                                          0) {
+                                                                        removeFromCart(
+                                                                          widget
+                                                                              .index!,
                                                                           widget
                                                                               .favList,
+                                                                          context,
                                                                         );
-                                                                      },
-                                                                      itemBuilder:
-                                                                          (BuildContext
-                                                                              context) {
-                                                                        return widget
-                                                                            .favList[widget.index!]
-                                                                            .itemsCounter!
-                                                                            .map<PopupMenuItem<String>>(
-                                                                          (String
-                                                                              value) {
-                                                                            return PopupMenuItem(
-                                                                              value: value,
-                                                                              child: Text(
-                                                                                value,
-                                                                                style: TextStyle(
-                                                                                  fontFamily: 'ubuntu',
-                                                                                  color: Theme.of(context).colorScheme.fontColor,
-                                                                                ),
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 26,
+                                                                    height: 20,
+                                                                    child:
+                                                                        Stack(
+                                                                      children: [
+                                                                        Selector<
+                                                                            CartProvider,
+                                                                            Tuple2<List<String?>,
+                                                                                String?>>(
+                                                                          builder: (context,
+                                                                              data,
+                                                                              child) {
+                                                                            return TextField(
+                                                                              textAlign: TextAlign.center,
+                                                                              readOnly: true,
+                                                                              style: TextStyle(
+                                                                                fontSize: textFontSize12,
+                                                                                color: Theme.of(context).colorScheme.fontColor,
+                                                                              ),
+                                                                              controller: context.read<FavoriteProvider>().controllerText[widget.index!],
+                                                                              decoration: const InputDecoration(
+                                                                                border: InputBorder.none,
                                                                               ),
                                                                             );
                                                                           },
-                                                                        ).toList();
-                                                                      },
+                                                                          selector: (_, provider) => Tuple2(
+                                                                              provider.cartIdList,
+                                                                              provider.qtyList(widget.favList[widget.index!].id!, widget.favList[widget.index!].prVarientList![widget.favList[widget.index!].selVarient!].id!)),
+                                                                        ),
+                                                                        PopupMenuButton<
+                                                                            String>(
+                                                                          tooltip:
+                                                                              '',
+                                                                          icon:
+                                                                              const Icon(
+                                                                            Icons.arrow_drop_down,
+                                                                            size:
+                                                                                1,
+                                                                          ),
+                                                                          onSelected:
+                                                                              (String value) {
+                                                                            addToCart(
+                                                                              value,
+                                                                              2,
+                                                                              widget.favList,
+                                                                            );
+                                                                          },
+                                                                          itemBuilder:
+                                                                              (BuildContext context) {
+                                                                            return widget.favList[widget.index!].itemsCounter!.map<PopupMenuItem<String>>(
+                                                                              (String value) {
+                                                                                return PopupMenuItem(
+                                                                                  value: value,
+                                                                                  child: Text(
+                                                                                    value,
+                                                                                    style: TextStyle(
+                                                                                      fontFamily: 'ubuntu',
+                                                                                      color: Theme.of(context).colorScheme.fontColor,
+                                                                                    ),
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                            ).toList();
+                                                                          },
+                                                                        ),
+                                                                      ],
                                                                     ),
-                                                                  ],
-                                                                ),
+                                                                  ),
+                                                                  InkWell(
+                                                                    child:
+                                                                        Container(
+                                                                      child:
+                                                                          const Padding(
+                                                                        padding:
+                                                                            EdgeInsets.all(8.0),
+                                                                        child:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .add,
+                                                                          size:
+                                                                              15,
+                                                                          color:
+                                                                              colors.blackTemp,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    onTap:
+                                                                        () async {
+                                                                      await addToCart(
+                                                                        (int.parse(context.read<FavoriteProvider>().controllerText[widget.index!].text) +
+                                                                                int.parse(widget.favList[widget.index!].qtyStepSize!))
+                                                                            .toString(),
+                                                                        2,
+                                                                        widget
+                                                                            .favList,
+                                                                      );
+                                                                    },
+                                                                  )
+                                                                ],
                                                               ),
-                                                              InkWell(
-                                                                child: Card(
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            circularBorderRadius50),
-                                                                  ),
-                                                                  child:
-                                                                      const Padding(
-                                                                    padding:
-                                                                        EdgeInsets.all(
-                                                                            8.0),
-                                                                    child: Icon(
-                                                                      Icons.add,
-                                                                      size: 15,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                onTap:
-                                                                    () async {
-                                                                  await addToCart(
-                                                                    (int.parse(context.read<FavoriteProvider>().controllerText[widget.index!].text) +
-                                                                            int.parse(widget.favList[widget.index!].qtyStepSize!))
-                                                                        .toString(),
-                                                                    2,
-                                                                    widget
-                                                                        .favList,
-                                                                  );
-                                                                },
-                                                              )
-                                                            ],
+                                                            ),
                                                           ),
                                                         ],
                                                       )
                                                     : Container(),
                                           ],
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(
+                                              left: 15, bottom: 10),
+                                          child: StarRatingIndicators(
+                                            noOfRatings: widget
+                                                .favList[widget.index!]
+                                                .noOfRating!,
+                                            totalRating: widget
+                                                .favList[widget.index!].rating!,
+                                          ),
                                         )
-                                      : Container(),
-                                ],
-                              ),
-                              Positioned.directional(
-                                textDirection: Directionality.of(context),
-                                end: 0,
-                                top: 0,
-                                child: Container(
-                                  padding: const EdgeInsets.only(
-                                    right: 5,
-                                    top: 5.0,
-                                  ),
-                                  alignment: Alignment.topRight,
-                                  child: InkWell(
-                                    child: const Icon(
-                                      Icons.close,
+
+                                        // Container(
+                                        //   margin: EdgeInsets.only(left:20,),
+                                        //   child: StarRating(
+                                        //     noOfRatings: widget
+                                        //         .favList[widget.index!]
+                                        //         .noOfRating!,
+                                        //     totalRating: widget
+                                        //         .favList[widget.index!].rating!,
+                                        //     needToShowNoOfRatings: true,
+                                        //   ),
+                                        // ),
+                                      ],
                                     ),
-                                    onTap: () {
-                                      if (CUR_USERID != null) {
-                                        Future.delayed(Duration.zero).then(
-                                          (value) => context
-                                              .read<UpdateFavProvider>()
-                                              .removeFav(
+                                    Positioned.directional(
+                                      textDirection: Directionality.of(context),
+                                      end: 0,
+                                      top: 0,
+                                      child: Container(
+                                        padding: const EdgeInsets.only(
+                                          right: 5,
+                                          top: 5.0,
+                                        ),
+                                        alignment: Alignment.topRight,
+                                        child: InkWell(
+                                          child: const Icon(
+                                            Icons.delete,
+                                            color: colors.blackTemp,
+                                          ),
+                                          onTap: () {
+                                            if (CUR_USERID != null) {
+                                              Future.delayed(Duration.zero)
+                                                  .then(
+                                                (value) => context
+                                                    .read<UpdateFavProvider>()
+                                                    .removeFav(
+                                                        widget
+                                                            .favList[
+                                                                widget.index!]
+                                                            .id!,
+                                                        widget
+                                                            .favList[
+                                                                widget.index!]
+                                                            .prVarientList![0]
+                                                            .id!,
+                                                        context),
+                                              );
+                                            } else {
+                                              db.addAndRemoveFav(
                                                   widget.favList[widget.index!]
                                                       .id!,
-                                                  widget.favList[widget.index!]
-                                                      .prVarientList![0].id!,
-                                                  context),
-                                        );
-                                      } else {
-                                        db.addAndRemoveFav(
-                                            widget.favList[widget.index!].id!,
-                                            false);
-                                        context
-                                            .read<FavoriteProvider>()
-                                            .removeFavItem(widget
-                                                .favList[widget.index!]
-                                                .prVarientList![0]
-                                                .id!);
+                                                  false);
+                                              context
+                                                  .read<FavoriteProvider>()
+                                                  .removeFavItem(widget
+                                                      .favList[widget.index!]
+                                                      .prVarientList![0]
+                                                      .id!);
 
-                                        setSnackbar(
-                                            getTranslated(context,
-                                                'Removed from favorite')!,
-                                            context);
-                                      }
-                                    },
-                                  ),
+                                              setSnackbar(
+                                                  getTranslated(context,
+                                                      'Removed from favorite')!,
+                                                  context);
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                    Divider()
+                  ],
                 ),
-                widget.favList[widget.index!].availability == '0'
-                    ? Container()
-                    : context
-                                .read<FavoriteProvider>()
-                                .controllerText[widget.index!]
-                                .text ==
-                            '0'
-                        ? Positioned.directional(
-                            textDirection: Directionality.of(context),
-                            bottom: 4,
-                            end: 4,
-                            child: InkWell(
-                              child: Container(
-                                padding: const EdgeInsets.all(8.0),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      circularBorderRadius40),
-                                  color: Theme.of(context).colorScheme.white,
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      offset: Offset(2, 2),
-                                      blurRadius: 12,
-                                      color: Color.fromRGBO(0, 0, 0, 0.13),
-                                      spreadRadius: 0.4,
-                                    )
-                                  ],
-                                ),
-                                child: const Icon(
-                                  Icons.shopping_cart_outlined,
-                                  size: 20,
-                                ),
-                              ),
-                              onTap: () async {
-                                await addToCart(
-                                  '1',
-                                  1,
-                                  widget.favList,
-                                ).then(
-                                  (value) {
-                                    Future.delayed(const Duration(seconds: 3))
-                                        .then(
-                                      (_) async {
-                                        context
-                                            .read<UserProvider>()
-                                            .setCartCount(context
-                                                    .read<UpdateFavProvider>()
-                                                    .cartCount ??
-                                                '');
-
-                                        widget.updateNow();
-                                      },
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          )
-                        : Container()
               ],
             ),
           );

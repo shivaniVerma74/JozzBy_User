@@ -499,7 +499,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                                              ElevatedButton(onPressed: (){
                                                print('___________${context.read<CartProvider>().totalPrice}__________');
                                                double percent = double.parse(ADVANCE_PERCENT ?? '0.0');
-                                                deductAmount = context.read<CartProvider>().totalPrice*percent /100 ;
+                                               deductAmount = context.read<CartProvider>().totalPrice*percent /100 ;
                                                openCheckout();
                                               // initiatePayment();
                                                setState(() {});
@@ -524,9 +524,9 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                         borderRadius: circularBorderRadius5,
                         size: 0.8,
                         title: getTranslated(context, 'DONE'),
-                        onBtnSelected: paymentIndex==1 && isAdvancePaymentSuccess ? (){
+                        onBtnSelected: /*paymentIndex==1 && isAdvancePaymentSuccess ? (){
                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please pay advance amount first')));
-                        } : paymentIndex== 3 && (isPhonePayPaymentSuccess ?? false) ? (){
+                        } :*/ paymentIndex== 3 && (isPhonePayPaymentSuccess ?? false) ? (){
                                          Routes.pop(context);
                                      } :  paymentIndex== 3  && !(isPhonePayPaymentSuccess ?? false) ? initiatePayment : (){
                           Routes.pop(context);
@@ -555,7 +555,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
       MaterialPageRoute(
         builder: (context) => Scaffold(
           appBar: AppBar(
-            title: Text('PhonePe Payment'),
+            title: const Text('PhonePe Payment'),
           ),
           body: InAppWebView(
             initialUrlRequest: URLRequest(url: Uri.parse(phonePePaymentUrl)),
@@ -573,7 +573,6 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                 ///
                 _handlePaymentStatus(url.toString());
 
-                print('___________${_paymentStatus}__________');
 
                 await _webViewController?.stopLoading();
 
@@ -602,11 +601,9 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
 
   void _handlePaymentStatus(String url) async{
     Map<String, dynamic> responseData = await fetchDataFromUrl() ;
-    print('___________${responseData.toString()}__________');
 
     String isError = responseData['data'][0]['error'];
 
-    print('___________${isError}__________');
 
     if (isError == 'true' ) {
       // Payment success
@@ -615,8 +612,9 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Payment Failure')));
 
     } else {
-      isAdvancePaymentSuccess = false ;
+      isAdvancePaymentSuccess = false;
       context.read<CartProvider>().totalPrice = context.read<CartProvider>().totalPrice - deductAmount!;
+      context.read<CartProvider>().deductAmount = deductAmount ?? 0.0 ;
       setState(() {
       });
       // Payment failure
@@ -672,8 +670,8 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
     url = finalResult['data']['data']['instrumentResponse']['redirectInfo']['url'];
     merchantId = finalResult['data']['data']['merchantId'];
     merchantTransactionId = finalResult['data']['data']['merchantTransactionId'];
-    print('_____merchantTransactionId______${merchantTransactionId}_____${merchantId}_____');
-    print("aaaaaaaaaaaaaaaaaaaaaa${url}");
+  //  print('_____merchantTransactionId______${merchantTransactionId}_____${merchantId}_____');
+    //print("aaaaaaaaaaaaaaaaaaaaaa${url}");
 
     }
     else {
@@ -908,8 +906,8 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
               if(userIsAvailable){
                 if(int.parse(availableCredit ?? '0') < context.read<CartProvider>().totalPrice){
                   context.read<CartProvider>().totalPrice = context.read<CartProvider>().totalPrice - int.parse(availableCredit ?? '0') ;
-                  // initiatePayment();
-                  openCheckout(amount: context.read<CartProvider>().totalPrice);
+                   initiatePayment();
+                  //openCheckout(amount: context.read<CartProvider>().totalPrice);
                 }
               }
             },
@@ -934,8 +932,8 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
     var options = {
       'key': 'rzp_test_1DP5mmOlF5G5ag',
       'amount': amount?.toInt() ?? amt*100,
-      'name': 'jdx-user',
-      'description': 'jdx-user',
+      'name': 'Jozz by Bazar',
+      'description': 'Jozz by Bazar',
       "currency": "INR",
       'prefill': {'contact': '$phone', 'email': '$email'},
       'external': {
@@ -958,9 +956,10 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
             .assignmentId
             .toString(),
         response.paymentId);*/
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment Success")));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment Success")));
     isAdvancePaymentSuccess = false ;
     context.read<CartProvider>().totalPrice = context.read<CartProvider>().totalPrice - deductAmount!;
+    context.read<CartProvider>().deductAmount = deductAmount!;
     setState(() {
     });
 
@@ -974,7 +973,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
 
     print('${response.error}________error_________');
     print('${response.code}________code_________');
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment cancelled by user")));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment cancelled by user")));
 
   }
 

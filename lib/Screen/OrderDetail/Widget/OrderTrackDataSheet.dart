@@ -88,7 +88,7 @@ class _OrderTrackDataBottomSheetState extends State<OrderTrackDataBottomSheet> {
     request.fields.addAll({
       'username': 'JOSSBYTECHNOLOGIESINDIAPVTLTD-EGS514326',
       'password': '5hGBxrCzly',
-      'awb': '1057847214'
+      'awb': widget.awb ?? '1057847214'
     });
 
 

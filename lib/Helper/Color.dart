@@ -17,8 +17,10 @@ extension colors on ColorScheme {
     },
   );
 
-  static const Color primary = Color(0xffEA4F1C);
+  static const Color primary = Color(0xffEF2121);
+  static const Color primary1 = Color(0xfffef2ea);
   static const Color secondary = Color(0xffF18A22);
+  static const Color transparent = Color(0xffEFEFEF);
 
   Color get btnColor => brightness == Brightness.dark ? whiteTemp : primary;
 
@@ -33,7 +35,11 @@ extension colors on ColorScheme {
   Color get blue =>
       brightness == Brightness.dark
           ? const Color(0xff8381d5)
-          : const Color(0xff4543c1);
+          : const Color(0xffF18A22);
+  Color get green =>
+      brightness == Brightness.dark
+          ? const Color(0xff32CD32)
+          : const Color(0xff478778);
 
   Color get fontColor =>
       brightness == Brightness.dark ? whiteTemp : const Color(0xff222222);
@@ -49,8 +55,8 @@ extension colors on ColorScheme {
 
   static Color darkIcon = const Color(0xff9B9B9B);
 
-  static const Color grad1Color = Color(0xffEA4F1C);
-  static const Color grad2Color = Color(0xffF18A22);
+  static const Color grad1Color = Color(0xffEF2121);
+  static const Color grad2Color = Color(0xffEF2121);
   static const Color lightWhite2 = Color(0xffEEF2F3);
 
   static const Color yellow = Color(0xfffdd901);

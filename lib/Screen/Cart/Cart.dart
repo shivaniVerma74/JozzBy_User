@@ -317,9 +317,30 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
     deviceHeight = MediaQuery.of(context).size.height;
     deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: widget.fromBottom
-          ? null
-          : getSimpleAppBar(getTranslated(context, 'CART')!, context),
+      backgroundColor:colors.primary1,
+      appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
+        backgroundColor: colors.whiteTemp,
+        title: const Text('Cart',style: TextStyle(color: colors.blackTemp),),
+        leading: Container(
+          margin: const EdgeInsets.all(10),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(circularBorderRadius4),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard())),
+            child: const Center(
+              child: Icon(
+                Icons.arrow_back_ios_rounded,
+                color: colors.primary,
+              ),
+            ),
+          ),
+        )
+      ),
+      // appBar:
+      // widget.fromBottom
+      //     ? null
+      //     : getSimpleAppBar(getTranslated(context, 'CART')!, context),
       body: isNetworkAvail
           ? CUR_USERID != null
               ? Stack(
@@ -387,14 +408,15 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
       );
     } catch (e) {}
   }
-
+bool notForCheckout = false ;
+  String cartMessage = '' ;
   Future<void> _getCart(String save) async {
     isNetworkAvail = await isNetworkAvailable();
 
     if (isNetworkAvail) {
       try {
         var parameter = {USER_ID: CUR_USERID, SAVE_LATER: save};
-
+        print('-------paramete--------${parameter}');
         apiBaseHelper.postAPICall(getCartApi, parameter).then((getdata) async{
           bool error = getdata['error'];
           String? msg = getdata['message'];
@@ -434,7 +456,9 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
             }
             setState(() {});
           } else {
-            if (msg != 'Cart Is Empty !') setSnackbar(msg!, _scaffoldKey);
+            if (msg != 'Cart Is Empty !')setSnackbar(msg!, _scaffoldKey);
+            notForCheckout =  true ;
+            cartMessage  = msg ?? '' ;
           }
           if (mounted) {
             setState(() {
@@ -712,7 +736,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
         : cartList.isEmpty && context.read<CartProvider>().saveLaterList.isEmpty
             ? const EmptyCart()
             : Container(
-                color: Theme.of(context).colorScheme.lightWhite,
+                color:colors.primary1,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -850,7 +874,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                     cartList.isNotEmpty
                         ? SimBtn(
                             size: 0.9,
-                            height: 40,
+                            height: 50,
                             borderRadius: circularBorderRadius5,
                             title: getTranslated(context, 'PROCEED_CHECKOUT'),
                             onBtnSelected: () async {
@@ -872,7 +896,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                 context.read<CartProvider>().saveLaterList.isEmpty
             ? const EmptyCart()
             : Container(
-                color: Theme.of(context).colorScheme.lightWhite,
+              color: colors.primary1,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1043,15 +1067,16 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                       padding: const EdgeInsets.all(11),
                                       decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: [
-                                            colors.grad1Color,
-                                            colors.grad2Color
-                                          ],
-                                          stops: [0, 1],
-                                        ),
+                                        color: colors.primary
+                                        // gradient: LinearGradient(
+                                        //   begin: Alignment.topLeft,
+                                        //   end: Alignment.bottomRight,
+                                        //   colors: [
+                                        //     colors.grad1Color,
+                                        //     colors.grad2Color
+                                        //   ],
+                                        //   stops: [0, 1],
+                                        // ),
                                       ),
                                       child: const Icon(
                                         Icons.arrow_forward,
@@ -1117,7 +1142,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                       ),
                                     ],
                                   ),
-                                Row(
+                                cartMessage!= '' ? Text(cartMessage) : Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
@@ -1143,7 +1168,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                         ),
                       ],
                     ),
-                    SimBtn(
+     !notForCheckout ?  SimBtn(
                       size: 0.9,
                       height: 40,
                       borderRadius: circularBorderRadius5,
@@ -1193,7 +1218,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                           );
                         }
                       },
-                    ),
+                    ) : SizedBox(),
                   ],
                 ),
               );
@@ -1217,7 +1242,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
         ),
       ),
       builder: (builder) {
-        context.read<CartProvider>().deliveryCharge = double.parse(deliveryChargeList.first.deliveryCharge ??'0.0');
+        context.read<CartProvider>().deliveryCharge = deliveryChargeList.isEmpty ? 0.0 : double.parse(deliveryChargeList.first.deliveryCharge ??'0.0');
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             context.read<CartProvider>().checkoutState = setState;
@@ -1493,7 +1518,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                                           _placeOrder = true;
                                                         },
                                                       );
-                                                    } else if (!context
+                                                    } /*else if (!context
                                                         .read<CartProvider>()
                                                         .deliverable) {
                                                       checkDeliverable();
@@ -1504,7 +1529,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                                           _placeOrder = true;
                                                         },
                                                       );
-                                                    } else {
+                                                    }*/ else {
                                                       confirmDialog();
                                                       context
                                                           .read<CartProvider>()
@@ -1882,7 +1907,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
         payVia = 'PayPal';
       } else if (context.read<CartProvider>().payMethod ==
           getTranslated(context, 'PHONE_PAY')) {
-        payVia = 'PayUMoney';
+        payVia = 'Phone Pay';
       }
       else if (context.read<CartProvider>().payMethod ==
           getTranslated(context, 'PHONE_PAY')) {
@@ -1920,6 +1945,8 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
 
       try {
         request.fields[USER_ID] = CUR_USERID!;
+        request.fields['advance_amt'] = context.read<CartProvider>().deductAmount.toString();
+        request.fields['remaining_amt'] = context.read<CartProvider>().totalPrice.toString();
         request.fields[MOBILE] = mob;
         request.fields[PRODUCT_VARIENT_ID] = varientId!;
         request.fields[QUANTITY] = quantity!;
@@ -1969,6 +1996,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
           request.fields[ACTIVE_STATUS] = WAITING;
         }
 
+
         if (context.read<CartProvider>().prescriptionImages.isEmpty) {
           for (var i = 0;
               i < context.read<CartProvider>().prescriptionImages.length;
@@ -1987,6 +2015,8 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
             request.files.add(pic);
           }
         }
+
+        print('___________${request.fields}__________');
         var response = await request.send();
         print(request.fields);
         print(request.url);

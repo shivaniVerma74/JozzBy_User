@@ -14,6 +14,7 @@ import '../../Helper/String.dart';
 import '../../Helper/routes.dart';
 import '../../Provider/UserProvider.dart';
 import '../../widgets/desing.dart';
+import '../Dashboard/Dashboard.dart';
 import '../Language/languageSettings.dart';
 import 'widgets/languageBottomSheet.dart';
 import 'widgets/themeBottomSheet.dart';
@@ -86,8 +87,8 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
             ? Container()
             : _getDrawerItem(
                 getTranslated(context, 'MYTRANSACTION')!, 'pro_th'),
-        /*_getDrawerItem(
-            getTranslated(context, 'CHANGE_THEME_LBL')!, 'pro_theme'),*/
+        // _getDrawerItem(
+        //     getTranslated(context, 'CHANGE_THEME_LBL')!, 'pro_theme'),
         /*_getDrawerItem(
             getTranslated(context, 'CHANGE_LANGUAGE_LBL')!, 'pro_language'),*/
         CUR_USERID == '' || CUR_USERID == null
@@ -98,8 +99,8 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
             ? Container()
             : /*_getDrawerItem(
                 getTranslated(context, 'REFEREARN')!, 'pro_referral'),*/
-        /*_getDrawerItem(
-            getTranslated(context, 'CUSTOMER_SUPPORT')!, 'pro_customersupport'),*/
+        _getDrawerItem(
+            getTranslated(context, 'CUSTOMER_SUPPORT')!, 'pro_customersupport'),
         _getDrawerItem(getTranslated(context, 'ABOUT_LBL')!, 'pro_aboutus'),
         _getDrawerItem(
             getTranslated(context, 'CONTACT_LBL')!, 'pro_contact_us'),
@@ -199,7 +200,8 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
                 context: context, title: 'RETURN_POLICY_LBL');
           } else if (title == getTranslated(context, 'FAQS')) {
             Routes.navigateToFaqsListScreen(context);
-          } else if (title == getTranslated(context, 'CHANGE_THEME_LBL')) {
+          }
+          else if (title == getTranslated(context, 'CHANGE_THEME_LBL')) {
             CustomBottomSheet.showBottomSheet(
                     child: ThemeBottomSheet(),
                     context: context,
@@ -212,19 +214,22 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
                 }
               });
             });
-          } else if (title == getTranslated(context, 'LOGOUT')) {
+          }
+          else if (title == getTranslated(context, 'LOGOUT')) {
             MyProfileDialog.showLogoutDialog(context);
           } else if (title == getTranslated(context, 'CHANGE_PASS_LBL')) {
             CustomBottomSheet.showBottomSheet(
                 child: ChangePasswordBottomSheet(),
                 context: context,
                 enableDrag: true);
-          } else if (title == getTranslated(context, 'CHANGE_LANGUAGE_LBL')) {
+          }
+          else if (title == getTranslated(context, 'CHANGE_LANGUAGE_LBL')) {
             CustomBottomSheet.showBottomSheet(
                 child: LanguageBottomSheet(),
                 context: context,
                 enableDrag: true);
-          } else if (title == getTranslated(context, 'DeleteAcoountNow')) {
+          }
+          else if (title == getTranslated(context, 'DeleteAcoountNow')) {
             MyProfileDialog.showDeleteWarningAccountDialog(context);
           }
         },
@@ -240,6 +245,27 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:colors.primary1,
+      appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
+        backgroundColor: colors.whiteTemp,
+        title: const Text('Profile',style: TextStyle(color: colors.blackTemp),),
+          leading: Container(
+            margin: const EdgeInsets.all(10),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(circularBorderRadius4),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>const Dashboard())),
+              child: const Center(
+                child: Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: colors.primary,
+                ),
+              ),
+            ),
+          )
+
+      ),
       key: scaffoldKey,
       body: SafeArea(
         child: SingleChildScrollView(

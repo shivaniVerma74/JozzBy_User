@@ -159,8 +159,8 @@ class StateMyOrder extends State<MyOrder> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:colors.primary1,
       key: _scaffoldKey,
-      backgroundColor: Theme.of(context).colorScheme.lightWhite,
       appBar: getAppBar(
           getTranslated(context, 'MY_ORDERS_LBL')!, context, setStateNow),
       body: isNetworkAvail

@@ -40,11 +40,12 @@ class SliderBtn extends StatelessWidget {
                   height: 40,
                   alignment: FractionalOffset.center,
                   decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [colors.grad1Color, colors.grad2Color],
-                          stops: [0, 1]),
+                    color: colors.primary,
+                      // gradient: const LinearGradient(
+                      //     begin: Alignment.topLeft,
+                      //     end: Alignment.bottomRight,
+                      //     colors: [colors.grad1Color, colors.grad2Color],
+                      //     stops: [0, 1]),
                       borderRadius:
                           BorderRadius.circular(circularBorderRadius50)),
                   child: currentPage == 0 || currentPage == 1

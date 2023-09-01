@@ -105,6 +105,15 @@ class _ListViewLayOutState extends State<ListViewLayOut> {
               .productList[index]
               .prVarientList![0]
               .disPrice!);
+          double margin = double.parse(context
+              .read<ExploreProvider>()
+              .productList[index]
+              .prVarientList![0]
+              .price!) - double.parse(context
+              .read<ExploreProvider>()
+              .productList[index]
+              .prVarientList![0]
+              .disPrice!);
           if (price == 0) {
             price = double.parse(context
                 .read<ExploreProvider>()
@@ -195,49 +204,63 @@ class _ListViewLayOutState extends State<ListViewLayOut> {
                               Padding(
                                 padding: const EdgeInsetsDirectional.only(
                                     start: 15.0, top: 8.0),
-                                child: Row(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Price: ${DesignConfiguration.getPriceFormat(context, price)!}',
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).colorScheme.blue,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'ubuntu',
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 3,
+                                        ),
+                                        Text(
+                                          double.parse(context
+                                                      .read<ExploreProvider>()
+                                                      .productList[index]
+                                                      .prVarientList![0]
+                                                      .disPrice!) !=
+                                                  0
+                                              ? 'MRP: ${DesignConfiguration.getPriceFormat(
+                                                  context,
+                                                  double.parse(context
+                                                      .read<ExploreProvider>()
+                                                      .productList[index]
+                                                      .prVarientList![0]
+                                                      .price!))!}'
+                                              : '',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .overline!
+                                              .copyWith(
+                                                  fontFamily: 'ubuntu',
+                                                  decoration:
+                                                      TextDecoration.lineThrough,
+                                                  decorationColor:
+                                                      colors.darkColor3,
+                                                  decorationStyle:
+                                                      TextDecorationStyle.solid,
+                                                  decorationThickness: 2,
+                                                  letterSpacing: 0),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 5,),
                                     Text(
-                                      DesignConfiguration.getPriceFormat(
-                                          context, price)!,
+                                      'Margin: ${DesignConfiguration.getPriceFormat(context, margin)!}',
                                       style: TextStyle(
                                         color:
-                                            Theme.of(context).colorScheme.blue,
+                                        Theme.of(context).colorScheme.green,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'ubuntu',
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 3,
-                                    ),
-                                    Text(
-                                      double.parse(context
-                                                  .read<ExploreProvider>()
-                                                  .productList[index]
-                                                  .prVarientList![0]
-                                                  .disPrice!) !=
-                                              0
-                                          ? DesignConfiguration.getPriceFormat(
-                                              context,
-                                              double.parse(context
-                                                  .read<ExploreProvider>()
-                                                  .productList[index]
-                                                  .prVarientList![0]
-                                                  .price!))!
-                                          : '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .overline!
-                                          .copyWith(
-                                              fontFamily: 'ubuntu',
-                                              decoration:
-                                                  TextDecoration.lineThrough,
-                                              decorationColor:
-                                                  colors.darkColor3,
-                                              decorationStyle:
-                                                  TextDecorationStyle.solid,
-                                              decorationThickness: 2,
-                                              letterSpacing: 0),
                                     ),
                                   ],
                                 ),

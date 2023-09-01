@@ -218,8 +218,10 @@ class _SearchState extends State<Search> with TickerProviderStateMixin {
     userProvider = Provider.of<UserProvider>(context);
 
     return Scaffold(
+      backgroundColor:colors.primary1,
       key: _scaffoldKey,
       appBar: AppBar(
+        elevation: 0,
         leading: Padding(
           padding: const EdgeInsetsDirectional.only(end: 4.0),
           child: IconButton(

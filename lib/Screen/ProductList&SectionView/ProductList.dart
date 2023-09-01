@@ -4,6 +4,7 @@ import 'package:eshop_multivendor/Provider/explore_provider.dart';
 import 'package:eshop_multivendor/Screen/ProductList&SectionView/Widget/ListcompareGrid.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -22,15 +23,19 @@ import '../../widgets/simmerEffect.dart';
 import '../../widgets/snackbar.dart';
 import '../NoInterNetWidget/NoInterNet.dart';
 import '../Product Detail/Widget/commanFiledsofProduct.dart';
+import '../homePage/homepageNew.dart';
 import 'Widget/ListcompareList.dart';
 
 class ProductList extends StatefulWidget {
-  final String? name, id;
+   String? name, id,brandId,brandName;
   final bool? tag, fromSeller;
   final int? dis;
+   final  bool? istrueId;
 
-  const ProductList(
-      {Key? key, this.id, this.name, this.tag, this.fromSeller, this.dis})
+   bool? getBrand;
+
+   ProductList(
+      {Key? key, this.id, this.name, this.tag, this.fromSeller, this.dis,this.brandId,this.istrueId,this.getBrand,this.brandName})
       : super(key: key);
 
   @override
@@ -93,6 +98,13 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
 
   @override
   void initState() {
+   setState(() {
+     widget.getBrand =false;
+     print('------------jjjjjkkkkkkkkkkkkkk-------------${widget.getBrand}');
+   });
+
+  print('my brand Id--------------------${widget.brandId}');
+
     super.initState();
     controller.addListener(_scrollListener);
     searchController.addListener(
@@ -191,11 +203,12 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print('____ssssss_______${widget.brandId}_______${widget.istrueId}___');
     return Scaffold(
-      appBar: widget.fromSeller!
-          ? null
-          : getAppBar(
-              widget.name!,
+      backgroundColor: colors.primary1,
+      appBar:
+      getAppBar(
+        widget.name==null?'Brand details':widget.name!,
               context,
               setStateNow,
             ),
@@ -257,14 +270,18 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
       LIMIT: perPage.toString(),
       OFFSET: offset.toString(),
       TOP_RETAED: top,
+      'brand': widget.getBrand == false ? widget.brandId: ""
     };
+
+    print('-----getProductApi--parameter--------------${parameter}');
     if (selId != '') {
       parameter[ATTRIBUTE_VALUE_ID] = selId;
     }
-    if (widget.tag!) parameter[TAG] = widget.name!;
-    if (widget.fromSeller!) {
-      parameter['seller_id'] = widget.id!;
-    } else {
+    // if (widget.tag!) parameter[TAG] = widget.name!;
+    // if (widget.fromSeller!) {
+    //   parameter['seller_id'] = widget.id!;
+    // }
+    else {
       parameter[CATID] = widget.id ?? '';
     }
     if (CUR_USERID != null) parameter[USER_ID] = CUR_USERID!;
@@ -285,6 +302,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
         currentRangeValues!.end.round().toString() != '0') {
       parameter[MAXPRICE] = currentRangeValues!.end.round().toString();
     }
+    print('_____brand______${parameter}__________');
     context.read<ProductListProvider>().setProductListParameter(parameter);
     tempList.clear();
     Future.delayed(Duration.zero).then(
@@ -309,6 +327,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
               var data = value['data'];
               tempList =
                   (data as List).map((data) => Product.fromJson(data)).toList();
+              print('Get Products Data ----------${tempList}');
               if (value.containsKey(TAG)) {
                 List<String> tempList = List<String>.from(value[TAG]);
                 if (tempList.isNotEmpty) tagList = tempList;
@@ -522,7 +541,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                           },
                         );
                       }
-                      getProduct('0');
+                        getProduct('0');
                       Navigator.pop(context, 'option 3');
                     },
                   ),
@@ -674,7 +693,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-              if (widget.fromSeller!) Container() else _tags(),
+              if (widget.fromSeller==null?false:widget.fromSeller!) Container() else _tags(),
               sortAndFilterOption(),
             ],
           ),

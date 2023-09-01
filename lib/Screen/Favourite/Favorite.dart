@@ -147,6 +147,8 @@ class StateFav extends State<Favorite> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: colors.primary1,
+      // backgroundColor:colors.white30,
       appBar:
           getAppBar(getTranslated(context, 'FAVORITE')!, context, setStateNow),
       body: isNetworkAvail
@@ -173,18 +175,76 @@ class StateFav extends State<Favorite> with TickerProviderStateMixin {
     }
   }
 
+  shopNow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(bottom: 20.0),
+      child: Container(
+        width: deviceWidth! * 0.5,
+        height: 45,
+        alignment: FractionalOffset.center,
+        decoration: const BoxDecoration(
+          color: colors.primary,
+          // gradient: LinearGradient(
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.bottomRight,
+          //   colors: [colors.grad1Color, colors.grad2Color],
+          //   stops: [0, 1],
+          // ),
+          borderRadius: BorderRadius.all(Radius.circular(50)
+              ,
+            ),
+          ),
+        child: TextButton(
+
+          onPressed: () {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/home', (Route<dynamic> route) => false);
+
+          },
+          child: Text(
+            getTranslated(context, 'SHOP_NOW')!,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headline6!.copyWith(
+                color: Theme.of(context).colorScheme.white,
+                fontWeight: FontWeight.normal,
+                fontFamily: 'ubuntu',
+                fontSize: 16
+            ),
+          ),
+        ),
+        ),
+    );
+  }
+
+  noCartImage(BuildContext context) {
+    return Image(image: AssetImage("assets/images/png/Wishlistpng.png"),
+      fit: BoxFit.contain,
+      height: 300,
+      width: 300);
+  }
+
   _showContent(BuildContext context) {
     return Consumer<FavoriteProvider>(
       builder: (context, value, child) {
         if (value.getCurrentStatus == FavStatus.isSuccsess) {
           return value.favoriteList.isEmpty
               ? Center(
-                  child: Text(
-                    getTranslated(context, 'noFav')!,
-                    style: const TextStyle(
-                      fontFamily: 'ubuntu',
-                    ),
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      noCartImage(context),
+                      // noCartText(context),
+                      // noCartDec(context),
+                      shopNow(context)
+                    ],
                   ),
+                  // Text(
+                  //   getTranslated(context, 'noFav')!,
+                  //   style: const TextStyle(
+                  //     fontFamily: 'ubuntu',
+                  //   ),
+                  // ),
                 )
               : RefreshIndicator(
                   color: colors.primary,

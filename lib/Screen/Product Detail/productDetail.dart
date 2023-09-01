@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:eshop_multivendor/Helper/ApiBaseHelper.dart';
 import 'package:eshop_multivendor/Provider/homePageProvider.dart';
+import 'package:eshop_multivendor/Screen/Cart/Cart.dart';
 import 'package:eshop_multivendor/widgets/star_rating.dart';
 import 'package:eshop_multivendor/Helper/Color.dart';
 import 'package:eshop_multivendor/Helper/Constant.dart';
@@ -18,6 +19,8 @@ import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tuple/tuple.dart';
 import '../../Helper/String.dart';
 import '../../Helper/routes.dart';
 import '../../Model/Faqs_Model.dart';
@@ -25,6 +28,7 @@ import '../../Provider/SettingProvider.dart';
 import '../../Provider/paymentProvider.dart';
 import '../../Provider/productDetailProvider.dart';
 import '../../Provider/Favourite/FavoriteProvider.dart';
+import '../../repository/cartRepository.dart';
 import '../../widgets/desing.dart';
 import '../Language/languageSettings.dart';
 import '../../widgets/networkAvailablity.dart';
@@ -110,10 +114,23 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
   List<Product> mostFavProList = [];
   String query = '';
   Timer? _debounce;
+  bool _isProgress = false;
+  bool setVariant = false;
+  String? brand_name;
+
+  getName() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    brand_name = pref.getString('brand_name');
+    print('-------brandnameeeeeeeee---${brand_name}');
+
+  }
+
+
 
   @override
   void initState() {
     super.initState();
+
     context.read<ProductDetailProvider>().seeView = false;
     context.read<ProductDetailProvider>().isLoadingmore = true;
     allApiAndFun();
@@ -555,9 +572,8 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
     deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: isBottom
-          ? Colors.transparent.withOpacity(0.5)
-          : Theme.of(context).canvasColor,
+      backgroundColor:colors.primary1,
+
       body: isNetworkAvail
           ? Stack(
               children: <Widget>[
@@ -833,6 +849,11 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
 
     if (CUR_USERID != null || CUR_USERID != '') {
       if (from == 1) {
+        print('----------from------${from}');
+        print('----------total length------${totalLen}');
+        print('----------quantity------${context.read<ProductDetailProvider>().qtyChange }');
+
+
         if (int.parse(qty) >= totalLen) {
           qtyController.text = totalLen.toString();
           context.read<ProductDetailProvider>().qtyChange = true;
@@ -1042,7 +1063,6 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                 (_) async {
                   if (from && intent) {
                     cartTotalClear();
-
                     Routes.navigateToCartScreen(context, false);
                   }
                 },
@@ -1594,6 +1614,8 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
           },
           selector: (_, HomePageProvider) => HomePageProvider.curCartCount,
         ),
+
+
         Selector<FavoriteProvider, List<String?>>(
           builder: (context, data, child) {
             return Padding(
@@ -1844,10 +1866,10 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
             ? widget.model!.availability != '0'
                 ? Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.white,
+                      color:colors.whiteTemp,
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(context).colorScheme.black26,
+                          color: Theme.of(context).colorScheme.white,
                           blurRadius: 10,
                         )
                       ],
@@ -1858,82 +1880,220 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                           return Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () async {
-                                    addToCart(
-                                      qtyController.text,
-                                      false,
-                                      true,
-                                      widget.model!,
-                                    );
-                                  },
-                                  child: SizedBox(
-                                    height: heightAnimation.value,
-                                    child: Center(
-                                      child: Text(
-                                        getTranslated(context, 'ADD_CART')!,
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1!
-                                            .copyWith(
-                                              color: colors.primary,
-                                              fontWeight: FontWeight.normal,
-                                              fontFamily: 'ubuntu',
+                              InkWell(
+                                onTap: () async {
+                                  String qty;
+                                  qty = qtyController.text;
+                                  addToCart(
+                                    qty,
+                                    true,
+                                    true,
+                                    widget.model!,
+                                  );
+                                },
+                                child: Container(
+                                  height:45,
+                                  decoration:BoxDecoration(
+                                      color:colors.transparent,
+                                      borderRadius: BorderRadius.circular(10)
+                                  ),
+                                  child: Center(
+                                    child: Row(
+                                      children: <Widget>[
+                                        GestureDetector(
+                                          child: Card(
+                                            elevation: 5,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10),
                                             ),
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(4.0),
+                                              child: Icon(
+                                                Icons.remove,
+                                                size: 20,
+                                              ),
+                                            ),
+                                          ),
+
+                                          onTap: () {
+
+
+                                            // removeFromCart();
+
+
+                                            // addToCart(
+                                            //   qtyController.text,
+                                            //   false,
+                                            //   false,
+                                            //   widget.model!,
+                                            // );
+                                            // removeFromCart();
+                                          },
+                                        ),
+
+                                        Selector<UserProvider, String>(
+                                          builder: (context, data, child) {
+                                            return Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(circularBorderRadius7),
+                                                  color:colors.transparent
+                                              ),
+                                              width: 33,
+                                              height: 33,
+                                              child: Center(
+                                                child: Text(
+                                                  data==""||data==null?'0':data,
+                                                  style: TextStyle(
+                                                    fontSize:16,
+                                                    fontFamily: 'ubuntu',
+                                                    fontWeight: FontWeight.bold,
+                                                    color:colors.primary,
+
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          selector: (_, HomePageProvider) => HomePageProvider.curCartCount,
+                                        ),
+
+                                        // Container(
+                                        //   width: 37,
+                                        //   // height: 20,
+                                        //   color: Colors.transparent,
+                                        //   child: Stack(
+                                        //     children: [
+                                        //       TextField(
+                                        //         textAlign: TextAlign.center,
+                                        //         readOnly: true,
+                                        //         style: TextStyle(
+                                        //             fontSize: 12,
+                                        //             color: Theme.of(context)
+                                        //                 .colorScheme
+                                        //                 .fontColor,
+                                        //             fontWeight: FontWeight.bold),
+                                        //         controller: qtyController,
+                                        //         // _controller[index],
+                                        //         decoration: InputDecoration(
+                                        //           border: InputBorder.none,
+                                        //         ),
+                                        //       )
+                                        //     ],
+                                        //   ),
+                                        // ), // ),
+
+                                        GestureDetector(
+                                          child: const Card(
+                                            elevation: 5,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.all(Radius.circular(10)),
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.all(4.0),
+                                              child: Icon(
+                                                Icons.add,
+                                                size: 20,
+                                              ),
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            addToCart(
+                                              qtyController.text,
+                                              false,
+                                              true,
+                                              widget.model!,
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    ),
+
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 20,),
+                              InkWell(
+                                onTap: () async {
+
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart(fromBottom: true)));
+                                  // addToCart(
+                                  //   qtyController.text,
+                                  //   false,
+                                  //   true,
+                                  //   widget.model!,
+                                  // );
+                                },
+                                child: Container(
+                                  height:45,
+                                  width:170,
+                                  decoration: BoxDecoration(
+                                      color: colors.primary,
+                                      borderRadius: BorderRadius.circular(30)
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      getTranslated(context, 'ADD_CART')!,
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle1!
+                                          .copyWith(
+                                        color: colors.whiteTemp,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: 'ubuntu',
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () async {
-                                    String qty;
-                                    qty = qtyController.text;
-                                    addToCart(
-                                      qty,
-                                      true,
-                                      true,
-                                      widget.model!,
-                                    );
-                                  },
-                                  child: Container(
-                                    height: heightAnimation.value,
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: [
-                                            colors.grad1Color,
-                                            colors.grad2Color
-                                          ],
-                                          stops: [
-                                            0,
-                                            1
-                                          ]),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        getTranslated(context, 'BUYNOW')!,
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1!
-                                            .copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .white,
-                                              fontSize: textFontSize16,
-                                              fontWeight: FontWeight.normal,
-                                              fontFamily: 'ubuntu',
-                                            ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              // Expanded(
+                              //   child: InkWell(
+                              //     onTap: () async {
+                              //       String qty;
+                              //       qty = qtyController.text;
+                              //       addToCart(
+                              //         qty,
+                              //         true,
+                              //         true,
+                              //         widget.model!,
+                              //       );
+                              //     },
+                              //     child: Container(
+                              //       height: heightAnimation.value,
+                              //       decoration: const BoxDecoration(
+                              //         gradient: LinearGradient(
+                              //             begin: Alignment.topLeft,
+                              //             end: Alignment.bottomRight,
+                              //             colors: [
+                              //               colors.grad1Color,
+                              //               colors.grad2Color
+                              //             ],
+                              //             stops: [
+                              //               0,
+                              //               1
+                              //             ]),
+                              //       ),
+                              //       child: Center(
+                              //         child: Text(
+                              //           getTranslated(context, 'BUYNOW')!,
+                              //           textAlign: TextAlign.center,
+                              //           style: Theme.of(context)
+                              //               .textTheme
+                              //               .subtitle1!
+                              //               .copyWith(
+                              //                 color: Theme.of(context)
+                              //                     .colorScheme
+                              //                     .white,
+                              //                 fontSize: textFontSize16,
+                              //                 fontWeight: FontWeight.normal,
+                              //                 fontFamily: 'ubuntu',
+                              //               ),
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           );
                         }),
@@ -1965,101 +2125,229 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                       );
                     })
             : available!
-                ? Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Theme.of(context).colorScheme.black26,
-                            blurRadius: 10)
-                      ],
-                    ),
-                    child: AnimatedBuilder(
-                        animation: buttonAnimationController,
-                        builder: (context, child) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () async {
-                                    addToCart(
-                                      qtyController.text,
-                                      false,
-                                      true,
-                                      widget.model!,
-                                    );
-                                  },
-                                  child: SizedBox(
-                                    height: heightAnimation.value,
-                                    child: Center(
-                                      child: Text(
-                                        getTranslated(context, 'ADD_CART')!,
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1!
-                                            .copyWith(
-                                              color: colors.primary,
-                                              fontWeight: FontWeight.normal,
-                                              fontFamily: 'ubuntu',
-                                            ),
+                ? AnimatedBuilder(
+                    animation: buttonAnimationController,
+                    builder: (context, child) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          InkWell(
+                            onTap: () async {
+                              String qty;
+                              qty = qtyController.text;
+                              addToCart(
+                                qty,
+                                true,
+                                true,
+                                widget.model!,
+                              );
+                            },
+                            child: Container(
+                              height:45,
+                              decoration:BoxDecoration(
+                                color:colors.transparent,
+                                borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Center(
+                                child: Row(
+                                  children: <Widget>[
+                                    GestureDetector(
+                                      child: Card(
+                                        elevation: 5,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(4.0),
+                                          child: Icon(
+                                            Icons.remove,
+                                            size: 20,
+                                          ),
+                                        ),
                                       ),
+
+                                      onTap: () {
+
+
+                                        // removeFromCart();
+
+
+                                        // addToCart(
+                                        //   qtyController.text,
+                                        //   false,
+                                        //   false,
+                                        //   widget.model!,
+                                        // );
+                                        // removeFromCart();
+                                      },
                                     ),
+
+                                    Selector<UserProvider, String>(
+                                      builder: (context, data, child) {
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(circularBorderRadius7),
+                                            color:colors.transparent
+                                          ),
+                                          width: 33,
+                                          height: 33,
+                                          child: Center(
+                                            child: Text(
+                                              data==""||data==null?'0':data,
+                                              style: TextStyle(
+                                                fontSize:16,
+                                                fontFamily: 'ubuntu',
+                                                fontWeight: FontWeight.bold,
+                                                color:colors.primary,
+
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      selector: (_, HomePageProvider) => HomePageProvider.curCartCount,
+                                    ),
+
+                                    // Container(
+                                    //   width: 37,
+                                    //   // height: 20,
+                                    //   color: Colors.transparent,
+                                    //   child: Stack(
+                                    //     children: [
+                                    //       TextField(
+                                    //         textAlign: TextAlign.center,
+                                    //         readOnly: true,
+                                    //         style: TextStyle(
+                                    //             fontSize: 12,
+                                    //             color: Theme.of(context)
+                                    //                 .colorScheme
+                                    //                 .fontColor,
+                                    //             fontWeight: FontWeight.bold),
+                                    //         controller: qtyController,
+                                    //         // _controller[index],
+                                    //         decoration: InputDecoration(
+                                    //           border: InputBorder.none,
+                                    //         ),
+                                    //       )
+                                    //     ],
+                                    //   ),
+                                    // ), // ),
+
+                                    GestureDetector(
+                                      child: const Card(
+                                        elevation: 5,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(4.0),
+                                          child: Icon(
+                                            Icons.add,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        addToCart(
+                                          qtyController.text,
+                                          false,
+                                          true,
+                                          widget.model!,
+                                        );
+                                      },
+                                    )
+                                  ],
+                                ),
+
+                              ),
+                            ),
+                          ),
+                           SizedBox(width: 20,),
+                          InkWell(
+                            onTap: () async {
+
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart(fromBottom: true)));
+                              // addToCart(
+                              //   qtyController.text,
+                              //   false,
+                              //   true,
+                              //   widget.model!,
+                              // );
+                            },
+                            child: Container(
+                              height:45,
+                              width:170,
+                              decoration: BoxDecoration(
+                                  color: colors.primary,
+                                  borderRadius: BorderRadius.circular(30)
+                              ),
+                              child: Center(
+                                child: Text(
+                                  getTranslated(context, 'ADD_CART')!,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1!
+                                      .copyWith(
+                                    color: colors.whiteTemp,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'ubuntu',
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () async {
-                                    String qty;
-                                    qty = qtyController.text;
-                                    addToCart(
-                                      qty,
-                                      true,
-                                      true,
-                                      widget.model!,
-                                    );
-                                  },
-                                  child: Container(
-                                    height: heightAnimation.value,
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: [
-                                            colors.grad1Color,
-                                            colors.grad2Color
-                                          ],
-                                          stops: [
-                                            0,
-                                            1
-                                          ]),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        getTranslated(context, 'BUYNOW')!,
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1!
-                                            .copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .white,
-                                              fontSize: textFontSize16,
-                                              fontWeight: FontWeight.normal,
-                                              fontFamily: 'ubuntu',
-                                            ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }),
-                  )
+                            ),
+                          ),
+                          // Expanded(
+                          //   child: InkWell(
+                          //     onTap: () async {
+                          //       String qty;
+                          //       qty = qtyController.text;
+                          //       addToCart(
+                          //         qty,
+                          //         true,
+                          //         true,
+                          //         widget.model!,
+                          //       );
+                          //     },
+                          //     child: Container(
+                          //       height: heightAnimation.value,
+                          //       decoration: const BoxDecoration(
+                          //         gradient: LinearGradient(
+                          //             begin: Alignment.topLeft,
+                          //             end: Alignment.bottomRight,
+                          //             colors: [
+                          //               colors.grad1Color,
+                          //               colors.grad2Color
+                          //             ],
+                          //             stops: [
+                          //               0,
+                          //               1
+                          //             ]),
+                          //       ),
+                          //       child: Center(
+                          //         child: Text(
+                          //           getTranslated(context, 'BUYNOW')!,
+                          //           textAlign: TextAlign.center,
+                          //           style: Theme.of(context)
+                          //               .textTheme
+                          //               .subtitle1!
+                          //               .copyWith(
+                          //                 color: Theme.of(context)
+                          //                     .colorScheme
+                          //                     .white,
+                          //                 fontSize: textFontSize16,
+                          //                 fontWeight: FontWeight.normal,
+                          //                 fontFamily: 'ubuntu',
+                          //               ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      );
+                    })
                 : available == false || outOfStock == true
                     ? outOfStock == true
                         ? AnimatedBuilder(
@@ -2122,6 +2410,166 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
       ],
     );
   }
+
+  get isProgress => _isProgress;
+
+  setProgress(bool progress) {
+    _isProgress = progress;
+    // notifyListeners();
+  }
+
+  Future<void> removeFromCart({
+    required int index,
+    required bool remove,
+    required List<SectionModel> cartList,
+    required bool move,
+    required int selPos,
+    required BuildContext context,
+    required Function update,
+    required String promoCode,
+  }) async {
+    isNetworkAvail = await isNetworkAvailable();
+    if (!remove &&
+        int.parse(cartList[index].qty!) ==
+            cartList[index].productList![0].minOrderQuntity) {
+      setSnackbar(
+        "${getTranslated(context, 'MIN_MSG')}${cartList[index].qty}",
+        context,
+      );
+    } else {
+      if (isNetworkAvail) {
+        try {
+          setProgress(true);
+          int? qty;
+          if (remove) {
+            qty = 0;
+          } else {
+            qty = (int.parse(cartList[index].qty!) -
+                int.parse(cartList[index].productList![0].qtyStepSize!));
+
+            if (qty < cartList[index].productList![0].minOrderQuntity!) {
+              qty = cartList[index].productList![0].minOrderQuntity;
+              setSnackbar("${getTranslated(context, 'MIN_MSG')}$qty", context);
+            }
+          }
+          String varId;
+          if (cartList[index].productList![0].availability == '0') {
+            varId = cartList[index].productList![0].prVarientList![selPos].id!;
+          } else {
+            varId = cartList[index].varientId!;
+          }
+
+          var parameter = {
+            PRODUCT_VARIENT_ID: varId,
+            USER_ID: CUR_USERID,
+            QTY: qty.toString()
+          };
+
+          dynamic result =
+          await CartRepository.manageCartAPICall(parameter: parameter);
+          bool error = result['error'];
+          String? msg = result['message'];
+          if (!error) {
+            var data = result['data'];
+            String? qty = data['total_quantity'];
+            context.read<UserProvider>().setCartCount(data['cart_count']);
+            if (move == false) {
+              if (qty == '0') remove = true;
+
+              if (remove) {
+                cartList.removeWhere(
+                        (item) => item.varientId == cartList[index].varientId);
+              } else {
+                cartList[index].qty = qty.toString();
+              }
+
+              // oriPrice = double.parse(data[SUB_TOTAL]);
+
+              /*if (!ISFLAT_DEL) {
+                if (addressList.isNotEmpty &&
+                    (oriPrice) <
+                        double.parse(addressList[selectedAddress!].freeAmt!)) {
+                  deliveryCharge = double.parse(
+                      addressList[selectedAddress!].deliveryCharge!);
+                } else {
+                  deliveryCharge = 0;
+                }
+                update();
+              } else {
+                if ((oriPrice) < double.parse(MIN_AMT!)) {
+                  deliveryCharge = double.parse(CUR_DEL_CHR!);
+                } else {
+                  deliveryCharge = 0;
+                }
+              }*/
+              // getDeliveryCharge();
+              //
+              // if(deliveryChargeList.isNotEmpty) {
+              //   if (oriPrice <
+              //       double.parse(deliveryChargeList.first.maximum ?? '0.0')) {
+              //     deliveryCharge = double.parse(
+              //         deliveryChargeList.first.deliveryCharge ?? '0.0');
+              //   }
+              // }
+              // totalPrice = 0;
+              //
+              // totalPrice = deliveryCharge + oriPrice;
+              //
+              // if (isPromoValid!) {
+              //   await context
+              //       .read<PromoCodeProvider>()
+              //       .validatePromocode(
+              //     check: false,
+              //     context: context,
+              //     promocode: promoCode,
+              //     update: update,
+              //   )
+              //       .then(
+              //         (value) {
+              //       FocusScope.of(context).unfocus();
+              //       update();
+              //     },
+              //   );
+              // } else if (isUseWallet!) {
+              //   setProgress(false);
+              //   remWalBal = 0;
+              //   payMethod = null;
+              //   usedBalance = 0;
+              //   isPayLayShow = true;
+              //   isUseWallet = false;
+              //   update();
+              // } else {
+              //   setProgress(false);
+              //   update();
+              // }
+            } else {
+              if (qty == '0') remove = true;
+
+              if (remove) {
+                cartList.removeWhere(
+                        (item) => item.varientId == cartList[index].varientId);
+              }
+            }
+          } else {
+            setSnackbar(msg!, context);
+          }
+          update();
+          setProgress(false);
+        } on TimeoutException catch (_) {
+          setSnackbar(getTranslated(context, 'somethingMSg')!, context);
+          setProgress(false);
+        }
+      } else {
+        isNetworkAvail = false;
+        update();
+      }
+    }
+  }
+
+
+
+
+
 
   _mostFav() {
     return mostFavProList.isNotEmpty

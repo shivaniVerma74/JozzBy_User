@@ -28,7 +28,8 @@ import 'Widget/listViewLayOut.dart';
 import 'Widget/sellerProfileWidget.dart';
 
 class SellerProfile extends StatefulWidget {
-  final String? sellerID,
+  final String? sellerID;
+  String? s_id,
       sellerName,
       sellerImage,
       sellerRating,
@@ -44,7 +45,7 @@ class SellerProfile extends StatefulWidget {
     this.sellerRating,
     required this.totalProductsOfSeller,
     this.storeDesc,
-    this.sellerStoreName,
+    this.sellerStoreName,this.s_id,
   }) : super(key: key);
 
   @override
@@ -82,6 +83,7 @@ class _SellerProfileState extends State<SellerProfile>
   String lastStatus = '';
   String _currentLocaleId = '';
   String lastWords = '';
+  String? sellerId_new;
   final SpeechToText speech = SpeechToText();
   late StateSetter setStater;
   ChoiceChip? tagChip;
@@ -117,6 +119,10 @@ class _SellerProfileState extends State<SellerProfile>
 
   @override
   void initState() {
+
+
+
+    print('----------seller--id___neww-----${widget.s_id}');
     context.read<SellerDetailProvider>().setOffsetvalue(0);
     notificationoffset = 0;
     context.read<ExploreProvider>().productList.clear();
@@ -250,8 +256,13 @@ class _SellerProfileState extends State<SellerProfile>
       body: isNetworkAvail
           ? Consumer<SellerDetailProvider>(
               builder: (context, value, child) {
-                if (value.getCurrentStatus ==
-                    SellerDetailProviderStatus.isSuccsess) {
+
+                print('1=================================${value.getCurrentStatus}');
+                print('1===============trhthh==================${SellerDetailProviderStatus.isSuccsess}');
+                if (
+                // value.getCurrentStatus
+                SellerDetailProviderStatus.isSuccsess
+                    == SellerDetailProviderStatus.isSuccsess) {
                   return Column(
                     children: [
                       Container(
@@ -405,7 +416,9 @@ class _SellerProfileState extends State<SellerProfile>
                   );
                 } else if (value.getCurrentStatus ==
                     SellerDetailProviderStatus.isFailure) {
-                  return Center(
+                  return
+
+                    Center(
                     child: Text(
                       value.geterrormessage,
                       style: const TextStyle(
@@ -462,11 +475,11 @@ class _SellerProfileState extends State<SellerProfile>
           SORT: sortBy,
           ORDER: orderBy,
           TOP_RETAED: showTopRated,
-          SELLER_ID: widget.sellerID
+          SELLER_ID: '${widget.s_id}'
         };
-
-        if (selId != '') {
-          parameter[ATTRIBUTE_VALUE_ID] = selId;
+         print('-----------sellerrrrrrrrrrrrrrrr--------------${parameter}');
+        if (widget.s_id != '') {
+          parameter[ATTRIBUTE_VALUE_ID] =widget.s_id;
         }
 
         if (query.trim() != '') {
@@ -515,6 +528,7 @@ class _SellerProfileState extends State<SellerProfile>
                     () => setState(
                       () {
                         List mainlist = value['data'];
+                        print('-----------rrrrrrrrrrrr-----------${mainlist}');
                         if (mainlist.isNotEmpty) {
                           List<Product> items = [];
                           List<Product> allitems = [];
@@ -524,7 +538,7 @@ class _SellerProfileState extends State<SellerProfile>
                               .toList());
 
                           allitems.addAll(items);
-
+                          print('-----------hhhhhhhhhhhhhh------------${allitems}');
                           getAvailVarient(allitems);
                         } else {
                           notificationisloadmore = false;

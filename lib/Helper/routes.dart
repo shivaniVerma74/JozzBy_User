@@ -46,7 +46,7 @@ class Routes {
     Navigator.push(
       context,
       CupertinoPageRoute(
-        builder: (context) => const ProductPreview(),
+        builder: (context) =>  ProductPreview(),
       ),
     );
   }
@@ -240,7 +240,7 @@ class Routes {
       context,
       CupertinoPageRoute(
         builder: (context) => SellerProfile(
-          sellerID: sellerId,
+          sellerID: sellerId??'',
           sellerImage: sellerImage,
           sellerName: sellerName,
           sellerRating: sellerRatting,

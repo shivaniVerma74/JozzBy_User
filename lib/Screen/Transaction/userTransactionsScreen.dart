@@ -58,7 +58,7 @@ class _UserTransactionsState extends State<UserTransactions>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.white,
+        backgroundColor:colors.primary1,
         key: _scaffoldKey,
         appBar:
             getSimpleAppBar(getTranslated(context, 'MYTRANSACTION')!, context),

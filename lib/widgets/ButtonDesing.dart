@@ -37,11 +37,11 @@ class SimBtn extends StatelessWidget {
         height: height ?? 35,
         alignment: FractionalOffset.center,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [colors.grad1Color, colors.grad2Color],
-              stops: [0, 1]),
+          // gradient: const LinearGradient(
+          //     begin: Alignment.topLeft,
+          //     end: Alignment.bottomRight,
+          //     colors: [colors.grad1Color, colors.grad2Color],
+          //     stops: [0, 1]),
           color: backgroundColor ?? colors.primary,
           borderRadius: BorderRadius.all(
             Radius.circular(
@@ -78,7 +78,8 @@ class AppBtn extends StatelessWidget {
   final Animation? btnAnim;
   final VoidCallback? onBtnSelected;
 
-  const AppBtn({
+  const
+  AppBtn({
     Key? key,
     this.title,
     this.btnCntrl,
@@ -103,12 +104,13 @@ class AppBtn extends StatelessWidget {
           height: 45,
           alignment: FractionalOffset.center,
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [colors.grad1Color, colors.grad2Color],
-              stops: [0, 1],
-            ),
+            color:colors.primary,
+            // gradient: LinearGradient(
+            //   begin: Alignment.topLeft,
+            //   end: Alignment.bottomRight,
+            //   colors: [colors.grad1Color, colors.grad2Color],
+            //   stops: [0, 1],
+            // ),
             borderRadius: BorderRadius.all(
               Radius.circular(
                 circularBorderRadius10,

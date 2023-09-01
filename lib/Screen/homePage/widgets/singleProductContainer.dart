@@ -39,10 +39,12 @@ class SingleProductContainer extends StatelessWidget {
     if (length > index) {
       String? offPer;
       double price = double.parse(productDetails.prVarientList![0].disPrice!);
+      double margin =  double.parse(productDetails.prVarientList![0].price!) - double.parse(productDetails.prVarientList![0].disPrice!);
       if (price == 0) {
         price = double.parse(productDetails.prVarientList![0].price!);
 
         offPer = '0';
+
       } else {
         double off =
             double.parse(productDetails.prVarientList![0].price!) - price;
@@ -121,7 +123,7 @@ class SingleProductContainer extends StatelessWidget {
                           child: Row(
                             children: [
                               Text(
-                                ' ${DesignConfiguration.getPriceFormat(context, price)!}',
+                                'Price: ${DesignConfiguration.getPriceFormat(context, price)!}',
                                 style: TextStyle(
                                   color: Theme.of(context).colorScheme.blue,
                                   fontSize: textFontSize14,
@@ -135,7 +137,7 @@ class SingleProductContainer extends StatelessWidget {
                                       child: Padding(
                                         padding:
                                             const EdgeInsetsDirectional.only(
-                                          start: 10.0,
+                                          start: 8.0,
                                           top: 5,
                                         ),
                                         child: Row(
@@ -145,7 +147,7 @@ class SingleProductContainer extends StatelessWidget {
                                                           .prVarientList![0]
                                                           .disPrice!) !=
                                                       0
-                                                  ? '${DesignConfiguration.getPriceFormat(context, double.parse(productDetails.prVarientList![0].price!))}'
+                                                  ? 'MRP: ${DesignConfiguration.getPriceFormat(context, double.parse(productDetails.prVarientList![0].price!))}'
                                                   : '',
                                               style: Theme.of(context)
                                                   .textTheme
@@ -206,7 +208,7 @@ class SingleProductContainer extends StatelessWidget {
                                                   .prVarientList![0]
                                                   .disPrice!) !=
                                               0
-                                          ? '${DesignConfiguration.getPriceFormat(context, double.parse(productDetails.prVarientList![0].price!))}'
+                                          ? 'MRP: ${DesignConfiguration.getPriceFormat(context, double.parse(productDetails.prVarientList![0].price!))}'
                                           : '',
                                       style: Theme.of(context)
                                           .textTheme
@@ -249,6 +251,22 @@ class SingleProductContainer extends StatelessWidget {
                             : Container(),
                         Padding(
                           padding: const EdgeInsetsDirectional.only(
+                            start: 9.0,
+                            top: 5,
+                          ),
+                          child: Text(
+                            'Margin: ${DesignConfiguration.getPriceFormat(context, margin)!}',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.green,
+                              fontSize: textFontSize14,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.normal,
+                              fontFamily: 'ubuntu',
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(
                             start: 10.0,
                             top: 5,
                           ),
@@ -263,7 +281,8 @@ class SingleProductContainer extends StatelessWidget {
                               needToShowNoOfRatings: true,
                             ),
                           ),
-                        )
+                        ),
+
                       ],
                     ),
                   ),
@@ -301,6 +320,7 @@ class SingleProductContainer extends StatelessWidget {
                                       ? Icons.favorite_border
                                       : Icons.favorite,
                                   size: 20,
+                                  color:Colors.grey,
                                 ),
                               ),
                               onTap: () {

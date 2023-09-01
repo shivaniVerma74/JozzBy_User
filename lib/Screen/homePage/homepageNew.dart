@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart'as http;
 import 'package:eshop_multivendor/Helper/ApiBaseHelper.dart';
 import 'package:eshop_multivendor/Helper/Color.dart';
 import 'package:eshop_multivendor/Helper/Constant.dart';
@@ -24,10 +26,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:version/version.dart';
 import '../../Helper/String.dart';
 import '../../Helper/routes.dart';
+import '../../Model/Get_Images_model.dart';
+import '../../Model/Get_brands_model.dart';
+
 import '../../Provider/Favourite/FavoriteProvider.dart';
 import '../../Provider/homePageProvider.dart';
 import '../../widgets/desing.dart';
@@ -37,6 +43,11 @@ import '../../widgets/security.dart';
 import '../../widgets/snackbar.dart';
 import '../NoInterNetWidget/NoInterNet.dart';
 
+import '../ProductList&SectionView/ProductList.dart';
+
+import '../SellerDetail/Seller_Details.dart';
+
+String? brandId;
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -57,9 +68,20 @@ class _HomePageState extends State<HomePage>
   ApiBaseHelper apiBaseHelper = ApiBaseHelper();
 
   int count = 1;
+ String? brandId,brandName;
+  String? s_id;
+  int sellerListOffset = 0;
+  int totalSelletCount = 0;
+  String? seller_id;
+  String? sellerImage;
+  String? sellerStoreName,sellerRating,storeDesc;
+  List<Product> sellerList = [];
+
 
   @override
   bool get wantKeepAlive => true;
+
+  bool getBrand = true;
 
   setStateNow() {
     setState(() {});
@@ -82,6 +104,10 @@ class _HomePageState extends State<HomePage>
 
   @override
   void initState() {
+    getImagesApi();
+    getBrandApi();
+    getSeller();
+    isSet =true;
     UserProvider user = Provider.of<UserProvider>(context, listen: false);
 
     SettingProvider setting =
@@ -125,6 +151,8 @@ class _HomePageState extends State<HomePage>
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,18 +169,45 @@ class _HomePageState extends State<HomePage>
                     physics: const BouncingScrollPhysics(),
                     controller: _scrollBottomBarController,
                     slivers: [
-                      SliverPersistentHeader(
-                        floating: false,
-                        pinned: true,
-                        delegate: SearchBarHeaderDelegate(),
-                      ),
+                      // SliverPersistentHeader(
+                      //   floating: false,
+                      //   pinned: true,
+                      //   delegate: SearchBarHeaderDelegate(),
+                      // ),
                       SliverToBoxAdapter(
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomSlider(),
                             const HorizontalCategoryList(),
+                            const SizedBox(height: 20,),
+                            CustomSlider(),
                             const Section(),
+                            SizedBox(height: 10,),
+                            const Divider(
+                              thickness: 0.6,
+                              color:Colors.grey,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Container(
+                                color: colors.primary1,
+                                  width: MediaQuery.of(context).size.width/1,
+                                  height: 40,
+                                  child: Center(child: Text("All Brand List",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold,fontSize: 20),))),
+                            ),
+                            SizedBox(height: 10,),
+                            isSet==false?brandListCart():brandcard(),
+                            const Divider(
+                              thickness: 1,
+                              color:Colors.grey,
+                            ),
+                            const Text("All Seller",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold,fontSize: 20),),
+                            SizedBox(height: 10,),
+                            getSellerList(),
                             const MostLikeSection(),
+                            SizedBox(height: 10,),
+                            imageCard(),
+                            SizedBox(height: 50,),
                           ],
                         ),
                       )
@@ -167,6 +222,324 @@ class _HomePageState extends State<HomePage>
         ),
       ),
     );
+  }
+
+  void getSeller() {
+    Map parameter = {
+      LIMIT: perPage.toString(),
+      OFFSET: sellerListOffset.toString(),
+    };
+
+    // if (_controller.text != '') {
+    //   parameter = {
+    //     SEARCH: _controller.text.trim(),
+    //   };
+    // }
+
+    apiBaseHelper.postAPICall(getSellerApi, parameter).then(
+          (getdata) {
+        bool error = getdata['error'];
+        String? msg = getdata['message'];
+        List<Product> tempSellerList = [];
+        tempSellerList.clear();
+        if (!error) {
+          totalSelletCount = int.parse(getdata['total']);
+          var data = getdata['data'];
+
+          tempSellerList =
+              (data as List).map((data) => Product.fromSeller(data)).toList();
+          sellerListOffset += perPage;
+          setState(() {});
+        } else {
+          setSnackbar1(msg!,);
+        }
+        sellerList.addAll(tempSellerList);
+        context.read<HomePageProvider>().setSellerLoading(false);
+        print('My seller list------------${sellerList}');
+        for(var i=0;i<sellerList.length;i++){
+          seller_id = sellerList[i].seller_id;
+          sellerImage =sellerList[i].seller_profile;
+          sellerStoreName =sellerList[i].store_name;
+          sellerRating = sellerList[i].seller_rating;
+          storeDesc = sellerList[i].store_description;
+          print('---------seller id-3333----------${seller_id}');
+
+        }
+
+      },
+      onError: (error) {
+        setSnackbar1(error.toString());
+        context.read<HomePageProvider>().setSellerLoading(false);
+      },
+    );
+
+    setState(() {});
+  }
+
+  setSnackbar1(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        msg,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Theme.of(context).colorScheme.black),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.white,
+      elevation: 1.0,
+    ));
+  }
+
+ getSellerList(){
+
+    return Container(
+      color: colors.primary1,
+      height: 180,
+      child: ListView.separated(
+          itemCount:sellerList.length,
+          separatorBuilder: (BuildContext context, int index) => const Divider(),
+          scrollDirection: Axis.horizontal,
+
+          itemBuilder: (c,i){
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(onTap: (){
+
+                setState(() {
+                  s_id = sellerList[i].seller_id;
+
+                });
+                print('______sellerrrrrr${s_id}__________');
+                //
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => SellerProfile(totalProductsOfSeller: '',s_id:s_id,sellerImage: sellerImage,sellerStoreName:sellerStoreName,sellerRating: sellerRating,storeDesc: storeDesc
+                    ),
+                  ),
+                );
+
+              },
+                child: Container(
+                    decoration: BoxDecoration(
+                        color:Color(0xffEFEFEF),
+                        border: Border.all(color: colors.blackTemp),
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                    width: 165,
+                    height: 180,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 10,),
+                        Container(
+                          height: 100,width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(60),
+                            // border: Border.all(color: colors.blackTemp)
+                          ),
+                          child: ClipRRect(
+                             borderRadius: BorderRadius.circular(60),
+                              child: Image.network("${sellerList[i].seller_profile}",fit: BoxFit.fill,)),
+                        ),
+                        const SizedBox(height:15,),
+                        Container(
+                            width: 90,
+                            child: Center(child: Text("${sellerList[i].seller_name}",overflow: TextOverflow.ellipsis,maxLines: 2,textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),))),
+
+                      ],
+                    )
+                ),
+              ),
+            );
+          }),
+    );
+
+
+ }
+
+  brandcard(){
+    return Padding(
+      padding: const EdgeInsets.only(left:5.0,right: 5),
+      child: Container(
+        height: 130,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Card(
+          elevation: 4,
+          child: Column(
+            children: [
+              Container(
+                height: 40,
+                width: MediaQuery.of(context).size.width/1,
+                decoration: BoxDecoration(
+                    color: colors.secondary,
+                  borderRadius: BorderRadius.circular(5)
+                ),
+                child: const Center(child: Text('The brand List',style: TextStyle(fontWeight: FontWeight.bold,fontSize:20),)),
+              ),
+              SizedBox(height: 10,),
+              Text('For Brands this is botton to redirect list',style: TextStyle(fontWeight: FontWeight.bold)),
+              SizedBox(height: 10,),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isSet =false;
+                  });
+                },
+                child: Container(
+                    height: 40,
+                    width: 110,
+                    decoration: BoxDecoration(
+                      color: colors.secondary,
+                      borderRadius: BorderRadius.circular(80)
+                    ),
+                    child:Center(child: Text('CLICK HERE',style: TextStyle(color: colors.whiteTemp),))),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+
+
+  }
+
+
+
+  imageCard(){
+    return SizedBox(
+      height:200,
+        width:double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+              child: Image.network("${getImagesModel?.data?.first.image}",fit: BoxFit.fill,)),
+        ));
+  }
+
+  brandListCart(){
+    return Container(
+     color: colors.primary1,
+      height: 160,
+      child: ListView.separated(
+          itemCount: getBrandsModel?.data?.length.toInt()??0,
+          separatorBuilder: (BuildContext context, int index) => const Divider(),
+        scrollDirection: Axis.horizontal,
+
+          itemBuilder: (c,i){
+        return Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () async {
+
+                setState(() {
+                  brandId =   getBrandsModel!.data![i].id;
+                  brandName = getBrandsModel?.data?[i].name;
+                });
+                SharedPreferences pref = await SharedPreferences.getInstance();
+                pref.setString('brand_name', brandName!);
+                print('brandName------kkkk------------${getBrandsModel!.data![i].name}__________');
+
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => ProductList(getBrand: true,brandId: brandId,brandName: brandName),
+                  ),
+                );
+
+            },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color:Color(0xffEFEFEF),
+                    borderRadius: BorderRadius.circular(10)
+                  ),
+                     width: 100,
+                    height: 180,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                            Container(
+                            height: 90,
+                             width: double.infinity,
+                             child: ClipRRect(
+                               borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
+                                 child:getBrandsModel?.data?[i].image==null||getBrandsModel?.data?[i].image==""?Image.asset('assets/images/png/placeholder.png'): Image.network("$imageUrl${getBrandsModel?.data?[i].image}",fit: BoxFit.fill,))),
+                            const SizedBox(height:10,),
+                            Container(
+                                width: 90,
+                                child: Center(child: Text("${getBrandsModel?.data?[i].name}",overflow: TextOverflow.ellipsis,maxLines: 2,textAlign: TextAlign.center,))),
+
+                    ],
+                  )
+                ),
+              ),
+            ),
+            Container(
+              height:150,
+              width:0.50,
+              color: Colors.grey,
+            ),
+          ],
+        );
+      }),
+    );
+  }
+  GetImagesModel?getImagesModel;
+  getImagesApi() async {
+    var headers = {
+      'Cookie': 'ci_session=072b6f29be0b884e59f61a1530aec13e11b5f470'
+    };
+    var request = http.MultipartRequest('GET', Uri.parse('$baseUrl/get_slider_images_bottom'));
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+   var  result = await response.stream.bytesToString();
+   var finalResult = GetImagesModel.fromJson(jsonDecode(result));
+      setState(() {
+        getImagesModel =  finalResult;
+      });
+
+   print('____imagesPath_______${result}__________');
+
+    }
+    else {
+    print(response.reasonPhrase);
+    }
+
+  }
+
+
+  GetBrandsModel? getBrandsModel;
+  getBrandApi() async {
+    var headers = {
+      'Cookie': 'ci_session=b458202437d40c57fd9d5ea22c70e00ddc4d2723'
+    };
+    var request = http.MultipartRequest('GET', Uri.parse('$baseUrl/get_brand'));
+
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+       var result =  await response.stream.bytesToString();
+       var finalResult =  GetBrandsModel.fromJson(jsonDecode(result));
+       setState(() {
+         getBrandsModel = finalResult;
+
+         for(var i=0;i<getBrandsModel!.data!.length;i++){
+           brandId = getBrandsModel!.data![i].id;
+
+           print('----------brand_id--------------${brandId}');
+
+         }
+       });
+    }
+    else {
+    print(response.reasonPhrase);
+    }
+
   }
 
   Future<void> _refresh() {
@@ -192,6 +565,9 @@ class _HomePageState extends State<HomePage>
     isNetworkAvail = await isNetworkAvailable();
     if (isNetworkAvail) {
       getSetting();
+      getImagesApi();
+      getBrandApi();
+
       context.read<HomePageProvider>().getSliderImages();
       context.read<HomePageProvider>().getCategories(context);
       context.read<HomePageProvider>().getOfferImages();
@@ -209,6 +585,13 @@ class _HomePageState extends State<HomePage>
     }
     return;
   }
+
+
+
+
+
+
+
 
   void getSetting() {
     CUR_USERID = context.read<SettingProvider>().userId;
@@ -289,7 +672,10 @@ class _HomePageState extends State<HomePage>
 
         if (isNetworkAvail) {
           try {
-            var parameter = {'product_ids': proIds.join(',')};
+            var parameter = {
+              'product_ids': proIds.join(','),
+
+            };
 
             Response response =
                 await post(getProductApi, body: parameter, headers: headers)
@@ -573,3 +959,4 @@ class SearchBarHeaderDelegate extends SliverPersistentHeaderDelegate {
     return true;
   }
 }
+bool isSet= true ;

@@ -73,6 +73,10 @@ class GetPrice extends StatelessWidget {
     double price = double.parse(
       model!.prVarientList![pos].disPrice!,
     );
+    double margin = double.parse(model!.prVarientList![pos].price!) - double.parse(
+      model!.prVarientList![pos].disPrice!,
+    );
+
     double nodisPrice = double.parse(
       model!.prVarientList![pos].price!,
     );
@@ -91,40 +95,44 @@ class GetPrice extends StatelessWidget {
       off = off * 100 / double.parse(model!.prVarientList![pos].price!);
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '${DesignConfiguration.getPriceFormat(context, price)!} ',
-              style: Theme.of(context).textTheme.headline6!.copyWith(
-                    color: Theme.of(context).colorScheme.blue,
-                    fontWeight: FontWeight.w700,
-                    fontStyle: FontStyle.normal,
-                    fontSize: textFontSize20,
-                  ),
-            ),
-            const SizedBox(width: 10),
-            off != 0.00
-                ? Text(
-                    '${DesignConfiguration.getPriceFormat(context, double.parse(model!.prVarientList![pos].price!))!} ',
-                    style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          decoration: TextDecoration.lineThrough,
-                          decorationColor: colors.darkColor3,
-                          decorationStyle: TextDecorationStyle.solid,
-                          decorationThickness: 2,
-                          letterSpacing: 0,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .fontColor
-                              .withOpacity(0.7),
-                          fontStyle: FontStyle.normal,
-                          fontSize: textFontSize18,
-                          fontWeight: FontWeight.w300,
-                        ),
-                  )
-                : Container(),
-            const SizedBox(width: 10),
-            off != 0.00
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                'Price: ${DesignConfiguration.getPriceFormat(context, price)!} ',
+                style: Theme.of(context).textTheme.headline6!.copyWith(
+                  color: Theme.of(context).colorScheme.blue,
+                  fontWeight: FontWeight.w700,
+                  fontStyle: FontStyle.normal,
+                  fontSize: textFontSize20,
+                ),
+              ),
+              const SizedBox(width: 10),
+              off != 0.00
+                  ? Text(
+                'MRP: ${DesignConfiguration.getPriceFormat(context, double.parse(model!.prVarientList![pos].price!))!} ',
+                style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                  decoration: TextDecoration.lineThrough,
+                  decorationColor: colors.darkColor3,
+                  decorationStyle: TextDecorationStyle.solid,
+                  decorationThickness: 2,
+                  letterSpacing: 0,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .fontColor
+                      .withOpacity(0.7),
+                  fontStyle: FontStyle.normal,
+                  fontSize: textFontSize18,
+                  fontWeight: FontWeight.w300,
+                ),
+              )
+                  : Container(),
+              const SizedBox(width: 10),
+              //const Icon(Icons.share),
+              /*off != 0.00
                 ? Text(
                     ' ${off.toStringAsFixed(2)}% OFF',
                     style: Theme.of(context).textTheme.overline!.copyWith(
@@ -135,51 +143,64 @@ class GetPrice extends StatelessWidget {
                           fontSize: textFontSize18,
                         ),
                   )
-                : Container(),
-            from
-                ? Selector<CartProvider, Tuple2<List<String?>, String?>>(
-                    builder: (context, data, child) {
-                      if (!context.read<ProductDetailProvider>().qtyChange) {
-                        if (data.item1.contains(model!.id)) {
-                          qtyController.text = data.item2.toString();
-                        } else {
-                          String qty = model!
-                              .prVarientList![model!.selVarient!].cartCount!;
-                          if (qty == '0') {
-                            qtyController.text =
-                                model!.minOrderQuntity.toString();
-                          } else {
-                            qtyController.text = qty;
-                          }
-                        }
-                      } else {
-                        context.read<ProductDetailProvider>().qtyChange = false;
-                      }
+                : Container(),*/
+              from
+                  ? Selector<CartProvider, Tuple2<List<String?>, String?>>(
+                builder: (context, data, child) {
+                  if (!context.read<ProductDetailProvider>().qtyChange) {
+                    if (data.item1.contains(model!.id)) {
+                      qtyController.text = data.item2.toString();
+                    } else {
+                      String qty = model!
+                          .prVarientList![model!.selVarient!].cartCount!;
+                      if (qty == '0') {
 
-                      return Padding(
-                        padding: const EdgeInsetsDirectional.only(
-                          start: 3.0,
-                          bottom: 5,
-                          top: 3,
-                        ),
-                        child: model!.availability == '0'
-                            ? Container()
-                            : Row(
-                                children: const [],
-                              ),
-                      );
-                    },
-                    selector: (_, provider) => Tuple2(
-                      provider.cartIdList,
-                      provider.qtyList(
-                        model!.id!,
-                        model!.prVarientList![0].id!,
-                      ),
+                        qtyController.text =
+                            model!.minOrderQuntity.toString();
+                      } else {
+                        qtyController.text = qty;
+                      }
+                    }
+                  } else {
+                    context.read<ProductDetailProvider>().qtyChange = false;
+                  }
+
+                  return Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 3.0,
+                      bottom: 5,
+                      top: 3,
                     ),
-                  )
-                : Container(),
-          ],
-        ),
+                    child: model!.availability == '0'
+                        ? Container()
+                        : Row(
+                      children: const [],
+                    ),
+                  );
+                },
+                selector: (_, provider) => Tuple2(
+                  provider.cartIdList,
+                  provider.qtyList(
+                    model!.id!,
+                    model!.prVarientList![0].id!,
+                  ),
+                ),
+              )
+                  : Container(),
+            ],
+          ),
+          SizedBox(height: 5,),
+          Text(
+            'Margin: ${DesignConfiguration.getPriceFormat(context, margin)!} ',
+            style: Theme.of(context).textTheme.headline6!.copyWith(
+              color: Theme.of(context).colorScheme.green,
+              fontWeight: FontWeight.w700,
+              fontStyle: FontStyle.normal,
+              fontSize: textFontSize20,
+            ),
+          ),
+
+        ],),
       );
     } else {
       return Padding(

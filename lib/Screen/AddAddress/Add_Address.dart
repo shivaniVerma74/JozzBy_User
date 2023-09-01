@@ -175,6 +175,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:colors.primary1,
       key: _scaffoldKey,
       appBar: getSimpleAppBar(getTranslated(context, 'ADDRESS_LBL')!, context),
       body: isNetworkAvail

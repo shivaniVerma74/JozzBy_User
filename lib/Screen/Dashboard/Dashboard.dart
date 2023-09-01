@@ -8,6 +8,7 @@ import 'package:eshop_multivendor/Model/Section_Model.dart';
 import 'package:eshop_multivendor/Provider/Theme.dart';
 import 'package:eshop_multivendor/Screen/Profile/MyProfile.dart';
 import 'package:eshop_multivendor/Screen/ExploreSection/explore.dart';
+import 'package:eshop_multivendor/Screen/Search/Search.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -199,7 +200,7 @@ class _DashboardPageState extends State<Dashboard>
       child: Scaffold(
         extendBodyBehindAppBar: false,
         extendBody: true,
-        backgroundColor: Theme.of(context).colorScheme.lightWhite,
+        backgroundColor:colors.primary1,
         appBar: _selBottom == 0
             ? _getAppBar()
             : PreferredSize(
@@ -249,15 +250,13 @@ class _DashboardPageState extends State<Dashboard>
       title = getTranslated(context, 'PROFILE');
     }
     final appBar = AppBar(
+      toolbarHeight: 250,
       elevation: 0,
       centerTitle: false,
       automaticallyImplyLeading: false,
-      backgroundColor: Theme.of(context).colorScheme.lightWhite,
+      backgroundColor: colors.whiteTemp,
       title: _selBottom == 0
-          ? SvgPicture.asset(
-              DesignConfiguration.setSvgPath('titleicon'),
-              height: 40,
-            )
+          ?Image.asset('assets/images/png/splashlogo-removebg-preview.png',height:110,width: 110,)
           : Text(
               title!,
               style: const TextStyle(
@@ -269,11 +268,49 @@ class _DashboardPageState extends State<Dashboard>
       actions: <Widget>[
         Padding(
           padding: const EdgeInsetsDirectional.only(
+            end: 10.0,
+            bottom: 10.0,
+            top: 10.0,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(circularBorderRadius10),
+              color:colors.transparent,
+            ),
+            width: 40,
+            child: InkWell(
+              onTap: () {
+                CUR_USERID != null
+                    ? Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => const Search(),
+                  ),
+                ).then(
+                      (value) {
+                    if (value != null && value) {
+                      _tabController.animateTo(1);
+                    }
+                  },
+                )
+                    : Routes.navigateToSearchScreen(context);
+              },
+              child: Icon(
+                Icons.search,color:colors.blackTemp,
+
+              ),
+            ),
+          ),
+        ),
+
+
+        Padding(
+          padding: const EdgeInsetsDirectional.only(
               end: 10.0, bottom: 10.0, top: 10.0),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(circularBorderRadius10),
-              color: Theme.of(context).colorScheme.white,
+              color: colors.transparent,
             ),
             width: 40,
             child: IconButton(
@@ -298,7 +335,7 @@ class _DashboardPageState extends State<Dashboard>
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(circularBorderRadius10),
-              color: Theme.of(context).colorScheme.white,
+              color:colors.transparent,
             ),
             width: 40,
             child: IconButton(
@@ -358,27 +395,30 @@ class _DashboardPageState extends State<Dashboard>
                         height: 25,)
                     : SvgPicture.asset(
                         DesignConfiguration.setSvgPath(disabledImage),
-                        color: Colors.grey,
+                        color: colors.primary,
                         height: 20,
                       ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Text(
-                getTranslated(context, name)!,
-                style: TextStyle(
-                  color: _selBottom == selectedIndex
-                      ? Theme.of(context).colorScheme.fontColor
-                      : Theme.of(context).colorScheme.lightBlack,
-                  fontWeight: FontWeight.w400,
-                  fontStyle: FontStyle.normal,
-                  fontSize: textFontSize10,
-                  fontFamily: 'ubuntu',
+              padding: const EdgeInsets.symmetric(vertical: 3.0),
+              child: Container(
+                width: 60,
+                child: Text(
+                  getTranslated(context, name)!,
+                  style: TextStyle(
+                    color: _selBottom == selectedIndex
+                        ? Theme.of(context).colorScheme.fontColor
+                        : Theme.of(context).colorScheme.lightBlack,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.normal,
+                    fontSize: textFontSize10,
+                    fontFamily: 'ubuntu',
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             )
           ],
@@ -398,7 +438,7 @@ class _DashboardPageState extends State<Dashboard>
           ? kBottomNavigationBarHeight
           : 0,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.white,
+        color:Color(0xffF3E0C0) ,
         boxShadow: [
           BoxShadow(
             color: Theme.of(context).colorScheme.black26,
@@ -411,6 +451,7 @@ class _DashboardPageState extends State<Dashboard>
         builder: (context, data, child) {
           return TabBar(
             controller: _tabController,
+
             tabs: [
               Tab(
                 child: getTabItem(
@@ -474,6 +515,7 @@ class _DashboardPageState extends State<Dashboard>
             ],
             indicatorColor: Colors.transparent,
             labelColor: colors.primary,
+
             isScrollable: false,
             labelStyle: const TextStyle(fontSize: textFontSize12),
           );

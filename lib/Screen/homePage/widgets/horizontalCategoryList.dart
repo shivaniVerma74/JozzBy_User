@@ -26,14 +26,16 @@ class HorizontalCategoryList extends StatelessWidget {
                 ),
               )
             : Container(
-                height: 100,
-                padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+                height: 140,
+                color: colors.primary1.withOpacity(0.4),
+                padding: const EdgeInsets.only(top: 15,left:10),
                 child: ListView.builder(
                   itemCount: categoryData.catList.length < 10
                       ? categoryData.catList.length
                       : 10,
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
+
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     if (index == 0) {
@@ -70,39 +72,38 @@ class HorizontalCategoryList extends StatelessWidget {
                             }
                           },
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
+                            children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(
                                     circularBorderRadius25),
                                 child: DesignConfiguration.getCacheNotworkImage(
                                   boxFit: BoxFit.cover,
                                   context: context,
-                                  heightvalue: 50.0,
-                                  widthvalue: 50.0,
+                                  heightvalue: 90.0,
+                                  widthvalue: 90.0,
                                   placeHolderSize: 50,
                                   imageurlString:
                                       categoryData.catList[index].image!,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: SizedBox(
-                                  width: 50,
+                              Container(
+                                width:70,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
                                   child: Text(
                                     categoryData.catList[index].name!,
                                     style: Theme.of(context)
                                         .textTheme
                                         .caption!
                                         .copyWith(
-                                          fontFamily: 'ubuntu',
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .fontColor,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: textFontSize10,
-                                        ),
+                                      fontFamily: 'ubuntu',
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .fontColor,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: textFontSize10,
+                                    ),
+                                    maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
                                   ),
@@ -110,6 +111,7 @@ class HorizontalCategoryList extends StatelessWidget {
                               ),
                             ],
                           ),
+
                         ),
                       );
                     }

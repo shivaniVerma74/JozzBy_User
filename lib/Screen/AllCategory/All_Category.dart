@@ -3,17 +3,22 @@ import 'package:eshop_multivendor/Helper/Constant.dart';
 import 'package:eshop_multivendor/Provider/CategoryProvider.dart';
 import 'package:eshop_multivendor/Provider/homePageProvider.dart';
 import 'package:eshop_multivendor/Screen/NoInterNetWidget/NoInterNet.dart';
+import 'package:eshop_multivendor/Screen/Test/Widget/ListTile2.dart';
 import 'package:eshop_multivendor/widgets/networkAvailablity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../../Helper/String.dart';
+import '../../Helper/routes.dart';
 import '../../Model/Section_Model.dart';
+import '../../Provider/Theme.dart';
 import '../../widgets/desing.dart';
 import '../Language/languageSettings.dart';
 import '../ProductList&SectionView/ProductList.dart';
+import '../Search/Search.dart';
 import '../SubCategory/SubCategory.dart';
+import '../homePage/homepageNew.dart';
 
 class AllCategory extends StatefulWidget {
   const AllCategory({Key? key}) : super(key: key);
@@ -30,6 +35,7 @@ class _AllCategoryState extends State<AllCategory>
   @override
   void initState() {
     super.initState();
+    isSet = true;
     buttonController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     buttonSqueezeanimation = Tween(
@@ -45,6 +51,8 @@ class _AllCategoryState extends State<AllCategory>
       ),
     );
   }
+
+
 
   setStateNoInternate() async {
     _playAnimation();
@@ -70,15 +78,120 @@ class _AllCategoryState extends State<AllCategory>
     } on TickerCanceled {}
   }
 
+
+
+
+
   @override
   void dispose() {
     buttonController.dispose();
     super.dispose();
   }
-
+  late TabController _tabController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:colors.primary1,
+      appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
+        backgroundColor: colors.whiteTemp,
+        title: Container(
+          color: Theme.of(context).colorScheme.lightWhite,
+          padding: EdgeInsets.fromLTRB(
+            10,
+            context.watch<HomePageProvider>().getBars ? 10 : 30,
+            10,
+            0,
+          ),
+          child: GestureDetector(
+            child: SizedBox(
+              height: 50,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 0.0),
+                child: TextField(
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.fontColor,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  enabled: false,
+                  textAlign: TextAlign.left,
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.lightWhite,
+                      ),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(circularBorderRadius10),
+                      ),
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(circularBorderRadius10),
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.fromLTRB(15.0, 5.0, 0, 5.0),
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(circularBorderRadius10),
+                      ),
+                    ),
+                    isDense: true,
+                    hintText: getTranslated(context, 'searchHint'),
+                    hintStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
+                      color: Theme.of(context).colorScheme.fontColor,
+                      fontSize: textFontSize12,
+                      fontWeight: FontWeight.w400,
+                      fontStyle: FontStyle.normal,
+                    ),
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: SvgPicture.asset(
+                        DesignConfiguration.setSvgPath('homepage_search'),
+                        height: 15,
+                        width: 15,
+                      ),
+                    ),
+                    suffixIcon: Selector<ThemeNotifier, ThemeMode>(
+                      selector: (_, themeProvider) =>
+                          themeProvider.getThemeMode(),
+                      builder: (context, data, child) {
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: (data == ThemeMode.system &&
+                              MediaQuery.of(context).platformBrightness ==
+                                  Brightness.light) ||
+                              data == ThemeMode.light
+                              ? SvgPicture.asset(
+                            DesignConfiguration.setSvgPath('voice_search'),
+                            height: 15,
+                            width: 15,
+                          )
+                              : SvgPicture.asset(
+                            DesignConfiguration.setSvgPath(
+                                'voice_search_white'),
+                            height: 15,
+                            width: 15,
+                          ),
+                        );
+                      },
+                    ),
+                    fillColor: Theme.of(context).colorScheme.white,
+                    filled: true,
+                  ),
+                ),
+              ),
+            ),
+            onTap: () async {
+              Routes.navigateToSearchScreen(context);
+            },
+          ),
+        ),
+
+
+      ),
       body: !isNetworkAvail
           ? NoInterNet(
               buttonController: buttonController,
@@ -121,7 +234,7 @@ class _AllCategoryState extends State<AllCategory>
                                           .isNotEmpty)) {
                                     return GestureDetector(
                                       child: Container(
-                                        height: 100,
+                                        height: 60,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.rectangle,
                                           color: data == index
@@ -142,22 +255,22 @@ class _AllCategoryState extends State<AllCategory>
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        circularBorderRadius25),
-                                                child: SvgPicture.asset(
-                                                  DesignConfiguration
-                                                      .setSvgPath(data == index
-                                                          ? 'popular_sel'
-                                                          : 'popular'),
-                                                  color: colors.primary,
-                                                ),
-                                              ),
-                                            ),
+                                            // Padding(
+                                            //   padding:
+                                            //       const EdgeInsets.all(8.0),
+                                            //   child: ClipRRect(
+                                            //     borderRadius:
+                                            //         BorderRadius.circular(
+                                            //             circularBorderRadius25),
+                                            //     child: SvgPicture.asset(
+                                            //       DesignConfiguration
+                                            //           .setSvgPath(data == index
+                                            //               ? 'popular_sel'
+                                            //               : 'popular'),
+                                            //       color: colors.primary,
+                                            //     ),
+                                            //   ),
+                                            // ),
                                             Text(
                                               '${context.read<HomePageProvider>().catList[index].name!}\n',
                                               textAlign: TextAlign.center,
@@ -194,7 +307,7 @@ class _AllCategoryState extends State<AllCategory>
                                   } else {
                                     return GestureDetector(
                                       child: Container(
-                                        height: 100,
+                                        height: 60,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.rectangle,
                                           color: data == index
@@ -215,46 +328,57 @@ class _AllCategoryState extends State<AllCategory>
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: <Widget>[
-                                            Expanded(
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          circularBorderRadius25),
-                                                  child: DesignConfiguration
-                                                      .getCacheNotworkImage(
-                                                    boxFit: BoxFit.fill,
-                                                    context: context,
-                                                    heightvalue: null,
-                                                    widthvalue: null,
-                                                    imageurlString: context
-                                                        .read<
-                                                            HomePageProvider>()
-                                                        .catList[index]
-                                                        .image!,
-                                                    placeHolderSize: null,
-                                                  ),
+                                            // Expanded(
+                                            //   child: Padding(
+                                            //     padding:
+                                            //         const EdgeInsets.all(8.0),
+                                            //     child: SizedBox(
+                                            //       width: 60,
+                                            //
+                                            //       child: ClipRRect(
+                                            //         borderRadius:
+                                            //             BorderRadius.circular(
+                                            //                 /*circularBorderRadius25*/30),
+                                            //         child: DesignConfiguration
+                                            //             .getCacheNotworkImage(
+                                            //           boxFit: BoxFit.fill,
+                                            //           context: context,
+                                            //           heightvalue: null,
+                                            //           widthvalue: null,
+                                            //           imageurlString: context
+                                            //               .read<
+                                            //                   HomePageProvider>()
+                                            //               .catList[index]
+                                            //               .image!,
+                                            //           placeHolderSize: null,
+                                            //         ),
+                                            //       ),
+                                            //     ),
+                                            //   ),
+                                            // ),
+                                            Container(
+                                              height: 60,
+                                              width: 80,
+                                              color: data == index?colors.whiteTemp:colors.transparent,
+                                              child: Center(
+                                                child: Text(
+                                                  '${context.read<HomePageProvider>().catList[index].name!}\n',
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 2,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .caption!
+                                                      .copyWith(
+                                                        fontFamily: 'ubuntu',
+                                                        color: data == index
+                                                            ? colors.primary
+                                                            : Theme.of(context)
+                                                                .colorScheme
+                                                                .fontColor,
+                                                      ),
                                                 ),
                                               ),
-                                            ),
-                                            Text(
-                                              '${context.read<HomePageProvider>().catList[index].name!}\n',
-                                              textAlign: TextAlign.center,
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .caption!
-                                                  .copyWith(
-                                                    fontFamily: 'ubuntu',
-                                                    color: data == index
-                                                        ? colors.primary
-                                                        : Theme.of(context)
-                                                            .colorScheme
-                                                            .fontColor,
-                                                  ),
                                             )
                                           ],
                                         ),
@@ -367,7 +491,7 @@ class _AllCategoryState extends State<AllCategory>
                                 Expanded(
                                   child:
                                       Selector<CategoryProvider, List<Product>>(
-                                    builder: (context, data, child) {
+                                       builder: (context, data, child) {
                                       return data.isNotEmpty
                                           ? NotificationListener<
                                               OverscrollIndicatorNotification>(
@@ -376,67 +500,77 @@ class _AllCategoryState extends State<AllCategory>
                                                 return true;
                                               },
                                               child: GridView.count(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 20),
-                                                crossAxisCount: 3,
+                                                crossAxisCount: 2,
                                                 shrinkWrap: true,
-                                                childAspectRatio: .6,
+                                                childAspectRatio:0.9,
                                                 children: List.generate(
                                                   data.length,
                                                   (index) {
                                                     return GestureDetector(
-                                                      child: Column(
-                                                        children: <Widget>[
+                                                      child: Stack(
+                                                        children: [
                                                           Padding(
                                                             padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          circularBorderRadius10),
-                                                              child: DesignConfiguration
-                                                                  .getCacheNotworkImage(
-                                                                boxFit:
-                                                                    BoxFit.fill,
-                                                                context:
-                                                                    context,
-                                                                heightvalue:
-                                                                    null,
-                                                                widthvalue:
-                                                                    null,
-                                                                imageurlString:
-                                                                    data[index]
-                                                                        .image!,
-                                                                placeHolderSize:
-                                                                    null,
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                            child: SizedBox(
+                                                              height: 130,
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                    circularBorderRadius10),
+                                                                child: DesignConfiguration
+                                                                    .getCacheNotworkImage(
+                                                                  boxFit:
+                                                                  BoxFit.fill,
+                                                                  context:
+                                                                  context,
+                                                                  heightvalue:
+                                                                  null,
+                                                                  widthvalue:
+                                                                  null,
+                                                                  imageurlString:
+                                                                  data[index]
+                                                                      .image!,
+                                                                  placeHolderSize:
+                                                                  null,
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
-                                                          Text(
-                                                            '${data[index].name!}\n',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            maxLines: 2,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .caption!
-                                                                .copyWith(
+                                                          Positioned(
+                                                            top:135,
+                                                            left:40,
+
+                                                            child: Container(
+                                                              width: 70,
+                                                              child: Text(
+                                                              '${data[index].name!}\n',
+                                                              textAlign: TextAlign.center,
+                                                              maxLines: 2,
+                                                              overflow:
+                                                              TextOverflow
+                                                                  .ellipsis,
+                                                              style: Theme.of(
+                                                                  context)
+                                                                  .textTheme
+                                                                  .caption!
+                                                                  .copyWith(
                                                                   fontFamily:
-                                                                      'ubuntu',
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .colorScheme
-                                                                      .fontColor,
-                                                                ),
+                                                                  'ubuntu',
+                                                                  color:colors.primary,
+                                                                  fontWeight: FontWeight.w700,
+                                                                  fontSize: textFontSize13,
+
+
+
+                                                              ),
+                                                        ),
+                                                            ),
                                                           )
                                                         ],
+
                                                       ),
                                                       onTap: () {
                                                         if (context
@@ -580,5 +714,124 @@ class _AllCategoryState extends State<AllCategory>
               },
             ),
     );
+  }
+}
+
+
+
+class SearchBarHeaderDelegate extends SliverPersistentHeaderDelegate {
+  @override
+  Widget build(
+      BuildContext context,
+      double shrinkOffset,
+      bool overlapsContent,
+      ) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Container(
+        color: Theme.of(context).colorScheme.lightWhite,
+        padding: EdgeInsets.fromLTRB(
+          10,
+          context.watch<HomePageProvider>().getBars ? 10 : 30,
+          10,
+          0,
+        ),
+        child: GestureDetector(
+          child: SizedBox(
+            height: 50,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 0.0),
+              child: TextField(
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.fontColor,
+                  fontWeight: FontWeight.normal,
+                ),
+                enabled: false,
+                textAlign: TextAlign.left,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.lightWhite,
+                    ),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(circularBorderRadius10),
+                    ),
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(circularBorderRadius10),
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.fromLTRB(15.0, 5.0, 0, 5.0),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(circularBorderRadius10),
+                    ),
+                  ),
+                  isDense: true,
+                  hintText: getTranslated(context, 'searchHint'),
+                  hintStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
+                    color: Theme.of(context).colorScheme.fontColor,
+                    fontSize: textFontSize12,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.normal,
+                  ),
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: SvgPicture.asset(
+                      DesignConfiguration.setSvgPath('homepage_search'),
+                      height: 15,
+                      width: 15,
+                    ),
+                  ),
+                  suffixIcon: Selector<ThemeNotifier, ThemeMode>(
+                    selector: (_, themeProvider) =>
+                        themeProvider.getThemeMode(),
+                    builder: (context, data, child) {
+                      return Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: (data == ThemeMode.system &&
+                            MediaQuery.of(context).platformBrightness ==
+                                Brightness.light) ||
+                            data == ThemeMode.light
+                            ? SvgPicture.asset(
+                          DesignConfiguration.setSvgPath('voice_search'),
+                          height: 15,
+                          width: 15,
+                        )
+                            : SvgPicture.asset(
+                          DesignConfiguration.setSvgPath(
+                              'voice_search_white'),
+                          height: 15,
+                          width: 15,
+                        ),
+                      );
+                    },
+                  ),
+                  fillColor: Theme.of(context).colorScheme.white,
+                  filled: true,
+                ),
+              ),
+            ),
+          ),
+          onTap: () async {
+            Routes.navigateToSearchScreen(context);
+          },
+        ),
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => 75;
+
+  @override
+  double get minExtent => 75;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    return true;
   }
 }

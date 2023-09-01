@@ -1,20 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import '../../../Helper/Color.dart';
 import '../../../Helper/Constant.dart';
 import '../../../Helper/String.dart';
-import '../../../widgets/desing.dart';
 import '../../Language/languageSettings.dart';
 
 class EmptyCart extends StatelessWidget {
   const EmptyCart({Key? key}) : super(key: key);
 
   noCartImage(BuildContext context) {
-    return SvgPicture.asset(
-      DesignConfiguration.setSvgPath('empty_cart'),
-      fit: BoxFit.contain,
-    );
+    return Image.asset('assets/images/png/cartEmpty_image.png',height:350,width:350,);
   }
 
   noCartText(BuildContext context) {
@@ -54,12 +49,12 @@ class EmptyCart extends StatelessWidget {
           alignment: FractionalOffset.center,
           decoration: const BoxDecoration(
             color: colors.primary,
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [colors.grad1Color, colors.grad2Color],
-              stops: [0, 1],
-            ),
+            // gradient: LinearGradient(
+            //   begin: Alignment.topLeft,
+            //   end: Alignment.bottomRight,
+            //   colors: [colors.grad1Color, colors.grad2Color],
+            //   stops: [0, 1],
+            // ),
             borderRadius: BorderRadius.all(
               Radius.circular(
                 circularBorderRadius50,
@@ -92,8 +87,8 @@ class EmptyCart extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             noCartImage(context),
-            noCartText(context),
-            noCartDec(context),
+            // noCartText(context),
+            // noCartDec(context),
             shopNow(context)
           ],
         ),

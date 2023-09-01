@@ -13,11 +13,12 @@ import 'Widget/controlOverlay.dart';
 
 class ProductPreview extends StatefulWidget {
   final int? pos, secPos, index;
+
   final bool? list, from;
   final String? id, video, videoType;
   final List<String?>? imgList;
 
-  const ProductPreview({
+    ProductPreview({
     Key? key,
     this.pos,
     this.secPos,
@@ -28,6 +29,7 @@ class ProductPreview extends StatefulWidget {
     this.video,
     this.videoType,
     this.from,
+
   }) : super(key: key);
 
   @override
@@ -97,6 +99,7 @@ class StatePreview extends State<ProductPreview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:colors.primary1,
       body: Hero(
         tag: widget.list!
             ? '$heroTagUniqueString${widget.id}'
@@ -104,11 +107,12 @@ class StatePreview extends State<ProductPreview> {
         child: Stack(
           children: <Widget>[
             widget.video == ''
-                ? PhotoViewGallery.builder(
+                ?
+            PhotoViewGallery.builder(
                     scrollPhysics: const BouncingScrollPhysics(),
                     builder: (BuildContext context, int index) {
                       return PhotoViewGalleryPageOptions(
-                          initialScale: PhotoViewComputedScale.covered,
+                          initialScale: PhotoViewComputedScale.contained,
                           minScale: PhotoViewComputedScale.contained * 0.9,
                           imageProvider: NetworkImage(widget.imgList![index]!));
                     },
@@ -222,7 +226,8 @@ class StatePreview extends State<ProductPreview> {
             //Back button
             const IOSRundedButton(),
             curPos != 0
-                ? Positioned.directional(
+                ?
+            Positioned.directional(
                     start: 10,
                     top: MediaQuery.of(context).size.height * 0.45,
                     textDirection: Directionality.of(context),

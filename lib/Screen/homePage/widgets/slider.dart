@@ -42,6 +42,7 @@ class _CustomSliderState extends State<CustomSlider> {
   Widget build(BuildContext context) {
     return Consumer<HomePageProvider>(
       builder: (context, homeProvider, _) {
+        print("----slider----------${ homeProvider.homeSliderList}");
         return homeProvider.sliderLoading
             ? sliderLoading(context)
             : homeProvider.homeSliderList.isEmpty

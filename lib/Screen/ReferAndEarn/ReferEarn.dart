@@ -25,6 +25,7 @@ class _ReferEarnState extends State<ReferEarn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:colors.primary1,
       key: scaffoldKey,
       appBar: getSimpleAppBar(getTranslated(context, 'REFEREARN')!, context),
       body: Center(

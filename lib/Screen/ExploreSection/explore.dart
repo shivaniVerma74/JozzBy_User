@@ -24,6 +24,7 @@ import '../Language/languageSettings.dart';
 import '../../widgets/networkAvailablity.dart';
 import '../../widgets/simmerEffect.dart';
 import '../NoInterNetWidget/NoInterNet.dart';
+import '../Search/Search.dart';
 import 'Widgte/gridViewLayOut.dart';
 import 'Widgte/listViewLayOut.dart';
 import 'Widgte/sellerContentWidget.dart';
@@ -282,6 +283,53 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
     userProvider = Provider.of<UserProvider>(context);
 
     return Scaffold(
+      backgroundColor:colors.primary1,
+      appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
+        backgroundColor: colors.whiteTemp,
+        title: const Text('Explore',style: TextStyle(color: colors.blackTemp),),
+       actions: [
+         Padding(
+           padding: const EdgeInsetsDirectional.only(
+             end: 10.0,
+             bottom: 10.0,
+             top: 10.0,
+           ),
+           child: Container(
+             decoration: BoxDecoration(
+               borderRadius: BorderRadius.circular(circularBorderRadius10),
+               color:colors.transparent,
+             ),
+             width:50,
+             height:50,
+             child: InkWell(
+               onTap: () {
+                 CUR_USERID != null
+                     ? Navigator.push(
+                   context,
+                   CupertinoPageRoute(
+                     builder: (context) => const Search(),
+                   ),
+                 ).then(
+                       (value) {
+                     if (value != null && value) {
+                       _tabController.animateTo(1);
+                     }
+                   },
+                 )
+                     : Routes.navigateToSearchScreen(context);
+               },
+               child: Icon(
+                 Icons.search,color:colors.blackTemp,
+
+               ),
+             ),
+
+           ),
+         ),
+       ],
+      ),
       key: _scaffoldKey,
       body: isNetworkAvail
           ? Consumer<SellerDetailProvider>(
@@ -290,130 +338,130 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
                     SellerDetailProviderStatus.isSuccsess) {
                   return Column(
                     children: [
-                      Container(
-                        color: Theme.of(context).colorScheme.white,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                circularBorderRadius10,
-                              ),
-                            ),
-                            height: 44,
-                            child: TextField(
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.fontColor,
-                                fontWeight: FontWeight.normal,
-                              ),
-                              controller: _controller,
-                              autofocus: false,
-                              enabled: true,
-                              textAlign: TextAlign.left,
-                              decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .lightWhite),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(circularBorderRadius10),
-                                  ),
-                                ),
-                                enabledBorder: const OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(circularBorderRadius10),
-                                  ),
-                                ),
-                                contentPadding: const EdgeInsets.fromLTRB(
-                                    15.0, 5.0, 0, 5.0),
-                                border: const OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(circularBorderRadius10),
-                                  ),
-                                ),
-                                fillColor:
-                                    Theme.of(context).colorScheme.lightWhite,
-                                filled: true,
-                                isDense: true,
-                                hintText: getTranslated(context, 'searchHint'),
-                                hintStyle: Theme.of(context)
-                                    .textTheme
-                                    .bodyText2!
-                                    .copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .fontColor,
-                                      fontSize: textFontSize12,
-                                      fontWeight: FontWeight.w400,
-                                      fontStyle: FontStyle.normal,
-                                    ),
-                                prefixIcon: const Padding(
-                                    padding: EdgeInsets.all(15.0),
-                                    child: Icon(Icons.search)),
-                                suffixIcon: _controller.text != ''
-                                    ? IconButton(
-                                        onPressed: () {
-                                          FocusScope.of(context).unfocus();
-                                          _controller.text = '';
-                                          notificationoffset = 0;
-                                        },
-                                        icon: const Icon(
-                                          Icons.close,
-                                          color: colors.primary,
-                                        ),
-                                      )
-                                    : Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            lastWords = '';
-                                            if (!_hasSpeech) {
-                                              initSpeechState();
-                                            } else {
-                                              showSpeechDialog();
-                                            }
-                                          },
-                                          child: Selector<ThemeNotifier,
-                                              ThemeMode>(
-                                            selector: (_, themeProvider) =>
-                                                themeProvider.getThemeMode(),
-                                            builder: (context, data, child) {
-                                              return (data ==
-                                                              ThemeMode
-                                                                  .system &&
-                                                          MediaQuery.of(context)
-                                                                  .platformBrightness ==
-                                                              Brightness
-                                                                  .light) ||
-                                                      data == ThemeMode.light
-                                                  ? SvgPicture.asset(
-                                                      DesignConfiguration
-                                                          .setSvgPath(
-                                                              'voice_search'),
-                                                      height: 15,
-                                                      width: 15,
-                                                    )
-                                                  : SvgPicture.asset(
-                                                      DesignConfiguration
-                                                          .setSvgPath(
-                                                              'voice_search_white'),
-                                                      height: 15,
-                                                      width: 15,
-                                                    );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Container(
+                      //   color: Theme.of(context).colorScheme.white,
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
+                      //     child: Container(
+                      //       decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(
+                      //           circularBorderRadius10,
+                      //         ),
+                      //       ),
+                      //       height: 44,
+                      //       child: TextField(
+                      //         style: TextStyle(
+                      //           color: Theme.of(context).colorScheme.fontColor,
+                      //           fontWeight: FontWeight.normal,
+                      //         ),
+                      //         controller: _controller,
+                      //         autofocus: false,
+                      //         enabled: true,
+                      //         textAlign: TextAlign.left,
+                      //         decoration: InputDecoration(
+                      //           focusedBorder: OutlineInputBorder(
+                      //             borderSide: BorderSide(
+                      //                 color: Theme.of(context)
+                      //                     .colorScheme
+                      //                     .lightWhite),
+                      //             borderRadius: const BorderRadius.all(
+                      //               Radius.circular(circularBorderRadius10),
+                      //             ),
+                      //           ),
+                      //           enabledBorder: const OutlineInputBorder(
+                      //             borderSide:
+                      //                 BorderSide(color: Colors.transparent),
+                      //             borderRadius: BorderRadius.all(
+                      //               Radius.circular(circularBorderRadius10),
+                      //             ),
+                      //           ),
+                      //           contentPadding: const EdgeInsets.fromLTRB(
+                      //               15.0, 5.0, 0, 5.0),
+                      //           border: const OutlineInputBorder(
+                      //             borderSide:
+                      //                 BorderSide(color: Colors.transparent),
+                      //             borderRadius: BorderRadius.all(
+                      //               Radius.circular(circularBorderRadius10),
+                      //             ),
+                      //           ),
+                      //           fillColor:
+                      //               Theme.of(context).colorScheme.lightWhite,
+                      //           filled: true,
+                      //           isDense: true,
+                      //           hintText: getTranslated(context, 'searchHint'),
+                      //           hintStyle: Theme.of(context)
+                      //               .textTheme
+                      //               .bodyText2!
+                      //               .copyWith(
+                      //                 color: Theme.of(context)
+                      //                     .colorScheme
+                      //                     .fontColor,
+                      //                 fontSize: textFontSize12,
+                      //                 fontWeight: FontWeight.w400,
+                      //                 fontStyle: FontStyle.normal,
+                      //               ),
+                      //           prefixIcon: const Padding(
+                      //               padding: EdgeInsets.all(15.0),
+                      //               child: Icon(Icons.search)),
+                      //           suffixIcon: _controller.text != ''
+                      //               ? IconButton(
+                      //                   onPressed: () {
+                      //                     FocusScope.of(context).unfocus();
+                      //                     _controller.text = '';
+                      //                     notificationoffset = 0;
+                      //                   },
+                      //                   icon: const Icon(
+                      //                     Icons.close,
+                      //                     color: colors.primary,
+                      //                   ),
+                      //                 )
+                      //               : Padding(
+                      //                   padding: const EdgeInsets.all(10.0),
+                      //                   child: GestureDetector(
+                      //                     onTap: () {
+                      //                       lastWords = '';
+                      //                       if (!_hasSpeech) {
+                      //                         initSpeechState();
+                      //                       } else {
+                      //                         showSpeechDialog();
+                      //                       }
+                      //                     },
+                      //                     child: Selector<ThemeNotifier,
+                      //                         ThemeMode>(
+                      //                       selector: (_, themeProvider) =>
+                      //                           themeProvider.getThemeMode(),
+                      //                       builder: (context, data, child) {
+                      //                         return (data ==
+                      //                                         ThemeMode
+                      //                                             .system &&
+                      //                                     MediaQuery.of(context)
+                      //                                             .platformBrightness ==
+                      //                                         Brightness
+                      //                                             .light) ||
+                      //                                 data == ThemeMode.light
+                      //                             ? SvgPicture.asset(
+                      //                                 DesignConfiguration
+                      //                                     .setSvgPath(
+                      //                                         'voice_search'),
+                      //                                 height: 15,
+                      //                                 width: 15,
+                      //                               )
+                      //                             : SvgPicture.asset(
+                      //                                 DesignConfiguration
+                      //                                     .setSvgPath(
+                      //                                         'voice_search_white'),
+                      //                                 height: 15,
+                      //                                 width: 15,
+                      //                               );
+                      //                       },
+                      //                     ),
+                      //                   ),
+                      //                 ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Container(
                         color: Theme.of(context).colorScheme.white,
                         child: TabBar(

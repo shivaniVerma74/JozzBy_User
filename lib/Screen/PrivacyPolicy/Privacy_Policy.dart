@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../Helper/Color.dart';
 import '../../Helper/String.dart';
 import '../../widgets/appBar.dart';
 import '../Language/languageSettings.dart';
@@ -62,6 +63,7 @@ class StatePrivacy extends State<PrivacyPolicy> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:colors.primary1,
       key: _scaffoldKey,
       appBar: getSimpleAppBar(widget.title!, context),
       body: Consumer<SystemProvider>(builder: (context, value, child) {

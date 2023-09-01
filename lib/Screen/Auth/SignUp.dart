@@ -354,10 +354,10 @@ class _SignUpPageState extends State<SignUp> with TickerProviderStateMixin {
                   fontSize: textFontSize13),
               fillColor: Theme.of(context).colorScheme.lightWhite,
               border: InputBorder.none),
-          validator: (val) => StringValidation.validateField(
+          /*validator: (val) => StringValidation.validateField(
             val!,
             getTranslated(context, 'GST_LBL'),
-          ),
+          ),*/
           onSaved: (String? value) {
             context.read<AuthenticationProvider>().setGST(value);
           },
@@ -641,13 +641,7 @@ class _SignUpPageState extends State<SignUp> with TickerProviderStateMixin {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.only(top: 60),
-      child: SvgPicture.asset(
-        DesignConfiguration.setSvgPath('homelogo'),
-        alignment: Alignment.center,
-        height: 90,
-        width: 90,
-        fit: BoxFit.contain,
-      ),
+      child: Image.asset('assets/images/png/img_1.png',height:110,width:110,)
     );
   }
 }

@@ -32,39 +32,44 @@ class Section extends StatelessWidget {
                   child: sectionLoadingShimmer(context),
                 ),
               )
-            : ListView.builder(
-                padding: const EdgeInsets.all(0),
-                itemCount: context.read<HomePageProvider>().sectionList.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return SingleSection(
-                    index: index,
-                    from: 1,
-                    sectionTitle: context
-                            .read<HomePageProvider>()
-                            .sectionList[index]
-                            .title ??
-                        '',
-                    sectionStyle: context
-                            .read<HomePageProvider>()
-                            .sectionList[index]
-                            .style ??
-                        '',
-                    sectionSubTitle: context
-                            .read<HomePageProvider>()
-                            .sectionList[index]
-                            .shortDesc ??
-                        '',
-                    productList: context
-                            .read<HomePageProvider>()
-                            .sectionList[index]
-                            .productList ??
-                        [],
-                    wantToShowOfferImageBelowSection: true,
-                  );
-                },
-              );
+            : Container(
+          color: colors.primary1,
+              child: ListView.builder(
+                  padding: const EdgeInsets.all(0),
+                  itemCount: context.read<HomePageProvider>().sectionList.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return SingleSection(
+                      index: index,
+                      from: 1,
+                      sectionTitle: context
+                              .read<HomePageProvider>()
+                              .sectionList[index]
+                              .title ??
+                          '',
+                      sectionStyle: context
+                              .read<HomePageProvider>()
+                              .sectionList[index]
+                              .style ??
+                          '',
+                      sectionSubTitle: context
+                              .read<HomePageProvider>()
+                              .sectionList[index]
+                              .shortDesc ??
+                          '',
+                      productList: context
+                              .read<HomePageProvider>()
+                              .sectionList[index]
+                              .productList ??
+                          [],
+                      wantToShowOfferImageBelowSection: false,
+                    );
+
+
+                  },
+                ),
+            );
       },
       selector: (_, homePageProvider) => homePageProvider.secLoading,
     );
@@ -261,7 +266,9 @@ class SingleSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return productList.isNotEmpty
+    return
+
+      productList.isNotEmpty
         ? Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -270,6 +277,8 @@ class SingleSection extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
+
+
                     SectionHeadingContainer(
                       title: sectionTitle,
                       index: index,
@@ -362,7 +371,6 @@ class SingleSectionContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var orient = MediaQuery.of(context).orientation;
-
     return productList.isNotEmpty
         ? sectionStyle == DEFAULT
             ? Padding(
@@ -371,7 +379,7 @@ class SingleSectionContainer extends StatelessWidget {
                   padding: const EdgeInsetsDirectional.only(top: 5),
                   crossAxisCount: 2,
                   shrinkWrap: true,
-                  childAspectRatio: 0.750,
+                  childAspectRatio: 0.620, //750
                   mainAxisSpacing: 5,
                   crossAxisSpacing: 5,
                   physics: const NeverScrollableScrollPhysics(),
@@ -403,7 +411,7 @@ class SingleSectionContainer extends StatelessWidget {
                           fit: FlexFit.loose,
                           child: SizedBox(
                             height: orient == Orientation.portrait
-                                ? deviceHeight! * 0.6
+                                ? deviceHeight! * 0.745 // 0.6
                                 : deviceHeight!,
                             child: SingleProductContainer(
                               sectionPosition: index,
@@ -428,7 +436,7 @@ class SingleSectionContainer extends StatelessWidget {
                                     ? Container()
                                     : SizedBox(
                                         height: orient == Orientation.portrait
-                                            ? deviceHeight! * 0.2975
+                                            ? deviceHeight! * 0.35 //0.2975
                                             : deviceHeight! * 0.6,
                                         child: SingleProductContainer(
                                           sectionPosition: index,
@@ -449,7 +457,7 @@ class SingleSectionContainer extends StatelessWidget {
                                         : SizedBox(
                                             height:
                                                 orient == Orientation.portrait
-                                                    ? deviceHeight! * 0.2975
+                                                    ? deviceHeight! * 0.35 //0.2975
                                                     : deviceHeight! * 0.6,
                                             child: SingleProductContainer(
                                               sectionPosition: index,

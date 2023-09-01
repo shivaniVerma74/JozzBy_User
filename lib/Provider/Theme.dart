@@ -52,7 +52,7 @@ class ThemeProvider extends ChangeNotifier {
       isDark = false;
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     } else if (value == getTranslated(context, 'DARK_THEME')) {
-      themeNotifier.setThemeMode(ThemeMode.dark);
+      themeNotifier.setThemeMode(ThemeMode.light);
       prefs.setString(APP_THEME, DARK);
 
       isDark = true;

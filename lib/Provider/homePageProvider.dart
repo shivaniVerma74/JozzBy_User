@@ -113,6 +113,7 @@ class HomePageProvider extends ChangeNotifier {
   //
   //This method is used to get Slider images from server
   Future<void> getSliderImages() async {
+    print('&&&&&&&&Sliderrrrrrr${homeSliderList}');
     sliderLoading = true;
     notifyListeners();
     homeSliderList.clear();
@@ -127,6 +128,7 @@ class HomePageProvider extends ChangeNotifier {
           }
 
           homeSliderList.addAll(tempList);
+
           sliderLoading = false;
           notifyListeners();
         }
@@ -324,7 +326,7 @@ class HomePageProvider extends ChangeNotifier {
         apiBaseHelper.postAPICall(getFavApi, parameter).then(
           (getdata) {
             bool error = getdata['error'];
-            String? msg = getdata['message'];
+              String? msg = getdata['message'];
             if (!error) {
               var data = getdata['data'];
 

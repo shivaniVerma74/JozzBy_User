@@ -57,27 +57,25 @@ class _SplashScreen extends State<Splash> with TickerProviderStateMixin {
 
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: Color(0xffFEF2A6),
       body: Stack(
         children: <Widget>[
           Container(
             width: double.infinity,
             height: double.infinity,
-            decoration: DesignConfiguration.back(),
+            color:Color(0xffFEF2A6),
+            // decoration: DesignConfiguration.back(),
             child: Center(
-              child: SvgPicture.asset(
-                DesignConfiguration.setSvgPath('splashlogo'),
-                width: 150,
-                height: 150,
-              ),
+              child: Image.asset('assets/images/png/splashlogo-removebg-preview.png',height:320,width:320,),
             ),
           ),
-          Image.asset(
-            DesignConfiguration.setPngPath('doodle'),
-            fit: BoxFit.fill,
-            color: colors.grad1Color,
-            width: double.infinity,
-            height: double.infinity,
-          ),
+          // Image.asset(
+          //   DesignConfiguration.setPngPath('doodle'),
+          //   fit: BoxFit.fill,
+          //   color: colors.grad1Color,
+          //   width: double.infinity,
+          //   height: double.infinity,
+          // ),
         ],
       ),
     );

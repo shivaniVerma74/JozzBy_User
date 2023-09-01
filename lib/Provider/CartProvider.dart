@@ -27,7 +27,7 @@ class CartProvider extends ChangeNotifier {
   TextEditingController noteController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController promoC = TextEditingController();
-  double totalPrice = 0, oriPrice = 0, deliveryCharge = 0, taxPer = 0;
+  double totalPrice = 0, oriPrice = 0, deliveryCharge = 0, taxPer = 0,deductAmount = 0;
   int? selectedAddress = 0;
   String? selAddress, payMethod, selTime, selDate, promocode;
   bool? isTimeSlot,
@@ -171,8 +171,11 @@ class CartProvider extends ChangeNotifier {
     try {
       CartRepository.fetchDeliveryCharge().then(
             (value) {
+              print('___________${value['error']}__________');
           if (!value['error']) {
             deliveryChargeList = value['deliveryCharge'];
+
+            print('___________${value['deliveryCharge']}__________');
 
 
           }
@@ -842,6 +845,7 @@ class CartProvider extends ChangeNotifier {
           USER_ID: CUR_USERID,
           QTY: qty,
         };
+        print('------------parameter1111------------${parameter}');
         dynamic result =
             await CartRepository.manageCartAPICall(parameter: parameter);
 
@@ -887,9 +891,9 @@ class CartProvider extends ChangeNotifier {
 
            getDeliveryCharge();
 
-          if(oriPrice < double.parse(deliveryChargeList.first.maximum ?? '0.0')){
-            deliveryCharge = double.parse(deliveryChargeList.first.deliveryCharge ?? '0.0');
-          }
+          // if(oriPrice < double.parse(deliveryChargeList.first.maximum ?? '0.0')){
+          //   deliveryCharge = double.parse(deliveryChargeList.first.deliveryCharge ?? '0.0');
+          // }
 
           totalPrice = deliveryCharge + oriPrice;
 

@@ -511,13 +511,7 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.only(top: 60),
-      child: SvgPicture.asset(
-        DesignConfiguration.setSvgPath('homelogo'),
-        alignment: Alignment.center,
-        height: 90,
-        width: 90,
-        fit: BoxFit.contain,
-      ),
+      child: Image.asset('assets/images/png/splashlogo-removebg-preview.png',height:110,width:110,)
     );
   }
 }

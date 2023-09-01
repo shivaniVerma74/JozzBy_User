@@ -94,6 +94,7 @@ class StateNoti extends State<NotificationList> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: colors.primary1,
       appBar: getAppBar(
           getTranslated(context, 'NOTIFICATION')!, context, setStateNow),
       key: _scaffoldKey,
@@ -129,12 +130,7 @@ class StateNoti extends State<NotificationList> with TickerProviderStateMixin {
         ? Padding(
             padding: const EdgeInsetsDirectional.only(top: kToolbarHeight),
             child: Center(
-              child: Text(
-                getTranslated(context, 'noNoti')!,
-                style: const TextStyle(
-                  fontFamily: 'ubuntu',
-                ),
-              ),
+              child:Image.asset('assets/images/png/notificationImage.png',height:350,width:350,)
             ),
           )
         : RefreshIndicator(

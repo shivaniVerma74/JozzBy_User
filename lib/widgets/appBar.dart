@@ -17,6 +17,8 @@ getAppBar(
   Function setState,
 ) {
   return AppBar(
+    centerTitle: true,
+    elevation: 0,
     titleSpacing: 0,
     backgroundColor: Theme.of(context).colorScheme.white,
     leading: Builder(

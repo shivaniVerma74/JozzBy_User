@@ -25,12 +25,7 @@ class _SignInUpAccState extends State<SignInUpAcc> {
   _subLogo() {
     return Padding(
       padding: EdgeInsetsDirectional.only(top: deviceHeight! * 0.15),
-      child: SvgPicture.asset(
-        DesignConfiguration.setSvgPath('homelogo'),
-        height: 90,
-        width: 90,
-        fit: BoxFit.contain,
-      ),
+      child: Image.asset('assets/images/png/splashlogo-removebg-preview.png',height:110,width:110,)
     );
   }
 
@@ -102,11 +97,12 @@ class _SignInUpAccState extends State<SignInUpAcc> {
         height: 52,
         alignment: FractionalOffset.center,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [colors.grad1Color, colors.grad2Color],
-              stops: [0, 1]),
+          color: colors.primary,
+          // gradient: LinearGradient(
+          //     begin: Alignment.topLeft,
+          //     end: Alignment.bottomRight,
+          //     colors: [colors.grad1Color, colors.grad2Color],
+          //     stops: [0, 1]),
           borderRadius:
               BorderRadius.all(Radius.circular(circularBorderRadius10)),
         ),
