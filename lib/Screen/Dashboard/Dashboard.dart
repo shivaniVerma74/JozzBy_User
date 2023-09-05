@@ -403,7 +403,7 @@ class _DashboardPageState extends State<Dashboard>
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 3.0),
               child: Container(
-                width: 60,
+                width:80,
                 child: Text(
                   getTranslated(context, name)!,
                   style: TextStyle(
@@ -412,11 +412,11 @@ class _DashboardPageState extends State<Dashboard>
                         : Theme.of(context).colorScheme.lightBlack,
                     fontWeight: FontWeight.w400,
                     fontStyle: FontStyle.normal,
-                    fontSize: textFontSize10,
+                    fontSize: textFontSize9,
                     fontFamily: 'ubuntu',
                   ),
                   textAlign: TextAlign.center,
-                  maxLines: 2,
+                  maxLines:2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

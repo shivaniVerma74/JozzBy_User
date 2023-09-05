@@ -9,6 +9,7 @@ import '../../../Helper/String.dart';
 import '../../../Helper/routes.dart';
 import '../../../Provider/SettingProvider.dart';
 import '../../../Provider/UserProvider.dart';
+import '../../../Provider/authenticationProvider.dart';
 import '../../../widgets/desing.dart';
 import '../../Language/languageSettings.dart';
 import '../../../widgets/snackbar.dart';
@@ -22,13 +23,13 @@ class EditProfileBottomSheet extends StatefulWidget {
 }
 
 class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
-  FocusNode? passFocus = FocusNode();
+  FocusNode? nameFocus = FocusNode();
 
   final GlobalKey<FormState> _changeUserDetailsKey = GlobalKey<FormState>();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-
+  final gstController = TextEditingController();
   Widget getUserImage(String profileImage, VoidCallback? onBtnSelected) {
     return Stack(
       children: <Widget>[
@@ -104,6 +105,7 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
   Widget setNameField({required String userName}) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
         child: Container(
+
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           decoration: BoxDecoration(
@@ -332,6 +334,8 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
                     builder: (context, userEmail, child) {
                       return setEmailField(email: userEmail);
                     }),
+
+                setGST(),
                 saveButton(
                   title: getTranslated(context, 'SAVE_LBL')!,
                   onBtnSelected: () {
@@ -345,7 +349,62 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
       ],
     );
   }
-
+  _fieldFocusChange(
+      BuildContext context, FocusNode currentFocus, FocusNode? nextFocus) {
+    currentFocus.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
+  }
+  FocusNode? gstFocus;
+  setGST() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20,left: 10,right: 10),
+      child: Container(
+        height:60,
+        width: double.maxFinite,
+        decoration: BoxDecoration(
+          color: colors.whiteTemp,
+          borderRadius: BorderRadius.circular(circularBorderRadius10),
+        ),
+        alignment: Alignment.center,
+        child: TextFormField(
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.fontColor.withOpacity(0.7),
+              fontWeight: FontWeight.bold,
+              fontSize: textFontSize13),
+          keyboardType: TextInputType.text,
+          focusNode: gstFocus,
+          textInputAction: TextInputAction.next,
+          controller: gstController,
+          decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 13,
+                vertical: 5,
+              ),
+              hintText: getTranslated(context, 'GST_LBL'),
+              hintStyle: TextStyle(
+                  color:colors.blackTemp,
+                  fontWeight: FontWeight.bold,
+                  fontSize: textFontSize13),
+              fillColor: Theme.of(context).colorScheme.lightWhite,
+              border: InputBorder.none),
+          /*validator: (val) => StringValidation.validateField(
+            val!,
+            getTranslated(context, 'GST_LBL'),
+          ),*/
+          onSaved: (String? value) {
+            context.read<AuthenticationProvider>().setGST(value);
+          },
+          onFieldSubmitted: (v) {
+            _fieldFocusChange(
+              context,
+              gstFocus!,
+              nameFocus,
+            );
+          },
+        ),
+      ),
+    );
+  }
   @override
   void dispose() {
     nameController.dispose();

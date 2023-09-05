@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage>
   ApiBaseHelper apiBaseHelper = ApiBaseHelper();
 
   int count = 1;
- String? brandId,brandName;
+ String? brandId,brandName, brandImage;
   String? s_id;
   int sellerListOffset = 0;
   int totalSelletCount = 0;
@@ -107,9 +107,10 @@ class _HomePageState extends State<HomePage>
     getImagesApi();
     getBrandApi();
     getSeller();
-    isSet =true;
-    UserProvider user = Provider.of<UserProvider>(context, listen: false);
 
+    isSet =true;
+
+    UserProvider user = Provider.of<UserProvider>(context, listen: false);
     SettingProvider setting =
         Provider.of<SettingProvider>(context, listen: false);
     user.setMobile(setting.mobile);
@@ -156,6 +157,7 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: colors.primary1,
       key: _scaffoldKey,
       body: WillPopScope(
         onWillPop: onWillPopScope,
@@ -193,21 +195,24 @@ class _HomePageState extends State<HomePage>
                                 color: colors.primary1,
                                   width: MediaQuery.of(context).size.width/1,
                                   height: 40,
-                                  child: Center(child: Text("All Brand List",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold,fontSize: 20),))),
+                                  child: const Center(child: Text("All Brand List",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold,fontSize: 20),))),
                             ),
-                            SizedBox(height: 10,),
+                            const SizedBox(height: 10,),
                             isSet==false?brandListCart():brandcard(),
                             const Divider(
                               thickness: 1,
                               color:Colors.grey,
                             ),
-                            const Text("All Seller",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold,fontSize: 20),),
-                            SizedBox(height: 10,),
-                            getSellerList(),
+                            const Padding(
+                              padding: EdgeInsets.only(left:10.0,top: 5),
+                              child: Text("All Seller",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold,fontSize: 20),),
+                            ),
+                            const SizedBox(height: 10,),
+                            sellerList==""?Text('Seller Not Found',style: TextStyle(color: colors.blackTemp),):getSellerList(),
                             const MostLikeSection(),
-                            SizedBox(height: 10,),
+                            const SizedBox(height: 10,),
                             imageCard(),
-                            SizedBox(height: 50,),
+                            const SizedBox(height: 50,),
                           ],
                         ),
                       )
@@ -257,11 +262,7 @@ class _HomePageState extends State<HomePage>
         context.read<HomePageProvider>().setSellerLoading(false);
         print('My seller list------------${sellerList}');
         for(var i=0;i<sellerList.length;i++){
-          seller_id = sellerList[i].seller_id;
-          sellerImage =sellerList[i].seller_profile;
-          sellerStoreName =sellerList[i].store_name;
-          sellerRating = sellerList[i].seller_rating;
-          storeDesc = sellerList[i].store_description;
+
           print('---------seller id-3333----------${seller_id}');
 
         }
@@ -307,7 +308,12 @@ class _HomePageState extends State<HomePage>
                   s_id = sellerList[i].seller_id;
 
                 });
-                print('______sellerrrrrr${s_id}__________');
+
+                seller_id = sellerList[i].seller_id;
+                sellerImage =sellerList[i].seller_profile;
+                sellerStoreName =sellerList[i].store_name;
+                sellerRating = sellerList[i].seller_rating;
+                storeDesc = sellerList[i].store_description;
                 //
                 Navigator.push(
                   context,
@@ -439,6 +445,7 @@ class _HomePageState extends State<HomePage>
                 setState(() {
                   brandId =   getBrandsModel!.data![i].id;
                   brandName = getBrandsModel?.data?[i].name;
+                  brandImage = getBrandsModel?.data?[i].image;
                 });
                 SharedPreferences pref = await SharedPreferences.getInstance();
                 pref.setString('brand_name', brandName!);
@@ -447,7 +454,7 @@ class _HomePageState extends State<HomePage>
                 Navigator.push(
                   context,
                   CupertinoPageRoute(
-                    builder: (context) => ProductList(getBrand: true,brandId: brandId,brandName: brandName),
+                    builder: (context) => ProductList(getBrand: true,brandId: brandId,brandName: brandName,),
                   ),
                 );
 
@@ -563,15 +570,18 @@ class _HomePageState extends State<HomePage>
     user.setUserId(setting.userId);
 
     isNetworkAvail = await isNetworkAvailable();
+    print('ccccccccccccccccc${isNetworkAvail}');
     if (isNetworkAvail) {
       getSetting();
       getImagesApi();
       getBrandApi();
 
+      context.read<HomePageProvider>().getSections();
+      print('kkkkkkkkkkkkkk');
       context.read<HomePageProvider>().getSliderImages();
       context.read<HomePageProvider>().getCategories(context);
       context.read<HomePageProvider>().getOfferImages();
-      context.read<HomePageProvider>().getSections();
+
       context.read<HomePageProvider>().getMostLikeProducts();
       context.read<HomePageProvider>().getMostFavouriteProducts();
     } else {

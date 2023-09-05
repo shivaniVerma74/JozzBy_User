@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:eshop_multivendor/Helper/ApiBaseHelper.dart';
 import 'package:eshop_multivendor/Provider/homePageProvider.dart';
+import 'package:eshop_multivendor/Screen/AllCategory/All_Category.dart';
 import 'package:eshop_multivendor/Screen/Cart/Cart.dart';
 import 'package:eshop_multivendor/widgets/star_rating.dart';
 import 'package:eshop_multivendor/Helper/Color.dart';
@@ -24,6 +25,7 @@ import 'package:tuple/tuple.dart';
 import '../../Helper/String.dart';
 import '../../Helper/routes.dart';
 import '../../Model/Faqs_Model.dart';
+import '../../Provider/CategoryProvider.dart';
 import '../../Provider/SettingProvider.dart';
 import '../../Provider/paymentProvider.dart';
 import '../../Provider/productDetailProvider.dart';
@@ -34,9 +36,13 @@ import '../Language/languageSettings.dart';
 import '../../widgets/networkAvailablity.dart';
 import '../../widgets/snackbar.dart';
 import '../../widgets/validation.dart';
+import '../ProductList&SectionView/ProductList.dart';
 import '../ProductPreview/productPreview.dart';
 import '../Dashboard/Dashboard.dart';
 import '../NoInterNetWidget/NoInterNet.dart';
+import '../Search/Search.dart';
+import '../SubCategory/SubCategory.dart';
+import '../homePage/homepageNew.dart';
 import 'Widget/ProductHighLight.dart';
 import 'Widget/allQuestionButton.dart';
 import 'Widget/commanFiledsofProduct.dart';
@@ -45,7 +51,7 @@ import 'Widget/postFaq.dart';
 import 'Widget/productMoreDetail.dart';
 import 'Widget/reviewUI.dart';
 import 'Widget/sellerDetail.dart';
-import 'Widget/specialExtraOfferBtn.dart';
+
 
 class ProductDetail extends StatefulWidget {
   final Product? model;
@@ -64,8 +70,9 @@ class ProductDetail extends StatefulWidget {
 final TextEditingController _controller1 = TextEditingController();
 FocusNode searchFocusNode = FocusNode();
 TextEditingController qtyController = TextEditingController();
-
+late TabController _tabController;
 class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
+
   late final AnimationController buttonAnimationController =
       AnimationController(
           vsync: this, duration: const Duration(milliseconds: 300));
@@ -117,11 +124,13 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
   bool _isProgress = false;
   bool setVariant = false;
   String? brand_name;
-
+  int? index;
   getName() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     brand_name = pref.getString('brand_name');
     print('-------brandnameeeeeeeee---${brand_name}');
+    String? indexVal = pref.getString('index_value');
+    print('---cat---Index-----${indexVal}');
 
   }
 
@@ -567,6 +576,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+
     log('___________${widget.model?.desc}__________');
     deviceHeight = MediaQuery.of(context).size.height;
     deviceWidth = MediaQuery.of(context).size.width;
@@ -1523,7 +1533,8 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
         ),
       ),
       actions: [
-       /* Padding(
+
+        Padding(
           padding: const EdgeInsets.only(
             right: 10.0,
             bottom: 10.0,
@@ -1549,7 +1560,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
               ),
             ),
           ),
-        ),*/
+        ),
         Selector<UserProvider, String>(
           builder: (context, data, child) {
             return Padding(
@@ -1723,21 +1734,46 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+
                               Container(
                                 color: Theme.of(context).colorScheme.white,
                                 child: Column(
+
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    widget.model!.brandName != '' &&
-                                            widget.model!.brandName != null
-                                        ? GetNameWidget(
-                                            name: widget.model!.brandName!,
-                                          )
-                                        : Container(),
+
+                                    InkWell(
+                                      onTap: () {
+
+                                        // Navigator.push(
+                                        //   context,
+                                        //   CupertinoPageRoute(
+                                        //     builder:
+                                        //         (context) =>
+                                        //         SubCategory(
+                                        //           subList: context
+                                        //               .read<
+                                        //               HomePageProvider>()
+                                        //               .popularList[index].subList,
+                                        //              title: context.read<HomePageProvider>()
+                                        //               .popularList[index].name ?? '',
+                                        //         ),
+                                        //   ),
+                                        // );
+
+
+                                        Navigator.push(context,MaterialPageRoute(builder: (context)=>AllCategory()));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left:13.0,top: 10),
+                                        child: Text('${widget.model?.catName}',style: TextStyle(fontWeight:FontWeight.w700,color: colors.primary,fontSize: 15),),
+                                      ),
+                                    ),
                                     GetTitleWidget(
                                       title: widget.model!.name!,
                                     ),
+
                                     available! || outOfStock!
                                         ? GetPrice(
                                             pos: selectIndex,
@@ -1755,6 +1791,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                                   ],
                                 ),
                               ),
+
                               widget.model!.attributeList!.isNotEmpty
                                   ? getDivider(2, context)
                                   : Container(),
@@ -1768,15 +1805,68 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                               context.read<CartProvider>().promoList.isNotEmpty
                                   ? getDivider(2, context)
                                   : Container(),
+
                               ProductMoreDetail(
                                 model: widget.model,
                                 update: update,
                               ),
                               getDivider(2, context),
-                              ProductHighLightsDetail(
-                                model: widget.model,
-                                update: update,
+                              InkWell(
+                                onTap: () {
+
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => ProductList(getBrand: true,brandId: brandId,brandName: brand_name,),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width/1,
+                                  color: colors.whiteTemp,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left:3.0),
+                                    child: Row(
+                                      children: [
+                                        widget.model!.brandName != '' &&
+                                            widget.model!.brandName != null
+                                            ? GetNameWidget(
+                                          name: widget.model!.brandName!,
+                                        )
+                                            : Container(),
+                                        SizedBox(width: 10,),
+                                        Container(
+                                            height: 50,
+                                            width: 50,
+                                            child:widget.model?.brandImage==null?Image.asset('assets/images/png/placeholder.png'): Image.network('${widget.model?.brandImage}'))
+
+                                        //------image add of brand--------here--------
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
+
+                              getDivider(2, context),
+                              // ProductHighLightsDetail(
+                              //   model: widget.model,
+                              //   update: update,
+                              // ),
+
+                              Container(
+                                color: colors.whiteTemp,
+                                  height: 40,
+                                  width: MediaQuery.of(context).size.width/1,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 13.0,top: 10),
+                                    child: Row(
+                                      children: [
+                                        Text('SKU  :',style: TextStyle(color: colors.blackTemp),),
+                                        SizedBox(width: 10,),
+                                        widget.model?.sku==null||widget.model?.sku==""?Text('Not Found'):Text('${widget.model?.sku}',style: TextStyle(color: colors.blackTemp),)
+                                      ],
+                                    ),
+                                  )),
                               getDivider(2, context),
                               //_deliverPincode(),
                               //getDivider(2, context),
@@ -1852,6 +1942,32 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                               : Container(
                                   height: 0,
                                 ),
+
+
+                          // Container(
+                          //   width: 37,
+                          //   // height: 20,
+                          //   color: Colors.transparent,
+                          //   child: Stack(
+                          //     children: [
+                          //       TextField(
+                          //         textAlign: TextAlign.center,
+                          //         readOnly: true,
+                          //         style: TextStyle(
+                          //             fontSize: 12,
+                          //             color: Theme.of(context)
+                          //                 .colorScheme
+                          //                 .fontColor,
+                          //             fontWeight: FontWeight.bold),
+                          //         controller: qtyController,
+                          //         // _controller[index],
+                          //         decoration: InputDecoration(
+                          //           border: InputBorder.none,
+                          //         ),
+                          //       )
+                          //     ],
+                          //   ),
+                          // ), // ),
                           //_mostFav()
                         ],
                       )
@@ -1880,6 +1996,79 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                           return Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
+
+                              Padding(
+                                padding: const EdgeInsetsDirectional.only(
+                                  end: 10.0,
+                                  bottom: 10.0,
+                                  top: 10.0,
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(circularBorderRadius10),
+                                    color:colors.primary1,
+                                  ),
+                                  width: 40,
+                                  height: 35,
+                                  child: InkWell(
+                                    onTap: () {
+
+                                      Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (context) => const Dashboard(),
+                                        ),
+                                      );
+
+                                    },
+                                    child: Icon(
+                                      Icons.home_outlined,color:colors.blackTemp,
+
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsetsDirectional.only(
+                                  end: 10.0,
+                                  bottom: 10.0,
+                                  top: 10.0,
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(circularBorderRadius10),
+                                    color:colors.primary1,
+                                  ),
+                                  width: 40,
+                                  height:35,
+                                  child: InkWell(
+                                    onTap: () {
+                                      CUR_USERID != null
+                                          ? Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (context) => const Search(),
+                                        ),
+                                      ).then(
+                                            (value) {
+                                          if (value != null && value) {
+                                            _tabController.animateTo(1);
+                                          }
+                                        },
+                                      )
+                                          : Routes.navigateToSearchScreen(context);
+                                    },
+                                    child: Icon(
+                                      Icons.search,color:colors.blackTemp,
+
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+
+
                               InkWell(
                                 onTap: () async {
                                   String qty;
@@ -1916,9 +2105,78 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                                           ),
 
                                           onTap: () {
+                                            // if (context
+                                            //     .read<CartProvider>()
+                                            //     .isProgress ==
+                                            //     false) {
+                                            //   if (CUR_USERID != null) {
+                                            //     context
+                                            //         .read<CartProvider>()
+                                            //         .removeFromCart(
+                                            //       index: index,
+                                            //       remove: false,
+                                            //       cartList: cartList,
+                                            //       move: false,
+                                            //       selPos: selectedPos,
+                                            //       context: context,
+                                            //       update:
+                                            //       widget.setState,
+                                            //       promoCode: context
+                                            //           .read<
+                                            //           CartProvider>()
+                                            //           .promoC
+                                            //           .text,
+                                            //     );
+                                            //   } else {
+                                            //     if ((int.parse(
+                                            //         cartList[index]
+                                            //             .productList![0]
+                                            //             .prVarientList![
+                                            //         selectedPos]
+                                            //             .cartCount!)) >
+                                            //         1) {
+                                            //       context
+                                            //           .read<CartProvider>()
+                                            //           .addAndRemoveQty(
+                                            //         qty: cartList[index]
+                                            //             .productList![0]
+                                            //             .prVarientList![
+                                            //         selectedPos]
+                                            //             .cartCount!,
+                                            //         from: 2,
+                                            //         totalLen: cartList[
+                                            //         index]
+                                            //             .productList![
+                                            //         0]
+                                            //             .itemsCounter!
+                                            //             .length *
+                                            //             int.parse(cartList[
+                                            //             index]
+                                            //                 .productList![
+                                            //             0]
+                                            //                 .qtyStepSize!),
+                                            //         index: index,
+                                            //         price: price,
+                                            //         selectedPos:
+                                            //         selectedPos,
+                                            //         total: total,
+                                            //         cartList: cartList,
+                                            //         itemCounter: int
+                                            //             .parse(cartList[
+                                            //         index]
+                                            //             .productList![
+                                            //         0]
+                                            //             .qtyStepSize!),
+                                            //         context: context,
+                                            //         update:
+                                            //         widget.setState,
+                                            //       );
+                                            //       widget.setState();
+                                            //     }
+                                            //   }
+                                            // }
 
 
-                                            // removeFromCart();
 
 
                                             // addToCart(
@@ -2026,7 +2284,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                                 },
                                 child: Container(
                                   height:45,
-                                  width:170,
+                                  width:120,
                                   decoration: BoxDecoration(
                                       color: colors.primary,
                                       borderRadius: BorderRadius.circular(30)
@@ -2131,6 +2389,76 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                       return Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+
+                          Padding(
+                            padding: const EdgeInsetsDirectional.only(
+                              end: 10.0,
+                              bottom: 10.0,
+                              top: 10.0,
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(circularBorderRadius10),
+                                color:colors.primary1,
+                              ),
+                              width: 40,
+                              height: 35,
+                              child: InkWell(
+                                onTap: () {
+
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => const Dashboard(),
+                                    ),
+                                  );
+
+                                },
+                                child: Icon(
+                                  Icons.home_outlined,color:colors.blackTemp,
+
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsetsDirectional.only(
+                              end: 10.0,
+                              bottom: 10.0,
+                              top: 10.0,
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(circularBorderRadius10),
+                                color:colors.primary1,
+                              ),
+                              width: 40,
+                              height:35,
+                              child: InkWell(
+                                onTap: () {
+                                  CUR_USERID != null
+                                      ? Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => const Search(),
+                                    ),
+                                  ).then(
+                                        (value) {
+                                      if (value != null && value) {
+                                        _tabController.animateTo(1);
+                                      }
+                                    },
+                                  )
+                                      : Routes.navigateToSearchScreen(context);
+                                },
+                                child: Icon(
+                                  Icons.search,color:colors.blackTemp,
+
+                                ),
+                              ),
+                            ),
+                          ),
                           InkWell(
                             onTap: () async {
                               String qty;
@@ -2277,7 +2605,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                             },
                             child: Container(
                               height:45,
-                              width:170,
+                              width:110,
                               decoration: BoxDecoration(
                                   color: colors.primary,
                                   borderRadius: BorderRadius.circular(30)
@@ -2777,7 +3105,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                           shape: BoxShape.circle,
                           color: _selectedIndex[index] == (i)
                               ? colors.primary
-                              : colors.black12,
+                              : colors.blackTemp,
                         ),
                         child: Center(
                           child: Container(
@@ -2809,8 +3137,8 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                               Radius.circular(circularBorderRadius8)),
                           border: Border.all(
                             color: _selectedIndex[index] == (i)
-                                ? const Color(0xfffc6a57)
-                                : Theme.of(context).colorScheme.black,
+                                ?colors.blackTemp
+                                : colors.primary,
                             width: 1,
                           ),
                         ),
@@ -2820,7 +3148,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                           child: Image.network(
                             attSValue[i],
                             width: 80,
-                            height: 80,
+                            height:80,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
                                 DesignConfiguration.erroWidget(80),
@@ -2845,8 +3173,8 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                               Radius.circular(circularBorderRadius8)),
                           border: Border.all(
                             color: _selectedIndex[index] == (i)
-                                ? const Color(0xfffc6a57)
-                                : Theme.of(context).colorScheme.black,
+                                ? colors.primary
+                                : colors.blackTemp,
                             width: 1,
                           ),
                         ),
@@ -3689,6 +4017,8 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
         appStoreId: appStoreId,
       ),
     );
+
+   print('------share linkkkkkk-----${shortenedLink}');
 
     shortenedLink =
         await FirebaseDynamicLinks.instance.buildShortLink(parameters);

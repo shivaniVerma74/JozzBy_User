@@ -98,8 +98,9 @@ class GetPrice extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          Row(
+          Column(
             mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Price: ${DesignConfiguration.getPriceFormat(context, price)!} ',
@@ -110,7 +111,7 @@ class GetPrice extends StatelessWidget {
                   fontSize: textFontSize20,
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(height:5),
               off != 0.00
                   ? Text(
                 'MRP: ${DesignConfiguration.getPriceFormat(context, double.parse(model!.prVarientList![pos].price!))!} ',
@@ -132,7 +133,8 @@ class GetPrice extends StatelessWidget {
                   : Container(),
               const SizedBox(width: 10),
               //const Icon(Icons.share),
-              /*off != 0.00
+              SizedBox(height:5,),
+              off != 0.00
                 ? Text(
                     ' ${off.toStringAsFixed(2)}% OFF',
                     style: Theme.of(context).textTheme.overline!.copyWith(
@@ -143,12 +145,12 @@ class GetPrice extends StatelessWidget {
                           fontSize: textFontSize18,
                         ),
                   )
-                : Container(),*/
+                : Container(),
               from
                   ? Selector<CartProvider, Tuple2<List<String?>, String?>>(
-                builder: (context, data, child) {
+                    builder: (context, data, child) {
                   if (!context.read<ProductDetailProvider>().qtyChange) {
-                    if (data.item1.contains(model!.id)) {
+                      if (data.item1.contains(model!.id)) {
                       qtyController.text = data.item2.toString();
                     } else {
                       String qty = model!
@@ -189,7 +191,6 @@ class GetPrice extends StatelessWidget {
                   : Container(),
             ],
           ),
-          SizedBox(height: 5,),
           Text(
             'Margin: ${DesignConfiguration.getPriceFormat(context, margin)!} ',
             style: Theme.of(context).textTheme.headline6!.copyWith(

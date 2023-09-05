@@ -18,7 +18,7 @@ extension colors on ColorScheme {
   );
 
   static const Color primary = Color(0xffEF2121);
-  static const Color primary1 = Color(0xfffef2ea);
+  static const Color primary1 = Color(0xFFfffaf7);
   static const Color secondary = Color(0xffF18A22);
   static const Color transparent = Color(0xffEFEFEF);
 

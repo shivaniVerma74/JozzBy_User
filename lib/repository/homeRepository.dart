@@ -38,12 +38,17 @@ class HomeRepository {
 
   //
   //This method is used to fetch sections
+
+
+
   static Future<Map<String, dynamic>> fetchSections(
       {required Map<String, dynamic> parameter}) async {
+
     try {
+       print('-----This is parameter-------${parameter}');
       var sectionData =
           await ApiBaseHelper().postAPICall(getSectionApi, parameter);
-
+      print('-----get Section Data of Data----${sectionData}');
       return {
         'error': sectionData['error'],
         'message': sectionData['message'],
@@ -55,6 +60,10 @@ class HomeRepository {
       throw ApiException('$errorMesaage${e.toString()}');
     }
   }
+
+
+
+
 
   //
   //This method is used to fetch offer images

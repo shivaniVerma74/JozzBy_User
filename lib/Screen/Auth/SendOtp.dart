@@ -311,6 +311,9 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
     );
   }
 
+
+
+
   Widget termAndPolicyTxt() {
     return widget.title == getTranslated(context, 'SEND_OTP_TITLE')
         ? SizedBox(

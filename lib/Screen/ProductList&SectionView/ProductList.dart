@@ -310,8 +310,8 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
         (
           value,
         ) async {
-          bool error = value['error'];
-          String? msg = value['message'];
+          bool error = value['error'] == null ? true : value['error'];
+          String? msg = value['message'] == null ? '' : value['message'];
           if (offset == 0) notificationisnodata = error;
           if (!error) {
             tempList.clear();

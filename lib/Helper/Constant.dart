@@ -1,11 +1,11 @@
 import 'package:eshop_multivendor/Helper/ApiBaseHelper.dart';
 
 //Your application name
-const String appName = 'Jozzby Bazaar';
+const String appName = 'Jozzby Bazar';
 
 //Your package name
-const String packageName = 'jozzbybazaar.customer';
-const String iosPackage = 'jozzbybazaar.customer';
+const String packageName = 'jozzbyBazar.customer';
+const String iosPackage = 'jozzbyBazar.customer';
 
 //Playstore link of your application
 const String androidLink = 'https://play.google.com/store/apps/details?id=';
@@ -62,7 +62,7 @@ const double circularBorderRadius100 = 100;
 //Token ExpireTime in minutes & issuer name
 const int tokenExpireTime = 5;
 
-const String issuerName = 'Jozzby Bazaar';
+const String issuerName = 'Jozzby Bazar';
 
 //General Error Message
 const String errorMesaage = 'Something went wrong, Error : ';

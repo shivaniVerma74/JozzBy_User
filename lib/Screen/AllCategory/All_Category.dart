@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Helper/String.dart';
 import '../../Helper/routes.dart';
 import '../../Model/Section_Model.dart';
@@ -95,7 +96,7 @@ class _AllCategoryState extends State<AllCategory>
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        backgroundColor: colors.whiteTemp,
+        backgroundColor:Theme.of(context).colorScheme.lightWhite,
         title: Container(
           color: Theme.of(context).colorScheme.lightWhite,
           padding: EdgeInsets.fromLTRB(
@@ -207,10 +208,11 @@ class _AllCategoryState extends State<AllCategory>
                 }
                 return Row(
                   children: [
+                    SizedBox(height: 50,),
                     Expanded(
                       flex: 1,
                       child: Container(
-                        color: Theme.of(context).colorScheme.lightWhite,
+                        color: colors.primary1,
                         child: NotificationListener<
                             OverscrollIndicatorNotification>(
                           onNotification: (overscroll) {
@@ -541,10 +543,9 @@ class _AllCategoryState extends State<AllCategory>
                                                           ),
                                                           Positioned(
                                                             top:135,
-                                                            left:40,
-
+                                                            left:20,
                                                             child: Container(
-                                                              width: 70,
+                                                              width:110,
                                                               child: Text(
                                                               '${data[index].name!}\n',
                                                               textAlign: TextAlign.center,
@@ -572,12 +573,9 @@ class _AllCategoryState extends State<AllCategory>
                                                         ],
 
                                                       ),
-                                                      onTap: () {
-                                                        if (context
-                                                                    .read<
-                                                                        CategoryProvider>()
-                                                                    .curCat ==
-                                                                0 &&
+                                                      onTap: ()  async {
+
+                                                        if (context.read<CategoryProvider>().curCat == 0 &&
                                                             context
                                                                 .read<
                                                                     HomePageProvider>()

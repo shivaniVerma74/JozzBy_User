@@ -553,7 +553,7 @@ class _SignUpPageState extends State<SignUp> with TickerProviderStateMixin {
                     registerTxt(),
                     setUserName(),
                     setEmail(),
-                    setGST(),
+                    // setGST(),
                     setPass(),
                     setRefer(),
                     verifyBtn(),
@@ -620,7 +620,7 @@ class _SignUpPageState extends State<SignUp> with TickerProviderStateMixin {
                     signUpSubTxt(),
                     setUserName(),
                     setEmail(),
-                    setGST(),
+                    // setGST(),
                     setPass(),
                     setRefer(),
                     verifyBtn(),
@@ -641,7 +641,7 @@ class _SignUpPageState extends State<SignUp> with TickerProviderStateMixin {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.only(top: 60),
-      child: Image.asset('assets/images/png/img_1.png',height:110,width:110,)
+      child: Image.asset('assets/images/png/splashlogo-removebg-preview.png',height:110,width:110,)
     );
   }
 }

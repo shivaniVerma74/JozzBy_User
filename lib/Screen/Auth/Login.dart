@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:eshop_multivendor/Provider/Favourite/FavoriteProvider.dart';
 import 'package:eshop_multivendor/Provider/SettingProvider.dart';
 import 'package:eshop_multivendor/Provider/UserProvider.dart';
@@ -26,6 +27,7 @@ import '../../widgets/security.dart';
 import '../../widgets/validation.dart';
 import '../Dashboard/Dashboard.dart';
 import '../NoInterNetWidget/NoInterNet.dart';
+import 'Verify_Otp.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -44,7 +46,11 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
   Animation? buttonSqueezeanimation;
   AnimationController? buttonController;
   bool isShowPass = true;
+  bool isMobile= false;
+  int _value = 1;
+  bool isSendOtp = false;
 
+  String? mobile, id, countrycode, mobileno;
   @override
   void initState() {
     SystemChromeSettings.setSystemButtomNavigationBarithTopAndButtom();
@@ -88,7 +94,95 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
   void validateAndSubmit() async {
     if (validateAndSave()) {
       _playAnimation();
-      checkNetwork();
+      isMobile==false?checkNetwork():
+      checkNetwork1()  ;
+
+    }
+  }
+
+
+  Future<void> checkNetwork1() async {
+    isNetworkAvail = await isNetworkAvailable();
+    if (isNetworkAvail) {
+      Future.delayed(Duration.zero).then(
+            (value) => context.read<AuthenticationProvider>().getVerifyUser().then(
+              (
+              value,
+              ) async {
+            bool? error = value['error'];
+            String? msg = value['message'];
+            int? receivedOTP = value['data'] ;
+            await buttonController!.reverse();
+            SettingProvider settingsProvider =
+            Provider.of<SettingProvider>(context, listen: false);
+            print('Verifyyyyyy');
+            print('--------------vvvvvvv---${isMobile}');
+            if (isMobile==true) {
+              if (!error!) {
+                setSnackbar(msg!, context);
+                Future.delayed(const Duration(seconds: 1)).then(
+                      (_) {
+                    Navigator.pushReplacement(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => VerifyOtp(
+                          mobileNumber: mobile!,
+                          countryCode: countrycode,
+                          isMobile: isMobile,
+                          responseOtp: receivedOTP.toString(),
+                          title: getTranslated(context, 'SEND_OTP_TITLE'),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              } else {
+                setSnackbar(msg!, context);
+              }
+            }
+            if (isMobile==false) {
+              if (error!) {
+                settingsProvider.setPrefrence(MOBILE,
+                    context.read<AuthenticationProvider>().mobilenumbervalue);
+                settingsProvider.setPrefrence(COUNTRY_CODE, countrycode!);
+                Future.delayed(const Duration(seconds: 1)).then(
+                      (_) {
+                    Navigator.pushReplacement(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => VerifyOtp(
+                          mobileNumber: context
+                              .read<AuthenticationProvider>()
+                              .mobilenumbervalue,
+                          countryCode: countrycode,
+                          responseOtp: receivedOTP.toString(),
+                          title: getTranslated(context, 'FORGOT_PASS_TITLE'),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              } else {
+                setSnackbar(
+                    getTranslated(context, 'FIRSTSIGNUP_MSG')!, context);
+              }
+            }
+          },
+        ),
+      );
+    } else {
+      Future.delayed(const Duration(seconds: 2)).then(
+            (_) async {
+          if (mounted) {
+            setState(
+                  () {
+                isNetworkAvail = false;
+              },
+            );
+          }
+          await buttonController!.reverse();
+        },
+      );
     }
   }
 
@@ -494,6 +588,54 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
     );
   }
 
+
+  loginBtnText(){
+   return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Radio(
+          value: 1,
+          fillColor: MaterialStateColor.resolveWith(
+                  (states) =>  colors.secondary),
+          activeColor:  colors.secondary,
+          groupValue: _value,
+          onChanged: (int? value) {
+            setState(() {
+              _value = value!;
+              isMobile = false;
+            });
+          },
+        ),
+        const Text(
+          'Mobile No.',
+          style: TextStyle(
+              color: colors.secondary, fontSize: 21),
+        ),
+        const SizedBox(height: 10,),
+        Radio(
+            value: 2,
+            fillColor: MaterialStateColor.resolveWith(
+                    (states) => colors.secondary),
+            activeColor:   colors.secondary,
+            groupValue: _value,
+            onChanged: (int? value) {
+              setState(() {
+                _value = value!;
+                isMobile = true;
+              });
+            }),
+        // SizedBox(width: 10.0,),
+        const Text(
+          'OTP',
+          style: TextStyle(
+              color:  colors.secondary, fontSize: 21),
+        ),
+      ],
+    );
+
+  }
+
   signInSubTxt() {
     return Padding(
       padding: const EdgeInsetsDirectional.only(
@@ -709,7 +851,7 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
         child: Consumer<AuthenticationProvider>(
           builder: (context, value, child) {
             return AppBtn(
-              title: getTranslated(context, 'SIGNIN_LBL'),
+              title:isMobile==false?getTranslated(context, 'SIGNIN_LBL'):getTranslated(context, 'SEND_OTP_TITLE'),
               btnAnim: buttonSqueezeanimation,
               btnCntrl: buttonController,
               onBtnSelected: () async {
@@ -750,9 +892,14 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
                     getLogo(),
                     signInTxt(),
                     signInSubTxt(),
+                    loginBtnText(),
+                    // verifyCodeTxt(),
+                    isMobile==true?setCodeWithMono():
                     setMobileNo(),
-                    setPass(),
+
+                    isMobile==false?setPass():
                     forgetPass(),
+                    isMobile==false?forgetPass():SizedBox(),
                     loginBtn(),
                     setDontHaveAcc(),
                   ],
@@ -774,4 +921,112 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
       child:Image.asset('assets/images/png/splashlogo-removebg-preview.png',height:110,width:110,)
     );
   }
+
+
+
+  Widget setCodeWithMono() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 45),
+      child: Container(
+        height: 53,
+        width: double.maxFinite,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.lightWhite,
+          borderRadius: BorderRadius.circular(circularBorderRadius10),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Expanded(
+              flex: 2,
+              child: setCountryCode(),
+            ),
+            Expanded(
+              flex: 4,
+              child: setMono(),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget setCountryCode() {
+    double width = deviceWidth!;
+    double height = deviceHeight! * 0.9;
+    return CountryCodePicker(
+      showCountryOnly: false,
+      searchStyle: TextStyle(
+        color: Theme.of(context).colorScheme.fontColor,
+      ),
+      flagWidth: 20,
+      boxDecoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.white,
+      ),
+      searchDecoration: InputDecoration(
+        hintText: getTranslated(context, 'COUNTRY_CODE_LBL'),
+        hintStyle: TextStyle(color: Theme.of(context).colorScheme.fontColor),
+        fillColor: Theme.of(context).colorScheme.fontColor,
+      ),
+      showOnlyCountryWhenClosed: false,
+      initialSelection: defaultCountryCode,
+      dialogSize: Size(width, height),
+      alignLeft: true,
+      textStyle: TextStyle(
+          color: Theme.of(context).colorScheme.fontColor,
+          fontWeight: FontWeight.bold),
+      onChanged: (CountryCode countryCode) {
+        countrycode = countryCode.toString().replaceFirst('+', '');
+        countryName = countryCode.name;
+      },
+      onInit: (code) {
+        countrycode = code.toString().replaceFirst('+', '');
+      },
+    );
+  }
+
+  Widget setMono() {
+    return TextFormField(
+      maxLength: 10,
+      keyboardType: TextInputType.number,
+      controller: mobileController,
+      style: Theme.of(context).textTheme.subtitle2!.copyWith(
+          color: Theme.of(context).colorScheme.fontColor,
+          fontWeight: FontWeight.normal),
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      validator: (val) => StringValidation.validateMob(
+          val!,
+          getTranslated(context, 'MOB_REQUIRED'),
+          getTranslated(context, 'VALID_MOB')),
+      onSaved: (String? value) {
+        print('___________${value}__________');
+        context.read<AuthenticationProvider>().setMobileNumber(value);
+        mobile = value;
+      },
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        counterText: "",
+        hintText: getTranslated(context, 'MOBILEHINT_LBL'),
+        hintStyle: Theme.of(context).textTheme.subtitle2!.copyWith(
+            color: Theme.of(context).colorScheme.fontColor,
+            fontWeight: FontWeight.normal),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: const BorderSide(color: colors.primary),
+          borderRadius: BorderRadius.circular(circularBorderRadius7),
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.lightWhite,
+          ),
+        ),
+      ),
+    );
+  }
+
+
+
+
+
+
 }

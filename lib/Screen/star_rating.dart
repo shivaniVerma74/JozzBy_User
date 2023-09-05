@@ -52,21 +52,21 @@ class StarRating extends StatelessWidget {
         ),
         needToShowNoOfRatings
             ? const SizedBox(
-                width: 5.0,
-              )
+          width: 5.0,
+        )
             : Container(),
         needToShowNoOfRatings
             ? Flexible(
-                child: Text(
-                  '($noOfRatings)',
-                  style: const TextStyle(
-                    fontSize: textFontSize10,
-                    fontWeight: FontWeight.w300,
-                    fontStyle: FontStyle.normal,
-                    fontFamily: 'ubuntu',
-                  ),
-                ),
-              )
+          child: Text(
+            '($noOfRatings)',
+            style: const TextStyle(
+              fontSize: textFontSize10,
+              fontWeight: FontWeight.w300,
+              fontStyle: FontStyle.normal,
+              fontFamily: 'ubuntu',
+            ),
+          ),
+        )
             : Container(),
       ],
     );

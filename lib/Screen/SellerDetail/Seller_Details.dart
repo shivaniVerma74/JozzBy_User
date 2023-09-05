@@ -250,7 +250,7 @@ class _SellerProfileState extends State<SellerProfile>
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Theme.of(context).colorScheme.white,
+      backgroundColor: colors.primary1,
       appBar: getAppBar(
           getTranslated(context, 'SELLER_DETAILS')!, context, setStateNow),
       body: isNetworkAvail
@@ -259,6 +259,7 @@ class _SellerProfileState extends State<SellerProfile>
 
                 print('1=================================${value.getCurrentStatus}');
                 print('1===============trhthh==================${SellerDetailProviderStatus.isSuccsess}');
+                print('1==============Notification Data=================${notificationisnodata}');
                 if (
                 // value.getCurrentStatus
                 SellerDetailProviderStatus.isSuccsess
@@ -266,7 +267,7 @@ class _SellerProfileState extends State<SellerProfile>
                   return Column(
                     children: [
                       Container(
-                        color: Theme.of(context).colorScheme.white,
+                        color: colors.primary1,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
                           child: Container(
@@ -416,9 +417,7 @@ class _SellerProfileState extends State<SellerProfile>
                   );
                 } else if (value.getCurrentStatus ==
                     SellerDetailProviderStatus.isFailure) {
-                  return
-
-                    Center(
+                  return Center(
                     child: Text(
                       value.geterrormessage,
                       style: const TextStyle(
@@ -478,9 +477,9 @@ class _SellerProfileState extends State<SellerProfile>
           SELLER_ID: '${widget.s_id}'
         };
          print('-----------sellerrrrrrrrrrrrrrrr--------------${parameter}');
-        if (widget.s_id != '') {
-          parameter[ATTRIBUTE_VALUE_ID] =widget.s_id;
-        }
+        // if (widget.s_id != '') {
+        //   parameter[ATTRIBUTE_VALUE_ID] =widget.s_id;
+        // }
 
         if (query.trim() != '') {
           parameter[SEARCH] = query.trim();
@@ -505,14 +504,17 @@ class _SellerProfileState extends State<SellerProfile>
               value,
             ) async {
               bool error = value['error'];
+              print('--------rrrrrrrrrr444------------${value}');
               String? search = value['search'];
               context.read<ExploreProvider>().setProductTotal(value['total'] ??
                   context.read<ExploreProvider>().totalProducts);
               notificationisgettingdata = false;
-              if (notificationoffset == 0) notificationisnodata = error;
+              if (notificationoffset == 0) notificationisnodata = false;
 
               if (!error && search!.trim() == query.trim()) {
                 if (mounted) {
+
+
                   if (initializingFilterDialogFirstTime) {
                     filterList = value['filters'];
 
@@ -587,10 +589,12 @@ class _SellerProfileState extends State<SellerProfile>
         sortAndFilterOption(),
         Expanded(
           child: Container(
-            color: Theme.of(context).colorScheme.lightWhite,
-            child: notificationisnodata
+            color: colors.primary1,
+            child:
+            notificationisnodata
                 ? DesignConfiguration.getNoItem(context)
-                : Stack(
+                :
+            Stack(
                     children: [
                       context.watch<ExploreProvider>().getCurrentView !=
                               'GridView'

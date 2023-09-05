@@ -184,9 +184,12 @@ class HomePageProvider extends ChangeNotifier {
 
   //This method is used to get Categories from server
   Future<void> getSections() async {
+    print('---***********-----${secLoading}');
     secLoading = true;
+
     notifyListeners();
     var parameter = {PRODUCT_LIMIT: '6', PRODUCT_OFFSET: '0'};
+
     if (CUR_USERID != null) parameter[USER_ID] = CUR_USERID!;
     sectionList.clear();
     await HomeRepository.fetchSections(parameter: parameter).then(
@@ -199,6 +202,7 @@ class HomePageProvider extends ChangeNotifier {
           }
 
           sectionList.addAll(tempList);
+
           secLoading = false;
           notifyListeners();
         }

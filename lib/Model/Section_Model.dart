@@ -120,6 +120,8 @@ class Product {
       shortDescription,
       codAllowed,
       brandName,
+      sku,
+      brandImage,
       qtyStepSize;
   List<String>? itemsCounter;
   List<String>? otherImage;
@@ -189,6 +191,8 @@ class Product {
     this.shortDescription,
     this.total,
     this.brandName,
+    this.sku,
+    this.brandImage,
     this.categoryId,
     this.subList,
     this.filterList,
@@ -314,6 +318,8 @@ class Product {
       is_attch_req: json[IS_ATTACH_REQ],
       codAllowed: json[COD_ALLOWED],
       brandName: json[ProductBrandName],
+      sku : json[ProductSku],
+      brandImage: json[ProductBrandImage],
     );
   }
 
@@ -392,7 +398,7 @@ class Product_Varient {
   });
 
   factory Product_Varient.fromJson(Map<String, dynamic> json) {
-    List<String> images = List<String>.from(json[IMAGES]);
+   // List<String> images = List<String>.from(json[IMAGES]);
 
     return Product_Varient(
       id: json[ID],
@@ -404,7 +410,8 @@ class Product_Varient {
       price: json[PRICE],
       availability: json[AVAILABILITY].toString(),
       cartCount: json[CART_COUNT],
-      images: images,
+      images: []
+        //json['images'] !=[] ?  (json['images'] as List).map((item) => item as String).toList() :  null
     );
   }
 }
@@ -529,3 +536,122 @@ class Promo {
     );
   }
 }
+
+
+
+// class Product_Varient {
+//   String? id;
+//   String? productId;
+//   String? attributeValueIds;
+//   String? attributeSet;
+//   String? price;
+//   String? specialPrice;
+//   String? sku;
+//   String? stock;
+//   String? weight;
+//   String? height;
+//   String? breadth;
+//   String? length;
+//   List<String>? images;
+//   int? availability;
+//   String? status;
+//   String? dateAdded;
+//   String? variantIds;
+//   String? attrName;
+//   String? variantValues;
+//   String? swatcheType;
+//   String? swatcheValue;
+//   List<String>? variantRelativePath;
+//   List<String>? imagesMd;
+//   List<String>? imagesSm;
+//   String? cartCount;
+//   int? isPurchased;
+//
+//   Product_Varient(
+//       {this.id,
+//         this.productId,
+//         this.attributeValueIds,
+//         this.attributeSet,
+//         this.price,
+//         this.specialPrice,
+//         this.sku,
+//         this.stock,
+//         this.weight,
+//         this.height,
+//         this.breadth,
+//         this.length,
+//         this.images,
+//         this.availability,
+//         this.status,
+//         this.dateAdded,
+//         this.variantIds,
+//         this.attrName,
+//         this.variantValues,
+//         this.swatcheType,
+//         this.swatcheValue,
+//         this.variantRelativePath,
+//         this.imagesMd,
+//         this.imagesSm,
+//         this.cartCount,
+//         this.isPurchased});
+//
+//   Product_Varient.fromJson(Map<String, dynamic> json) {
+//     id = json['id'];
+//     productId = json['product_id'];
+//     attributeValueIds = json['attribute_value_ids'];
+//     attributeSet = json['attribute_set'];
+//     price = json['price'];
+//     specialPrice = json['special_price'];
+//     sku = json['sku'];
+//     stock = json['stock'];
+//     weight = json['weight'];
+//     height = json['height'];
+//     breadth = json['breadth'];
+//     length = json['length'];
+//     images = json['images'].cast<String>();
+//     availability = json['availability'];
+//     status = json['status'];
+//     dateAdded = json['date_added'];
+//     variantIds = json['variant_ids'];
+//     attrName = json['attr_name'];
+//     variantValues = json['variant_values'];
+//     swatcheType = json['swatche_type'];
+//     swatcheValue = json['swatche_value'];
+//     variantRelativePath = json['variant_relative_path'].cast<String>();
+//     imagesMd = json['images_md'].cast<String>();
+//     imagesSm = json['images_sm'].cast<String>();
+//     cartCount = json['cart_count'];
+//     isPurchased = json['is_purchased'];
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['id'] = this.id;
+//     data['product_id'] = this.productId;
+//     data['attribute_value_ids'] = this.attributeValueIds;
+//     data['attribute_set'] = this.attributeSet;
+//     data['price'] = this.price;
+//     data['special_price'] = this.specialPrice;
+//     data['sku'] = this.sku;
+//     data['stock'] = this.stock;
+//     data['weight'] = this.weight;
+//     data['height'] = this.height;
+//     data['breadth'] = this.breadth;
+//     data['length'] = this.length;
+//     data['images'] = this.images;
+//     data['availability'] = this.availability;
+//     data['status'] = this.status;
+//     data['date_added'] = this.dateAdded;
+//     data['variant_ids'] = this.variantIds;
+//     data['attr_name'] = this.attrName;
+//     data['variant_values'] = this.variantValues;
+//     data['swatche_type'] = this.swatcheType;
+//     data['swatche_value'] = this.swatcheValue;
+//     data['variant_relative_path'] = this.variantRelativePath;
+//     data['images_md'] = this.imagesMd;
+//     data['images_sm'] = this.imagesSm;
+//     data['cart_count'] = this.cartCount;
+//     data['is_purchased'] = this.isPurchased;
+//     return data;
+//   }
+// }

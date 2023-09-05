@@ -4,6 +4,7 @@ import 'package:eshop_multivendor/Provider/SettingProvider.dart';
 import 'package:eshop_multivendor/Provider/authenticationProvider.dart';
 import 'package:eshop_multivendor/Screen/Auth/Set_Password.dart';
 import 'package:eshop_multivendor/Screen/Auth/SignUp.dart';
+import 'package:eshop_multivendor/Screen/Dashboard/Dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +22,11 @@ import '../../widgets/networkAvailablity.dart';
 class VerifyOtp extends StatefulWidget {
   final String? mobileNumber, countryCode, title;
   String? responseOtp ;
-
+  bool? isMobile ;
    VerifyOtp(
       {Key? key,
       required String this.mobileNumber,
-      this.countryCode,
+      this.countryCode,this.isMobile,
       this.title,this.responseOtp})
       : super(key: key);
 
@@ -52,6 +53,7 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     print('___________${widget.mobileNumber}_____sfsfs_____');
+    print('___________${widget.isMobile}_____setMobile_____');
     getUserDetails();
     getSingature();
     _onVerifyCode();
@@ -248,10 +250,20 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
       setSnackbar(getTranslated(context, 'OTPMSG')!, context);
       settingsProvider.setPrefrence(MOBILE, widget.mobileNumber!);
       settingsProvider.setPrefrence(COUNTRY_CODE, widget.countryCode!);
-      if (widget.title == getTranslated(context, 'SEND_OTP_TITLE')) {
+      print('${widget.isMobile}___jjjj___________' );
+    if (widget.title == getTranslated(context, 'SEND_OTP_TITLE')) {
         Future.delayed(const Duration(seconds: 2)).then((_) {
-          Navigator.pushReplacement(context,
-              CupertinoPageRoute(builder: (context) =>  SignUp(mobileNumber: widget.mobileNumber,)));
+          print('${widget.isMobile}______________' );
+          if((widget.isMobile ?? false))
+            {
+              Navigator.pushReplacement(context,
+                  CupertinoPageRoute(builder: (context) =>  SignUp(mobileNumber: widget.mobileNumber,)));
+            }else{
+            print('-----hccccccccccccc-------${widget.isMobile}');
+            Navigator.pushReplacement(context,
+                CupertinoPageRoute(builder: (context) =>  SignUp(mobileNumber: widget.mobileNumber,)));
+          }
+
         });
       } else if (widget.title ==
           getTranslated(context, 'FORGOT_PASS_TITLE')) {
@@ -315,6 +327,10 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
       setSnackbar(getTranslated(context, 'ENTEROTP')!, context);
       await buttonController!.reverse();
     }
+
+
+
+
   }
 
   Future<void> _playAnimation() async {

@@ -73,11 +73,10 @@ class StateOrder extends State<OrderDetail>
     context.read<UpdateOrdProvider>().changeStatus(UpdateOrdStatus.isSuccsess);
   }
 
-  static void downloadCallback(
+   void downloadCallback(
     String id,
     DownloadTaskStatus status,
-    int progress,
-  ) {
+    int progress,) {
     final SendPort send =
         IsolateNameServer.lookupPortByName('downloader_send_port')!;
     send.send([id, status, progress]);
