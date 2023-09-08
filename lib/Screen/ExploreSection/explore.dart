@@ -97,6 +97,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
     productsController!.addListener(_productsListScrollListener);
     sellerListController = ScrollController(keepScrollOffset: true);
     sellerListController!.addListener(_sellerListController);
+
     context.read<ExploreProvider>().productList = [];
     listViewIconController = AnimationController(
       vsync: this,
@@ -117,6 +118,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
             );
           }
           getProduct('0');
+
         } else {
           if (_tabController.index == 0) {
             query = _controller.text;
@@ -132,6 +134,8 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
                     notificationisloadmore = true;
                     notificationoffset = 0;
                     getProduct('0');
+
+
                   }
                 },
               );
@@ -174,6 +178,8 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
       length: 2,
       vsync: this,
     );
+    _tabController.addListener(_handleTabChange);
+
     buttonController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
 
@@ -189,7 +195,9 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
         ),
       ),
     );
+
     getProduct('0');
+
     Future.delayed(Duration.zero).then(
       (value) => context.read<SellerDetailProvider>().getSeller(
             '',
@@ -199,11 +207,14 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
     super.initState();
   }
 
+
+
   _productsListScrollListener() {
     if (productsController!.offset >=
             productsController!.position.maxScrollExtent &&
         !productsController!.position.outOfRange) {
       if (mounted) {
+
         setState(
           () {
             getProduct('0');
@@ -212,6 +223,8 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
       }
     }
   }
+
+
 
   _sellerListController() {
     if (sellerListController!.offset >=
@@ -320,7 +333,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
                  )
                      : Routes.navigateToSearchScreen(context);
                },
-               child: Icon(
+               child: const Icon(
                  Icons.search,color:colors.blackTemp,
 
                ),
@@ -501,7 +514,11 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
                       ),
                       Expanded(
                         child: TabBarView(
+
                           controller: _tabController,
+
+
+
                           children: [
                             Stack(
                               children: <Widget>[
@@ -570,10 +587,22 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
     if (notificationoffset == 0) {
       context.read<ExploreProvider>().productList = [];
     }
-
     context.read<ExploreProvider>().productList.addAll(tempList);
     notificationisloadmore = true;
     notificationoffset = notificationoffset + perPage;
+  }
+
+  void _handleTabChange() {
+    if (_tabController.index == 0 && _tabController.indexIsChanging) {
+      notificationisloadmore = true;
+       notificationoffset = 0;
+      _currentRangeValues = null ;
+      // This function will be called when the tab changes.
+      // You can make your API call here.
+      setState(() {
+        getProduct('0');
+      });
+    }
   }
 
   Future getProduct(String? showTopRated) async {
@@ -588,6 +617,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
             },
           );
         }
+
         var parameter = {
           LIMIT: perPage.toString(),
           OFFSET: notificationoffset.toString(),
@@ -613,6 +643,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
 
         if (CUR_USERID != null) parameter[USER_ID] = CUR_USERID!;
         context.read<ProductListProvider>().setProductListParameter(parameter);
+        print('___________${parameter}__________');
         Future.delayed(Duration.zero).then(
           (value) => context.read<ProductListProvider>().getProductList().then(
             (
@@ -649,6 +680,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
                           items.addAll(mainlist
                               .map((data) => Product.fromJson(data))
                               .toList());
+
 
                           allitems.addAll(items);
 
@@ -691,6 +723,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
   }
 
   _showContentOfProducts() {
+
     return Column(
       children: <Widget>[
         sortAndFilterOption(),

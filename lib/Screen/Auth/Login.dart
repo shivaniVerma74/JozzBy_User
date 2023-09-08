@@ -15,6 +15,7 @@ import '../../Helper/Color.dart';
 import '../../Helper/Constant.dart';
 import '../../Helper/String.dart';
 import '../../Helper/routes.dart';
+import '../../Model/otpModel.dart';
 import '../../Provider/authenticationProvider.dart';
 import '../../Provider/productDetailProvider.dart';
 import '../../widgets/ButtonDesing.dart';
@@ -28,7 +29,7 @@ import '../../widgets/validation.dart';
 import '../Dashboard/Dashboard.dart';
 import '../NoInterNetWidget/NoInterNet.dart';
 import 'Verify_Otp.dart';
-
+import 'package:http/http.dart'as http;
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
@@ -94,46 +95,100 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
   void validateAndSubmit() async {
     if (validateAndSave()) {
       _playAnimation();
-      isMobile==false?checkNetwork():
+      isMobile == false ? checkNetwork():
       checkNetwork1()  ;
 
     }
   }
 
+  otpModel? otpData;
+  Future<void> sendOTP()async {
+
+    var request = http.MultipartRequest('POST', Uri.parse('https://alphawizzserver.com/jozzby_bazar_new/app/v1/api/send_otp'));
+    request.fields.addAll({
+      'mobile': '${mobileController.text}',
+      'device_token': ''
+    });
+    print('----gggggg------${request.fields}');
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      await buttonController!.reverse();
+      var Result = await response.stream.bytesToString();
+      var finalResult = jsonDecode(Result);
+      print('---------Result---------${Result}');
+      int otpSecond = finalResult['otp'];
+      var error = finalResult['error'];
+      var msg = finalResult['message'];
+       print('-------otp------------${otpSecond}');
+       if(error==false){
+         setSnackbar(msg!, context);
+         Future.delayed(const Duration(seconds: 1)).then(
+               (_) {
+             Navigator.pushReplacement(
+               context,
+               CupertinoPageRoute(
+                 builder: (context) => VerifyOtp(
+                   mobileNumber:mobileController.text,
+                   countryCode: countrycode,
+                   isMobile: isMobile,
+                   responseOtp: otpSecond.toString(),
+                   title: getTranslated(context, 'SEND_OTP_TITLE'),
+                 ),
+               ),
+             );
+           },
+         );
+       }
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+
+
+
+
+
+  }
+
+
+
+
 
   Future<void> checkNetwork1() async {
     isNetworkAvail = await isNetworkAvailable();
     if (isNetworkAvail) {
+     // sendOTP();
       Future.delayed(Duration.zero).then(
-            (value) => context.read<AuthenticationProvider>().getVerifyUser().then(
+            (value) => context.read<AuthenticationProvider>().senOtp().then(
               (
               value,
               ) async {
             bool? error = value['error'];
             String? msg = value['message'];
-            int? receivedOTP = value['data'] ;
+            int? receivedOTP = value['otp'] ;
             await buttonController!.reverse();
             SettingProvider settingsProvider =
             Provider.of<SettingProvider>(context, listen: false);
-            print('Verifyyyyyy');
-            print('--------------vvvvvvv---${isMobile}');
             if (isMobile==true) {
               if (!error!) {
                 setSnackbar(msg!, context);
+
                 Future.delayed(const Duration(seconds: 1)).then(
                       (_) {
                     Navigator.pushReplacement(
                       context,
                       CupertinoPageRoute(
                         builder: (context) => VerifyOtp(
-                          mobileNumber: mobile!,
-                          countryCode: countrycode,
-                          isMobile: isMobile,
-                          responseOtp: receivedOTP.toString(),
-                          title: getTranslated(context, 'SEND_OTP_TITLE'),
-                        ),
+                        mobileNumber:mobileController.text,
+                        countryCode: countrycode,
+                        isMobile: isMobile,
+                        responseOtp: receivedOTP.toString(),
+                        title: getTranslated(context, 'SEND_OTP_TITLE'),
+
                       ),
-                    );
+                    ));
                   },
                 );
               } else {
@@ -198,6 +253,7 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
             String? errorMessage = value['message'];
             await buttonController!.reverse();
             if (!error) {
+              print('___________${value['data'][0]}__________');
               var getdata = value['data'][0];
               UserProvider userProvider =
                   Provider.of<UserProvider>(context, listen: false);
@@ -844,7 +900,7 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
     );
   }
 
-  loginBtn() {
+ loginBtn() {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: Center(
@@ -860,8 +916,15 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
                 }
                 if (monoFocus != null) {
                   monoFocus!.unfocus();
-                }
-                validateAndSubmit();
+                }/*
+                if(isMobile==true){
+                  sendOTP();
+                }*/
+
+                  validateAndSubmit();
+
+
+
               },
             );
           },

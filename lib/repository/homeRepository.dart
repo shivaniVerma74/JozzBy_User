@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:eshop_multivendor/Helper/ApiBaseHelper.dart';
 import '../Helper/Constant.dart';
 import '../Helper/String.dart';
@@ -48,8 +50,8 @@ class HomeRepository {
        print('-----This is parameter-------${parameter}');
       var sectionData =
           await ApiBaseHelper().postAPICall(getSectionApi, parameter);
-      print('-----get Section Data of Data----${sectionData}');
-      return {
+                      //    ;
+       return {
         'error': sectionData['error'],
         'message': sectionData['message'],
         'sectionList': (sectionData['data'] as List)

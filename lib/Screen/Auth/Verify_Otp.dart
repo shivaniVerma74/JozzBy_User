@@ -1,20 +1,28 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:eshop_multivendor/Helper/Color.dart';
+import 'package:eshop_multivendor/Helper/routes.dart';
+import 'package:eshop_multivendor/Provider/Favourite/FavoriteProvider.dart';
 import 'package:eshop_multivendor/Provider/SettingProvider.dart';
+import 'package:eshop_multivendor/Provider/UserProvider.dart';
 import 'package:eshop_multivendor/Provider/authenticationProvider.dart';
+import 'package:eshop_multivendor/Provider/productDetailProvider.dart';
 import 'package:eshop_multivendor/Screen/Auth/Set_Password.dart';
 import 'package:eshop_multivendor/Screen/Auth/SignUp.dart';
 import 'package:eshop_multivendor/Screen/Dashboard/Dashboard.dart';
+import 'package:eshop_multivendor/widgets/desing.dart';
+import 'package:eshop_multivendor/widgets/security.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import '../../Helper/Constant.dart';
 import '../../Helper/String.dart';
 import '../../widgets/ButtonDesing.dart';
-import '../../widgets/desing.dart';
+import 'package:http/http.dart'as http;
 import '../../widgets/snackbar.dart';
 import '../Language/languageSettings.dart';
 import '../../widgets/networkAvailablity.dart';
@@ -52,11 +60,9 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    print('___________${widget.mobileNumber}_____sfsfs_____');
-    print('___________${widget.isMobile}_____setMobile_____');
     getUserDetails();
-    getSingature();
-    _onVerifyCode();
+    //getSingature();
+    //_onVerifyCode();
     Future.delayed(const Duration(seconds: 60)).then(
       (_) {
         _isClickable = true;
@@ -126,12 +132,159 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
           btnAnim: buttonSqueezeanimation,
           btnCntrl: buttonController,
           onBtnSelected: () async {
-            _onFormSubmitted();
+
+            if(widget.isMobile ==true){
+              verifyuser();
+            }else{
+              _onFormSubmitted();
+
+            }
+
           },
         ),
       ),
     );
   }
+
+  clearYouCartDialog() async {
+    await DesignConfiguration.dialogAnimate(
+      context,
+      StatefulBuilder(
+        builder: (BuildContext context, StateSetter setStater) {
+          return WillPopScope(
+            onWillPop: () async {
+              return false;
+            },
+            child: AlertDialog(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    circularBorderRadius5,
+                  ),
+                ),
+              ),
+              title: Text(
+                getTranslated(context,
+                    'Your cart already has an items of another seller would you like to remove it ?')!,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.fontColor,
+                  fontWeight: FontWeight.normal,
+                  fontSize: textFontSize16,
+                  fontFamily: 'ubuntu',
+                ),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        DesignConfiguration.setSvgPath('appbarCart'),
+                        color: colors.primary,
+                        height: 50,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        child: Text(
+                          getTranslated(context, 'CANCEL')!,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.lightBlack,
+                            fontSize: textFontSize15,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'ubuntu',
+                          ),
+                        ),
+                        onPressed: () {
+                          Routes.pop(context);
+                          db.clearSaveForLater();
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/home', (r) => false);
+                        },
+                      ),
+                      TextButton(
+                        child: Text(
+                          getTranslated(context, 'Clear Cart')!,
+                          style: const TextStyle(
+                            color: colors.primary,
+                            fontSize: textFontSize15,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'ubuntu',
+                          ),
+                        ),
+                        onPressed: () {
+                          if (CUR_USERID != null) {
+                            context.read<UserProvider>().setCartCount('0');
+                            context
+                                .read<ProductDetailProvider>()
+                                .clearCartNow()
+                                .then(
+                                  (value) async {
+                                if (context
+                                    .read<ProductDetailProvider>()
+                                    .error ==
+                                    false) {
+                                  if (context
+                                      .read<ProductDetailProvider>()
+                                      .snackbarmessage ==
+                                      'Data deleted successfully') {
+                                  } else {
+                                    setSnackbar(
+                                        context
+                                            .read<ProductDetailProvider>()
+                                            .snackbarmessage,
+                                        context);
+                                  }
+                                } else {
+                                  setSnackbar(
+                                      context
+                                          .read<ProductDetailProvider>()
+                                          .snackbarmessage,
+                                      context);
+                                }
+                                Routes.pop(context);
+                                await offCartAdd();
+                                db.clearSaveForLater();
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  '/home',
+                                      (r) => false,
+                                );
+                              },
+                            );
+                          } else {
+                            Routes.pop(context);
+                            db.clearSaveForLater();
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/home',
+                                  (r) => false,
+                            );
+                          }
+                        },
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
 
   void _onVerifyCode() async {
     if (mounted) {
@@ -235,6 +388,218 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
     );
   }
 
+
+ Future<void> verifyuser() async {
+
+   var headers = {
+     'Cookie': 'ci_session=02250dbf2e1d3cccb38f822763edbb0ad432555e'
+   };
+   var request = http.MultipartRequest('POST', Uri.parse('https://alphawizzserver.com/jozzby_bazar_new/app/v1/api/verify_otp'));
+   request.fields.addAll({
+     'mobile': '${widget.mobileNumber}',
+     'otp': '${widget.responseOtp}',
+     'fcm_id': ''
+   });
+   request.headers.addAll(headers);
+   http.StreamedResponse response = await request.send();
+   if (response.statusCode == 200) {
+     var Result = await response.stream.bytesToString();
+     print('___________${Result}__________');
+     var finalResult = jsonDecode(Result);
+
+     if(finalResult['error']){
+       setSnackbar(finalResult['message'], context);
+
+     }else {
+       var getdata = finalResult['data'][0];
+       UserProvider userProvider =
+       Provider.of<UserProvider>(context, listen: false);
+       userProvider.setName(getdata[USERNAME] ?? '');
+       userProvider.setEmail(getdata[EMAIL] ?? '');
+       userProvider.setProfilePic(getdata[IMAGE] ?? '');
+
+       SettingProvider settingProvider =
+       Provider.of<SettingProvider>(context, listen: false);
+       settingProvider.saveUserDetail(
+         getdata[ID],
+         getdata[USERNAME],
+         getdata[EMAIL],
+         getdata[MOBILE],
+         getdata[CITY],
+         getdata[AREA],
+         getdata[ADDRESS],
+         getdata[PINCODE],
+         getdata[LATITUDE],
+         getdata[LONGITUDE],
+         getdata[IMAGE],
+         context,
+       );
+       offFavAdd().then(
+             (value) async {
+           db.clearFav();
+           context.read<FavoriteProvider>().setFavlist([]);
+           List cartOffList = await db.getOffCart();
+           if (singleSellerOrderSystem && cartOffList.isNotEmpty) {
+             forLoginPageSingleSellerSystem = true;
+             offSaveAdd().then(
+                   (value) {
+                 clearYouCartDialog();
+               },
+             );
+           } else {
+             offCartAdd().then(
+                   (value) {
+                 db.clearCart();
+                 offSaveAdd().then(
+                       (value) {
+                     db.clearSaveForLater();
+                     Navigator.pushNamedAndRemoveUntil(
+                       context,
+                       '/home',
+                           (r) => false,
+                     );
+                   },
+                 );
+               },
+             );
+           }
+         },
+       );
+     }
+   }
+   else {
+     print(response.reasonPhrase);
+   }
+
+
+
+ }
+
+  Future<void> offFavAdd() async {
+    List favOffList = await db.getOffFav();
+    if (favOffList.isNotEmpty) {
+      for (int i = 0; i < favOffList.length; i++) {
+        _setFav(favOffList[i]['PID']);
+      }
+    }
+  }
+  Future<void> offSaveAdd() async {
+    List saveOffList = await db.getOffSaveLater();
+
+    if (saveOffList.isNotEmpty) {
+      for (int i = 0; i < saveOffList.length; i++) {
+        saveForLater(saveOffList[i]['VID'], saveOffList[i]['QTY']);
+      }
+    }
+  }
+
+  Future<void> offCartAdd() async {
+    List cartOffList = await db.getOffCart();
+    if (cartOffList.isNotEmpty) {
+      for (int i = 0; i < cartOffList.length; i++) {
+        addToCartCheckout(cartOffList[i]['VID'], cartOffList[i]['QTY']);
+      }
+    }
+  }
+
+  Future<void> addToCartCheckout(String varId, String qty) async {
+    isNetworkAvail = await isNetworkAvailable();
+    if (isNetworkAvail) {
+      try {
+        var parameter = {
+          PRODUCT_VARIENT_ID: varId,
+          USER_ID: CUR_USERID,
+          QTY: qty,
+        };
+
+        Response response =
+        await post(manageCartApi, body: parameter, headers: headers)
+            .timeout(const Duration(seconds: timeOut));
+        if (response.statusCode == 200) {
+          var getdata = json.decode(response.body);
+          if (getdata['message'] == 'One of the product is out of stock.') {
+            homePageSingleSellerMessage = true;
+          }
+        }
+      } on TimeoutException catch (_) {
+        setSnackbar(getTranslated(context, 'somethingMSg')!, context);
+      }
+    } else {
+      if (mounted) isNetworkAvail = false;
+
+      setState(() {});
+    }
+  }
+
+
+  _setFav(String pid) async {
+    isNetworkAvail = await isNetworkAvailable();
+    if (isNetworkAvail) {
+      try {
+        var parameter = {USER_ID: CUR_USERID, PRODUCT_ID: pid};
+        Response response =
+        await post(setFavoriteApi, body: parameter, headers: headers)
+            .timeout(const Duration(seconds: timeOut));
+
+        var getdata = json.decode(response.body);
+
+        bool error = getdata['error'];
+        String? msg = getdata['message'];
+        if (!error) {
+          setSnackbar(msg!, context);
+        } else {
+          setSnackbar(msg!, context);
+        }
+      } on TimeoutException catch (_) {
+        setSnackbar(getTranslated(context, 'somethingMSg')!, context);
+      }
+    } else {
+      if (mounted) {
+        setState(
+              () {
+            isNetworkAvail = false;
+          },
+        );
+      }
+    }
+  }
+
+  saveForLater(String vid, String qty) async {
+    isNetworkAvail = await isNetworkAvailable();
+    if (isNetworkAvail) {
+      try {
+        var parameter = {
+          PRODUCT_VARIENT_ID: vid,
+          USER_ID: CUR_USERID,
+          QTY: qty,
+          SAVE_LATER: '1'
+        };
+        Response response =
+        await post(manageCartApi, body: parameter, headers: headers)
+            .timeout(const Duration(seconds: timeOut));
+        var getdata = json.decode(response.body);
+        bool error = getdata['error'];
+        String? msg = getdata['message'];
+        if (!error) {
+        } else {
+          setSnackbar(msg!, context);
+        }
+      } on TimeoutException catch (_) {
+        setSnackbar(getTranslated(context, 'somethingMSg')!, context);
+      }
+    } else {
+      if (mounted) {
+        setState(
+              () {
+            isNetworkAvail = false;
+          },
+        );
+      }
+    }
+  }
+
+
+
   void _onFormSubmitted() async {
     _playAnimation();
 
@@ -250,19 +615,13 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
       setSnackbar(getTranslated(context, 'OTPMSG')!, context);
       settingsProvider.setPrefrence(MOBILE, widget.mobileNumber!);
       settingsProvider.setPrefrence(COUNTRY_CODE, widget.countryCode!);
-      print('${widget.isMobile}___jjjj___________' );
+
     if (widget.title == getTranslated(context, 'SEND_OTP_TITLE')) {
         Future.delayed(const Duration(seconds: 2)).then((_) {
-          print('${widget.isMobile}______________' );
-          if((widget.isMobile ?? false))
-            {
-              Navigator.pushReplacement(context,
-                  CupertinoPageRoute(builder: (context) =>  SignUp(mobileNumber: widget.mobileNumber,)));
-            }else{
-            print('-----hccccccccccccc-------${widget.isMobile}');
+
             Navigator.pushReplacement(context,
                 CupertinoPageRoute(builder: (context) =>  SignUp(mobileNumber: widget.mobileNumber,)));
-          }
+
 
         });
       } else if (widget.title ==
@@ -470,13 +829,13 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
 
   Future <void> resendOTP() async{
     Future.delayed(Duration.zero).then(
-          (value) => context.read<AuthenticationProvider>().getVerifyUser().then(
+          (value) => context.read<AuthenticationProvider>().senOtp().then(
             (
             value,
             ) async {
           bool? error = value['error'];
           String? msg = value['message'];
-          int? receivedOTP = value['data'] ;
+          int? receivedOTP = value['otp'] ;
           await buttonController!.reverse();
 
           if (!error!) {
@@ -491,7 +850,6 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

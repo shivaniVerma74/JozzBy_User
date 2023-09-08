@@ -304,7 +304,7 @@ class _MyAppState extends State<MyApp> {
             '/': (context) => const Splash(),
             '/home': (context) => const Dashboard(),
           },
-          darkTheme: ThemeData(
+          /*darkTheme: ThemeData(
             canvasColor: colors.darkColor,
             cardColor: colors.darkColor2,
             dialogBackgroundColor: colors.darkColor2,
@@ -339,8 +339,8 @@ class _MyAppState extends State<MyApp> {
               secondary: colors.darkIcon,
               brightness: Brightness.dark,
             ),
-          ),
-          themeMode: themeNotifier.getThemeMode(),
+          ),*/
+          /*themeMode: themeNotifier.getThemeMode(),*/
         ),
       );
     }

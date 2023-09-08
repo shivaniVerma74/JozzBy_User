@@ -474,7 +474,7 @@ class _SellerProfileState extends State<SellerProfile>
           SORT: sortBy,
           ORDER: orderBy,
           TOP_RETAED: showTopRated,
-          SELLER_ID: '${widget.s_id}'
+          SELLER_ID: widget.s_id ?? widget.sellerID
         };
          print('-----------sellerrrrrrrrrrrrrrrr--------------${parameter}');
         // if (widget.s_id != '') {
@@ -504,12 +504,12 @@ class _SellerProfileState extends State<SellerProfile>
               value,
             ) async {
               bool error = value['error'];
-              print('--------rrrrrrrrrr444------------${value}');
               String? search = value['search'];
               context.read<ExploreProvider>().setProductTotal(value['total'] ??
                   context.read<ExploreProvider>().totalProducts);
               notificationisgettingdata = false;
               if (notificationoffset == 0) notificationisnodata = false;
+
 
               if (!error && search!.trim() == query.trim()) {
                 if (mounted) {
@@ -539,8 +539,11 @@ class _SellerProfileState extends State<SellerProfile>
                               .map((data) => Product.fromJson(data))
                               .toList());
 
+
+                          print('___________${items.length}__items________');
+
                           allitems.addAll(items);
-                          print('-----------hhhhhhhhhhhhhh------------${allitems}');
+                          print('-----------hhhhhhhhhhhhhh------------${allitems.length}');
                           getAvailVarient(allitems);
                         } else {
                           notificationisloadmore = false;

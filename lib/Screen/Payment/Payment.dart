@@ -146,400 +146,471 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     List<SectionModel> tempCartListForTestCondtion =
         context.read<CartProvider>().cartList;
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: getSimpleAppBar(
-          getTranslated(context, 'PAYMENT_METHOD_LBL')!, context),
-      body: isNetworkAvail
-          ? context.read<PaymentProvider>().isLoading
-              ? DesignConfiguration.getProgress()
-              : Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Consumer<UserProvider>(
-                                builder: (context, userProvider, _) {
-                                  return Card(
-                                    elevation: 0,
-                                    child: userProvider.curBalance != '0' &&
-                                            userProvider
-                                                .curBalance.isNotEmpty &&
-                                            userProvider.curBalance != ''
-                                        ? Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0),
-                                            child: CheckboxListTile(
-                                              dense: true,
-                                              contentPadding:
-                                                  const EdgeInsets.all(0),
-                                              value: context
-                                                  .read<CartProvider>()
-                                                  .isUseWallet,
-                                              onChanged: (bool? value) {
-                                                if (mounted) {
-                                                  setState(
-                                                    () {
-                                                      context
-                                                          .read<CartProvider>()
-                                                          .isUseWallet = value;
-                                                      if (value!) {
-                                                        if (context
+    return WillPopScope(
+      onWillPop: () async {
+        if(paymentIndex== 3   && (isPhonePayPaymentSuccess ?? false)){
+          return true;
+        }else if( paymentIndex== 3  && !(isPhonePayPaymentSuccess ?? false)){
+          initiatePayment();
+        }else if(razorAdvancePaySuccess== true && paymentIndex==1 ){
+          return true;
+        }else if(razorAdvancePaySuccess!= true && paymentIndex==1){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please pay first advance payment in case on cash on delivery')));
+        }
+        return false;
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        // appBar: getSimpleAppBar(getTranslated(context, 'PAYMENT_METHOD_LBL')!, context),
+        appBar: AppBar(
+          title: Text('${getTranslated(context, 'PAYMENT_METHOD_LBL')}',style: const TextStyle(
+            color: colors.whiteTemp,
+            fontWeight: FontWeight.normal,
+            fontFamily: 'ubuntu',
+          ),
+          ),
+          leading: Builder(
+            builder: (BuildContext context) {
+              return Container(
+                margin: const EdgeInsets.all(10),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(circularBorderRadius4),
+                  onTap: () {
+                    print("paymentIndex______$paymentIndex  isPhonePayPaymentSuccess________$isPhonePayPaymentSuccess    razorAdvancePaySuccess_____ $razorAdvancePaySuccess");
+
+                    if(paymentIndex== 3   && (isPhonePayPaymentSuccess ?? false)){
+                      Navigator.of(context).pop();
+                    }else if( paymentIndex== 3  && !(isPhonePayPaymentSuccess ?? false)){
+                      initiatePayment();
+                    }else if(razorAdvancePaySuccess== true && paymentIndex==1 ){
+                      Navigator.of(context).pop();
+                    }else if(razorAdvancePaySuccess!= true && paymentIndex==1){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please pay first advance payment in case on cash on delivery')));
+                    }
+
+                  },
+                  child: const Center(
+                    child: Icon(
+                      Icons.arrow_back_ios_rounded,
+                      color: colors.whiteTemp,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+
+        ),
+        body: isNetworkAvail
+            ? context.read<PaymentProvider>().isLoading
+                ? DesignConfiguration.getProgress()
+                : Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Consumer<UserProvider>(
+                                  builder: (context, userProvider, _) {
+                                    return Card(
+                                      elevation: 0,
+                                      child: userProvider.curBalance != '0' &&
+                                              userProvider
+                                                  .curBalance.isNotEmpty &&
+                                              userProvider.curBalance != ''
+                                          ? Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 8.0),
+                                              child: CheckboxListTile(
+                                                dense: true,
+                                                contentPadding:
+                                                    const EdgeInsets.all(0),
+                                                value: context
+                                                    .read<CartProvider>()
+                                                    .isUseWallet,
+                                                onChanged: (bool? value) {
+                                                  if (mounted) {
+                                                    setState(
+                                                      () {
+                                                        context
+                                                            .read<CartProvider>()
+                                                            .isUseWallet = value;
+                                                        if (value!) {
+                                                          if (context
+                                                                  .read<
+                                                                      CartProvider>()
+                                                                  .totalPrice <=
+                                                              double.parse(
+                                                                  userProvider
+                                                                      .curBalance)) {
+                                                            context
                                                                 .read<
                                                                     CartProvider>()
-                                                                .totalPrice <=
-                                                            double.parse(
-                                                                userProvider
-                                                                    .curBalance)) {
-                                                          context
-                                                              .read<
-                                                                  CartProvider>()
-                                                              .remWalBal = (double
-                                                                  .parse(userProvider
-                                                                      .curBalance) -
-                                                              context
-                                                                  .read<
-                                                                      CartProvider>()
-                                                                  .totalPrice);
-                                                          context
-                                                                  .read<
-                                                                      CartProvider>()
-                                                                  .usedBalance =
-                                                              context
-                                                                  .read<
-                                                                      CartProvider>()
-                                                                  .totalPrice;
-                                                          context
-                                                              .read<
-                                                                  CartProvider>()
-                                                              .payMethod = 'Wallet';
+                                                                .remWalBal = (double
+                                                                    .parse(userProvider
+                                                                        .curBalance) -
+                                                                context
+                                                                    .read<
+                                                                        CartProvider>()
+                                                                    .totalPrice);
+                                                            context
+                                                                    .read<
+                                                                        CartProvider>()
+                                                                    .usedBalance =
+                                                                context
+                                                                    .read<
+                                                                        CartProvider>()
+                                                                    .totalPrice;
+                                                            context
+                                                                .read<
+                                                                    CartProvider>()
+                                                                .payMethod = 'Wallet';
+
+                                                            context
+                                                                .read<
+                                                                    CartProvider>()
+                                                                .isPayLayShow = false;
+                                                          } else {
+                                                            context
+                                                                .read<
+                                                                    CartProvider>()
+                                                                .remWalBal = 0;
+                                                            context
+                                                                    .read<
+                                                                        CartProvider>()
+                                                                    .usedBalance =
+                                                                double.parse(
+                                                                    userProvider
+                                                                        .curBalance);
+                                                            context
+                                                                .read<
+                                                                    CartProvider>()
+                                                                .isPayLayShow = true;
+                                                          }
 
                                                           context
                                                               .read<
                                                                   CartProvider>()
-                                                              .isPayLayShow = false;
+                                                              .totalPrice = context
+                                                                  .read<
+                                                                      CartProvider>()
+                                                                  .totalPrice -
+                                                              context
+                                                                  .read<
+                                                                      CartProvider>()
+                                                                  .usedBalance;
                                                         } else {
                                                           context
                                                               .read<
                                                                   CartProvider>()
-                                                              .remWalBal = 0;
+                                                              .totalPrice = context
+                                                                  .read<
+                                                                      CartProvider>()
+                                                                  .totalPrice +
+                                                              context
+                                                                  .read<
+                                                                      CartProvider>()
+                                                                  .usedBalance;
                                                           context
                                                                   .read<
                                                                       CartProvider>()
-                                                                  .usedBalance =
+                                                                  .remWalBal =
                                                               double.parse(
                                                                   userProvider
                                                                       .curBalance);
                                                           context
                                                               .read<
                                                                   CartProvider>()
+                                                              .payMethod = null;
+                                                          context
+                                                              .read<
+                                                                  CartProvider>()
+                                                              .selectedMethod = null;
+                                                          context
+                                                              .read<
+                                                                  CartProvider>()
+                                                              .usedBalance = 0;
+                                                          context
+                                                              .read<
+                                                                  CartProvider>()
                                                               .isPayLayShow = true;
                                                         }
 
-                                                        context
-                                                            .read<
-                                                                CartProvider>()
-                                                            .totalPrice = context
-                                                                .read<
-                                                                    CartProvider>()
-                                                                .totalPrice -
-                                                            context
-                                                                .read<
-                                                                    CartProvider>()
-                                                                .usedBalance;
-                                                      } else {
-                                                        context
-                                                            .read<
-                                                                CartProvider>()
-                                                            .totalPrice = context
-                                                                .read<
-                                                                    CartProvider>()
-                                                                .totalPrice +
-                                                            context
-                                                                .read<
-                                                                    CartProvider>()
-                                                                .usedBalance;
-                                                        context
-                                                                .read<
-                                                                    CartProvider>()
-                                                                .remWalBal =
-                                                            double.parse(
-                                                                userProvider
-                                                                    .curBalance);
-                                                        context
-                                                            .read<
-                                                                CartProvider>()
-                                                            .payMethod = null;
-                                                        context
-                                                            .read<
-                                                                CartProvider>()
-                                                            .selectedMethod = null;
-                                                        context
-                                                            .read<
-                                                                CartProvider>()
-                                                            .usedBalance = 0;
-                                                        context
-                                                            .read<
-                                                                CartProvider>()
-                                                            .isPayLayShow = true;
-                                                      }
-
-                                                      widget.update();
-                                                    },
-                                                  );
-                                                }
-                                              },
-                                              title: Text(
-                                                getTranslated(
-                                                    context, 'USE_WALLET')!,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle1,
-                                              ),
-                                              subtitle: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 8.0),
-                                                child: Text(
-                                                  context
-                                                          .read<CartProvider>()
-                                                          .isUseWallet!
-                                                      ? '${getTranslated(context, 'REMAIN_BAL')!} : ${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().remWalBal)}'
-                                                      : '${getTranslated(context, 'TOTAL_BAL')!} : ${DesignConfiguration.getPriceFormat(context, double.parse(userProvider.curBalance))!}',
-                                                  style: TextStyle(
-                                                    fontSize: textFontSize15,
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .black,
+                                                        widget.update();
+                                                      },
+                                                    );
+                                                  }
+                                                },
+                                                title: Text(
+                                                  getTranslated(
+                                                      context, 'USE_WALLET')!,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .subtitle1,
+                                                ),
+                                                subtitle: Padding(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                          vertical: 8.0),
+                                                  child: Text(
+                                                    context
+                                                            .read<CartProvider>()
+                                                            .isUseWallet!
+                                                        ? '${getTranslated(context, 'REMAIN_BAL')!} : ${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().remWalBal)}'
+                                                        : '${getTranslated(context, 'TOTAL_BAL')!} : ${DesignConfiguration.getPriceFormat(context, double.parse(userProvider.curBalance))!}',
+                                                    style: TextStyle(
+                                                      fontSize: textFontSize15,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .black,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          )
-                                        : Container(),
-                                  );
-                                },
-                              ),
-                              context.read<CartProvider>().isTimeSlot!
-                                  ? Card(
-                                      elevation: 0,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              getTranslated(
-                                                  context, 'PREFERED_TIME')!,
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .fontColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: textFontSize16,
+                                            )
+                                          : Container(),
+                                    );
+                                  },
+                                ),
+                                context.read<CartProvider>().isTimeSlot!
+                                    ? Card(
+                                        elevation: 0,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                getTranslated(
+                                                    context, 'PREFERED_TIME')!,
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .fontColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: textFontSize16,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          const Divider(),
-                                          Container(
-                                            height: 90,
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                            child: ListView.builder(
+                                            const Divider(),
+                                            Container(
+                                              height: 90,
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 10),
+                                              child: ListView.builder(
+                                                shrinkWrap: true,
+                                                scrollDirection: Axis.horizontal,
+                                                itemCount: int.parse(context
+                                                    .read<PaymentProvider>()
+                                                    .allowDay!),
+                                                itemBuilder: (context, index) {
+                                                  return dateCell(index);
+                                                },
+                                              ),
+                                            ),
+                                            const Divider(),
+                                            ListView.builder(
                                               shrinkWrap: true,
-                                              scrollDirection: Axis.horizontal,
-                                              itemCount: int.parse(context
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemCount: context
                                                   .read<PaymentProvider>()
-                                                  .allowDay!),
+                                                  .timeModel
+                                                  .length,
                                               itemBuilder: (context, index) {
-                                                return dateCell(index);
+                                                return timeSlotItem(index);
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    : Container(),
+                                context.read<CartProvider>().isPayLayShow! && context.read<PaymentProvider>().payModel.isNotEmpty
+                                    ? Card(
+                                        elevation: 0,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                getTranslated(
+                                                    context, 'SELECT_PAYMENT')!,
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .fontColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: textFontSize16,
+                                                ),
+                                              ),
+                                            ),
+                                            const Divider(),
+                                            ListView.builder(
+                                              shrinkWrap: true,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemCount: context
+                                                  .read<PaymentProvider>()
+                                                  .paymentMethodList
+                                                  .length,
+                                              itemBuilder: (context, index) {
+
+                                                if (index == 1 &&
+                                                    context
+                                                        .read<PaymentProvider>()
+                                                        .cod &&
+                                                    tempCartListForTestCondtion[0]
+                                                            .productType !=
+                                                        'digital_product') {
+                                                  return paymentItem(index);
+                                                } else if (index == 2 &&
+                                                    context
+                                                        .read<PaymentProvider>()
+                                                        .paypal) {
+                                                  return paymentItem(index);
+                                                } else if (index == 3 &&
+                                                    context
+                                                        .read<PaymentProvider>()
+                                                        .phonepay) {
+                                                  return paymentItem(index);
+                                                }
+                                                // else if (index == 3 &&
+                                                //     context
+                                                //         .read<PaymentProvider>()
+                                                //         .paumoney) {
+                                                //   return paymentItem(index);
+                                                //
+                                                // }
+                                                else if (index == 4 &&
+                                                    context
+                                                        .read<PaymentProvider>()
+                                                        .razorpay) {
+                                                  return paymentItem(index);
+                                                }else if (index == 5 &&
+                                                    context
+                                                        .read<PaymentProvider>()
+                                                        .paystack) {
+                                                  return paymentItem(index);
+                                                } else if (index == 6 &&
+                                                    context
+                                                        .read<PaymentProvider>()
+                                                        .flutterwave) {
+                                                  return paymentItem(index);
+                                                } else if (index == 7 &&
+                                                    context
+                                                        .read<PaymentProvider>()
+                                                        .stripe) {
+                                                  return paymentItem(index);
+                                                } else if (index == 8 &&
+                                                    context
+                                                        .read<PaymentProvider>()
+                                                        .paytm) {
+                                                  return paymentItem(index);
+                                                } else if (index == 0 &&
+                                                    context
+                                                        .read<PaymentProvider>()
+                                                        .gpay) {
+                                                  return paymentItem(index);
+                                                } else if (index == 9 &&
+                                                    context
+                                                        .read<PaymentProvider>()
+                                                        .bankTransfer) {
+                                                  return paymentItem(index);
+                                                } else if (index == 10 &&
+                                                    context
+                                                        .read<PaymentProvider>()
+                                                        .midtrans) {
+                                                  return paymentItem(index);
+                                                } else if (index == 11 &&
+                                                    context
+                                                        .read<PaymentProvider>()
+                                                        .myfatoorah) {
+                                                  return paymentItem(index);
+                                                }
+                                                else {
+                                                  return Container();
+                                                }
                                               },
                                             ),
-                                          ),
-                                          const Divider(),
-                                          ListView.builder(
-                                            shrinkWrap: true,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            itemCount: context
-                                                .read<PaymentProvider>()
-                                                .timeModel
-                                                .length,
-                                            itemBuilder: (context, index) {
-                                              return timeSlotItem(index);
-                                            },
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  : Container(),
-                              context.read<CartProvider>().isPayLayShow! && context.read<PaymentProvider>().payModel.isNotEmpty
-                                  ? Card(
-                                      elevation: 0,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              getTranslated(
-                                                  context, 'SELECT_PAYMENT')!,
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .fontColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: textFontSize16,
-                                              ),
-                                            ),
-                                          ),
-                                          const Divider(),
-                                          ListView.builder(
-                                            shrinkWrap: true,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            itemCount: context
-                                                .read<PaymentProvider>()
-                                                .paymentMethodList
-                                                .length,
-                                            itemBuilder: (context, index) {
+                                           paymentIndex == 1 ? Align(
+                                             alignment: Alignment.topCenter,
+                                             child: Card(
+                                               elevation: 0,
+                                               child: Column(children: [
+                                               Text('*Pay ${ADVANCE_PERCENT}% Advance amount of Order amount'),
+                                               ElevatedButton(onPressed: (){
+                                                 print('___________${context.read<CartProvider>().totalPrice}__________');
+                                                 double percent = double.parse(ADVANCE_PERCENT ?? '0.0');
+                                                 deductAmount = context.read<CartProvider>().totalPrice*percent /100 ;
+                                                 openCheckout();
+                                                // initiatePayment();
+                                                 setState(() {});
 
-                                              if (index == 1 &&
-                                                  context
-                                                      .read<PaymentProvider>()
-                                                      .cod &&
-                                                  tempCartListForTestCondtion[0]
-                                                          .productType !=
-                                                      'digital_product') {
-                                                return paymentItem(index);
-                                              } else if (index == 2 &&
-                                                  context
-                                                      .read<PaymentProvider>()
-                                                      .paypal) {
-                                                return paymentItem(index);
-                                              } else if (index == 3 &&
-                                                  context
-                                                      .read<PaymentProvider>()
-                                                      .phonepay) {
-                                                return paymentItem(index);
-                                              }
-                                              // else if (index == 3 &&
-                                              //     context
-                                              //         .read<PaymentProvider>()
-                                              //         .paumoney) {
-                                              //   return paymentItem(index);
-                                              //
-                                              // }
-                                              else if (index == 4 &&
-                                                  context
-                                                      .read<PaymentProvider>()
-                                                      .razorpay) {
-                                                return paymentItem(index);
-                                              }else if (index == 5 &&
-                                                  context
-                                                      .read<PaymentProvider>()
-                                                      .paystack) {
-                                                return paymentItem(index);
-                                              } else if (index == 6 &&
-                                                  context
-                                                      .read<PaymentProvider>()
-                                                      .flutterwave) {
-                                                return paymentItem(index);
-                                              } else if (index == 7 &&
-                                                  context
-                                                      .read<PaymentProvider>()
-                                                      .stripe) {
-                                                return paymentItem(index);
-                                              } else if (index == 8 &&
-                                                  context
-                                                      .read<PaymentProvider>()
-                                                      .paytm) {
-                                                return paymentItem(index);
-                                              } else if (index == 0 &&
-                                                  context
-                                                      .read<PaymentProvider>()
-                                                      .gpay) {
-                                                return paymentItem(index);
-                                              } else if (index == 9 &&
-                                                  context
-                                                      .read<PaymentProvider>()
-                                                      .bankTransfer) {
-                                                return paymentItem(index);
-                                              } else if (index == 10 &&
-                                                  context
-                                                      .read<PaymentProvider>()
-                                                      .midtrans) {
-                                                return paymentItem(index);
-                                              } else if (index == 11 &&
-                                                  context
-                                                      .read<PaymentProvider>()
-                                                      .myfatoorah) {
-                                                return paymentItem(index);
-                                              }
-                                              else {
-                                                return Container();
-                                              }
-                                            },
-                                          ),
-                                         paymentIndex == 1 ? Align(
-                                           alignment: Alignment.topCenter,
-                                           child: Card(
-                                             elevation: 0,
-                                             child: Column(children: [
-                                             Text('*Pay ${ADVANCE_PERCENT}% Advance amount of Order amount'),
-                                             ElevatedButton(onPressed: (){
-                                               print('___________${context.read<CartProvider>().totalPrice}__________');
-                                               double percent = double.parse(ADVANCE_PERCENT ?? '0.0');
-                                               deductAmount = context.read<CartProvider>().totalPrice*percent /100 ;
-                                               openCheckout();
-                                              // initiatePayment();
-                                               setState(() {});
+                                               }, child: Text('Pay ${deductAmount ?? ''}'))
+                                             ],),),
+                                           ) : SizedBox(),
+                                            // paymentIndex ==1 ?
+                                            // InkWell(
+                                            //   onTap: initiatePayment,
+                                            //     child: const Text('PhonePay')) : SizedBox(),
 
-                                             }, child: Text('Pay ${deductAmount ?? ''}'))
-                                           ],),),
-                                         ) : SizedBox(),
-                                          // paymentIndex ==1 ?
-                                          // InkWell(
-                                          //   onTap: initiatePayment,
-                                          //     child: const Text('PhonePay')) : SizedBox(),
-
-                                        ],
-                                      ),
-                                    )
-                                  : Container()
-                            ],
+                                          ],
+                                        ),
+                                      )
+                                    : Container()
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                       SimBtn(
-                        borderRadius: circularBorderRadius5,
-                        size: 0.8,
-                        title: getTranslated(context, 'DONE'),
-                        onBtnSelected: /*paymentIndex==1 && isAdvancePaymentSuccess ? (){
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please pay advance amount first')));
-                        } :*/ paymentIndex== 3 && (isPhonePayPaymentSuccess ?? false) ? (){
-                                         Routes.pop(context);
-                                     } :  paymentIndex== 3  && !(isPhonePayPaymentSuccess ?? false) ? initiatePayment : (){
-                          Routes.pop(context);
-                        }
-                      ),
-                    ],
-                  ),
-                )
-          : NoInterNet(
-              setStateNoInternate: setStateNoInternate,
-              buttonSqueezeanimation: buttonSqueezeanimation,
-              buttonController: buttonController,
-            ),
+                         SimBtn(
+                          borderRadius: circularBorderRadius5,
+                          size: 0.8,
+                          title: getTranslated(context, 'DONE'),
+      //                     onBtnSelected: /*paymentIndex==1 && isAdvancePaymentSuccess ? (){
+      //                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please pay advance amount first')));
+      //                     } :*/
+      //
+      //                     paymentIndex== 3   && (isPhonePayPaymentSuccess ?? false) ? (){
+      //                                      Routes.pop(context);
+      //                                  }:
+      //                     razorAdvancePaySuccess== true && paymentIndex==1 ? (){Routes.pop(context);}
+      // :  paymentIndex== 3  && !(isPhonePayPaymentSuccess ?? false) ? initiatePayment : (){
+      //                       Routes.pop(context);
+      //                     }
+
+                           ///------------
+                             onBtnSelected: (){
+                            print("paymentIndex______$paymentIndex  isPhonePayPaymentSuccess________$isPhonePayPaymentSuccess    razorAdvancePaySuccess_____ $razorAdvancePaySuccess");
+
+                            if(paymentIndex== 3   && (isPhonePayPaymentSuccess ?? false)){
+                              Routes.pop(context);
+                            }else if( paymentIndex== 3  && !(isPhonePayPaymentSuccess ?? false)){
+                              initiatePayment();
+                            }else if(razorAdvancePaySuccess== true && paymentIndex==1 ){
+                              Routes.pop(context);
+                            }else if(razorAdvancePaySuccess!= true && paymentIndex==1){
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please pay first advance payment in case on cash on delivery')));
+                            }
+                             }
+                        ),
+                      ],
+                    ),
+                  )
+            : NoInterNet(
+                setStateNoInternate: setStateNoInternate,
+                buttonSqueezeanimation: buttonSqueezeanimation,
+                buttonController: buttonController,
+              ),
+      ),
     );
   }
   bool? isPhonePayPaymentSuccess ;
@@ -946,6 +1017,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
       debugPrint('Error: $e');
     }
   }
+bool razorAdvancePaySuccess = false;
 
   Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
     // RazorpayDetailApi();
@@ -958,6 +1030,8 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
         response.paymentId);*/
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment Success")));
     isAdvancePaymentSuccess = false ;
+    razorAdvancePaySuccess = true ;
+
     context.read<CartProvider>().totalPrice = context.read<CartProvider>().totalPrice - deductAmount!;
     context.read<CartProvider>().deductAmount = deductAmount!;
     setState(() {

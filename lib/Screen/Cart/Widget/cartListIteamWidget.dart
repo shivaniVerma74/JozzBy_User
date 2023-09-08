@@ -271,7 +271,7 @@ class _CartListViewLayOutState extends State<CartListViewLayOut> {
                                   height:35,
                                   width:100,
                                   decoration: BoxDecoration(
-                                      color:Color(0xffEFEFEF),
+                                      color:const Color(0xffEFEFEF),
                                       borderRadius: BorderRadius.circular(10)),
                                   child: Row(
                                     children: <Widget>[
@@ -287,11 +287,13 @@ class _CartListViewLayOutState extends State<CartListViewLayOut> {
                                           ),
                                         ),
                                         onTap: () {
+
                                           if (context
                                               .read<CartProvider>()
                                               .isProgress ==
                                               false) {
                                             if (CUR_USERID != null) {
+
                                               context
                                                   .read<CartProvider>()
                                                   .removeFromCart(
@@ -308,6 +310,7 @@ class _CartListViewLayOutState extends State<CartListViewLayOut> {
                                                     CartProvider>()
                                                     .promoC
                                                     .text,
+                                                isRemove: true
                                               );
                                             } else {
                                               if ((int.parse(

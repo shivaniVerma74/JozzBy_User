@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:collection/src/iterable_extensions.dart';
 import 'package:eshop_multivendor/Model/delivery_charges_response.dart';
@@ -171,7 +172,6 @@ class CartProvider extends ChangeNotifier {
     try {
       CartRepository.fetchDeliveryCharge().then(
             (value) {
-              print('___________${value['error']}__________');
           if (!value['error']) {
             deliveryChargeList = value['deliveryCharge'];
 
@@ -351,6 +351,7 @@ class CartProvider extends ChangeNotifier {
     required BuildContext context,
     required Function update,
     required String promoCode,
+    bool? isRemove
   }) async {
     isNetworkAvail = await isNetworkAvailable();
     if (!remove &&
@@ -386,16 +387,20 @@ class CartProvider extends ChangeNotifier {
           var parameter = {
             PRODUCT_VARIENT_ID: varId,
             USER_ID: CUR_USERID,
-            QTY: qty.toString()
+            QTY: remove ? qty.toString() : cartList[index].productList![0].qtyStepSize,//qty.toString()
+            REMOVE: isRemove ?? false || remove ? '0' : '1'
           };
 
+          print('___________${parameter}__________');
           dynamic result =
               await CartRepository.manageCartAPICall(parameter: parameter);
           bool error = result['error'];
           String? msg = result['message'];
           if (!error) {
+
             var data = result['data'];
-            String? qty = data['total_quantity'];
+            log('___________${data}__________');
+            String qty = data['total_quantity'];
             context.read<UserProvider>().setCartCount(data['cart_count']);
             if (move == false) {
               if (qty == '0') remove = true;
@@ -406,6 +411,11 @@ class CartProvider extends ChangeNotifier {
               } else {
                 cartList[index].qty = qty.toString();
               }
+              var cart = result['cart'];
+              List<SectionModel> uptcartList = (cart as List)
+                  .map((cart) => SectionModel.fromCart(cart))
+                  .toList();
+              setCartlist(uptcartList);
 
               oriPrice = double.parse(data[SUB_TOTAL]);
 
@@ -467,6 +477,7 @@ class CartProvider extends ChangeNotifier {
                 update();
               }
             } else {
+              print('___________else__________');
               if (qty == '0') remove = true;
 
               if (remove) {
@@ -612,7 +623,7 @@ class CartProvider extends ChangeNotifier {
           if (!error) {
             var data = result['data'];
 
-            String? qty = data['total_quantity'];
+            String qty = data['total_quantity'];
 
             context.read<UserProvider>().setCartCount(
                   data['cart_count'],
@@ -626,6 +637,9 @@ class CartProvider extends ChangeNotifier {
             }
 
             oriPrice = double.parse(data[SUB_TOTAL]);
+
+
+            controller[index].text = qty;
 
             /*if (!ISFLAT_DEL) {
               if ((oriPrice) <
@@ -843,7 +857,8 @@ class CartProvider extends ChangeNotifier {
         var parameter = {
           PRODUCT_VARIENT_ID: cartList[index].varientId,
           USER_ID: CUR_USERID,
-          QTY: qty,
+          QTY: cartList[index].productList![0].qtyStepSize,//qty,
+          REMOVE: '1'
         };
         print('------------parameter1111------------${parameter}');
         dynamic result =
@@ -854,14 +869,21 @@ class CartProvider extends ChangeNotifier {
         if (!error) {
           var data = result['data'];
 
+          log('_______log____${data}__________');
+
           String qty = data['total_quantity'];
+
+          print('______qty_____${qty}__________');
 
           context.read<UserProvider>().setCartCount(data['cart_count']);
           cartList[index].qty = qty;
           oriPrice = double.parse(data['sub_total']);
 
           controller[index].text = qty;
+          print('___________${controller[index].text}____fdfsdf______');
           totalPrice = 0;
+
+          print('___________${result['cart']}____fdfsdf______');
 
           var cart = result['cart'];
           List<SectionModel> uptcartList = (cart as List)

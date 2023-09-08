@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:eshop_multivendor/Screen/brand_list/brandlist.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart'as http;
 import 'package:eshop_multivendor/Helper/ApiBaseHelper.dart';
@@ -198,7 +199,7 @@ class _HomePageState extends State<HomePage>
                                   child: const Center(child: Text("All Brand List",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold,fontSize: 20),))),
                             ),
                             const SizedBox(height: 10,),
-                            isSet==false?brandListCart():brandcard(),
+                           brandcard(),
                             const Divider(
                               thickness: 1,
                               color:Colors.grey,
@@ -211,7 +212,7 @@ class _HomePageState extends State<HomePage>
                             sellerList==""?Text('Seller Not Found',style: TextStyle(color: colors.blackTemp),):getSellerList(),
                             const MostLikeSection(),
                             const SizedBox(height: 10,),
-                            imageCard(),
+                            getImagesModel?.data?.isEmpty ?? true ? SizedBox() :  imageCard(),
                             const SizedBox(height: 50,),
                           ],
                         ),
@@ -388,9 +389,7 @@ class _HomePageState extends State<HomePage>
               SizedBox(height: 10,),
               InkWell(
                 onTap: () {
-                  setState(() {
-                    isSet =false;
-                  });
+                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BrandList()));
                 },
                 child: Container(
                     height: 40,
@@ -419,9 +418,17 @@ class _HomePageState extends State<HomePage>
         width:double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-              child: Image.network("${getImagesModel?.data?.first.image}",fit: BoxFit.fill,)),
+          child: ListView.builder(
+            itemCount:getImagesModel?.data?.length ,
+            // physics: NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+            return ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network("${getImagesModel?.data?[index].image}",fit: BoxFit.fill,));
+          },)
+
         ));
   }
 
@@ -495,7 +502,7 @@ class _HomePageState extends State<HomePage>
       }),
     );
   }
-  GetImagesModel?getImagesModel;
+  GetImagesModel? getImagesModel;
   getImagesApi() async {
     var headers = {
       'Cookie': 'ci_session=072b6f29be0b884e59f61a1530aec13e11b5f470'
@@ -504,6 +511,7 @@ class _HomePageState extends State<HomePage>
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
+      print('_______________imagesPath_________________');
    var  result = await response.stream.bytesToString();
    var finalResult = GetImagesModel.fromJson(jsonDecode(result));
       setState(() {

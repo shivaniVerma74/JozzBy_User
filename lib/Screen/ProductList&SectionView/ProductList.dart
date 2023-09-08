@@ -99,7 +99,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
   @override
   void initState() {
    setState(() {
-     widget.getBrand =false;
+     widget.getBrand = false;
      print('------------jjjjjkkkkkkkkkkkkkk-------------${widget.getBrand}');
    });
 
@@ -208,7 +208,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
       backgroundColor: colors.primary1,
       appBar:
       getAppBar(
-        widget.name==null?'Brand details':widget.name!,
+        widget.name==null?'Brand Details':widget.name!,
               context,
               setStateNow,
             ),
@@ -270,10 +270,11 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
       LIMIT: perPage.toString(),
       OFFSET: offset.toString(),
       TOP_RETAED: top,
-      'brand': widget.getBrand == false ? widget.brandId: ""
+      'brand': widget.getBrand == false ? widget.brandId ?? "": ""
     };
 
     print('-----getProductApi--parameter--------------${parameter}');
+    print('___________${selId}_____selId_____');
     if (selId != '') {
       parameter[ATTRIBUTE_VALUE_ID] = selId;
     }
@@ -341,7 +342,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
             }
           } else {
             isLoadingmore = false;
-            if (msg != 'Products Not Found !') setSnackbar(msg!, context);
+            if (msg != 'Products Not Found !') //setSnackbar(msg!, context);
             notificationisnodata = true;
           }
 

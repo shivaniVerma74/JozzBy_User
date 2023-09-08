@@ -576,8 +576,8 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print('___________${widget.model?.qtyStepSize}__________');
 
-    log('___________${widget.model?.desc}__________');
     deviceHeight = MediaQuery.of(context).size.height;
     deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -1007,6 +1007,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                       Routes.navigateToCartScreen(context, false);
                     }
                   }
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart(fromBottom: true)));
                 } else {
                   if (msg !=
                       getTranslated(context,
@@ -1696,7 +1697,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
       ),
     );
   }
-
+double qty = 0.0 ;
   _showContent() {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -2021,7 +2022,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                                       );
 
                                     },
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.home_outlined,color:colors.blackTemp,
 
                                     ),
@@ -2066,8 +2067,6 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                                   ),
                                 ),
                               ),
-
-
 
                               InkWell(
                                 onTap: () async {
@@ -2189,31 +2188,26 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                                           },
                                         ),
 
-                                        Selector<UserProvider, String>(
-                                          builder: (context, data, child) {
-                                            return Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(circularBorderRadius7),
-                                                  color:colors.transparent
-                                              ),
-                                              width: 33,
-                                              height: 33,
-                                              child: Center(
-                                                child: Text(
-                                                  data==""||data==null?'0':data,
-                                                  style: TextStyle(
-                                                    fontSize:16,
-                                                    fontFamily: 'ubuntu',
-                                                    fontWeight: FontWeight.bold,
-                                                    color:colors.primary,
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(circularBorderRadius7),
+                                        color:colors.transparent
+                                    ),
+                                    width: 33,
+                                    height: 33,
+                                    child: Center(
+                                      child: Text(
+                                        widget.model?.qtyStepSize ?? '',
+                                        style: const TextStyle(
+                                          fontSize:16,
+                                          fontFamily: 'ubuntu',
+                                          fontWeight: FontWeight.bold,
+                                          color:colors.primary,
 
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          selector: (_, HomePageProvider) => HomePageProvider.curCartCount,
                                         ),
+                                      ),
+                                    ),
+                                  ),
 
                                         // Container(
                                         //   width: 37,
@@ -2256,12 +2250,16 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                                             ),
                                           ),
                                           onTap: () {
-                                            addToCart(
-                                              qtyController.text,
-                                              false,
-                                              true,
-                                              widget.model!,
-                                            );
+                                            qty += double.parse(widget.model?.qtyStepSize ?? '0.0');
+                                            setState(() {
+
+                                            });
+                                            // addToCart(
+                                            //   qtyController.text,
+                                            //   false,
+                                            //   true,
+                                            //   widget.model!,
+                                            // );
                                           },
                                         )
                                       ],
@@ -2270,7 +2268,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 20,),
+                              const SizedBox(width: 20,),
                               InkWell(
                                 onTap: () async {
 
@@ -2461,14 +2459,23 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                           ),
                           InkWell(
                             onTap: () async {
-                              String qty;
-                              qty = qtyController.text;
-                              addToCart(
-                                qty,
+                             // String qty;
+                              //qty = qtyController.text;
+
+                             if(qty > double.parse(widget.model?.qtyStepSize ?? '0.0'))
+                             {
+                               setState(() {
+                                 qty -= double.parse(widget.model?.qtyStepSize ?? '0.0');
+                               });
+                             }
+
+
+                              /*addToCart(
+                                widget.model?.qtyStepSize ?? '',
                                 true,
                                 true,
                                 widget.model!,
-                              );
+                              );*/
                             },
                             child: Container(
                               height:45,
@@ -2520,9 +2527,18 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                                           width: 33,
                                           height: 33,
                                           child: Center(
-                                            child: Text(
-                                              data==""||data==null?'0':data,
-                                              style: TextStyle(
+                                            child: qty == 0.0 ? Text(
+                                              widget.model?.qtyStepSize ?? '0',
+                                              style: const TextStyle(
+                                                fontSize:16,
+                                                fontFamily: 'ubuntu',
+                                                fontWeight: FontWeight.bold,
+                                                color:colors.primary,
+
+                                              ),
+                                            ) : Text(
+                                              qty.toStringAsFixed(0),
+                                              style: const TextStyle(
                                                 fontSize:16,
                                                 fontFamily: 'ubuntu',
                                                 fontWeight: FontWeight.bold,
@@ -2577,12 +2593,17 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                                         ),
                                       ),
                                       onTap: () {
-                                        addToCart(
-                                          qtyController.text,
+
+                                        qty += double.parse(widget.model?.qtyStepSize ?? '0.0');
+                                        setState(() {
+
+                                        });
+                                        /*addToCart(
+                                          qty.toStringAsFixed(0),
                                           false,
                                           true,
                                           widget.model!,
-                                        );
+                                        );*/
                                       },
                                     )
                                   ],
@@ -2595,13 +2616,19 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                           InkWell(
                             onTap: () async {
 
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart(fromBottom: true)));
+
                               // addToCart(
                               //   qtyController.text,
                               //   false,
                               //   true,
                               //   widget.model!,
                               // );
+                              addToCart(
+                                qty == 0.0 ? widget.model?.qtyStepSize ?? '' : qty.toStringAsFixed(0),
+                                true,
+                                true,
+                                widget.model!,
+                              );
                             },
                             child: Container(
                               height:45,

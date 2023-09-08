@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart';
 import '../widgets/security.dart';
@@ -23,7 +24,7 @@ class ApiBaseHelper {
       final response =
           await post(url, body: param.isNotEmpty ? param : [], headers: headers)
               .timeout(const Duration(seconds: timeOut));
-    
+
       responseJson = _response(response);
     } on SocketException catch (e) {
       throw ApiException('No Internet connection');

@@ -44,6 +44,19 @@ class AuthRepository {
     }
   }
 
+  static Future<Map<String, dynamic>> fetchOtpData({
+    required Map<String, dynamic> parameter,
+  }) async {
+    try {
+      var otpDetail =
+      await ApiBaseHelper().postAPICall(sendOtpApi, parameter);
+
+      return otpDetail;
+    } on Exception catch (e) {
+      throw ApiException('$errorMesaage${e.toString()}');
+    }
+  }
+
   static Future<Map<String, dynamic>> fetchSingUpData({
     required Map<String, dynamic> parameter,
   }) async {
