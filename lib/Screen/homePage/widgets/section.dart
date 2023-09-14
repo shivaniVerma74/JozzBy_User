@@ -170,7 +170,7 @@ class SectionHeadingContainer extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(
         right: 15.0,
-        top: 5.0,
+        top: 0.0,
         left: 15.0,
       ),
       child: Column(
@@ -273,7 +273,7 @@ class SingleSection extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 0.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -374,7 +374,7 @@ class SingleSectionContainer extends StatelessWidget {
     return productList.isNotEmpty
         ? sectionStyle == DEFAULT
             ? Padding(
-                padding: const EdgeInsets.only(top: 20, right: 10, left: 10),
+                padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
                 child: GridView.count(
                   padding: const EdgeInsetsDirectional.only(top: 5),
                   crossAxisCount: 2,
@@ -402,7 +402,7 @@ class SingleSectionContainer extends StatelessWidget {
             : sectionStyle == STYLE1
                 ? Padding(
                     padding:
-                        const EdgeInsets.only(top: 20, right: 10, left: 10),
+                        const EdgeInsets.only(top: 10, right: 10, left: 10),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -481,7 +481,7 @@ class SingleSectionContainer extends StatelessWidget {
                 : sectionStyle == STYLE2
                     ? Padding(
                         padding:
-                            const EdgeInsets.only(top: 20, right: 10, left: 10),
+                            const EdgeInsets.only(top: 10, right: 10, left: 10),
                         child: Row(
                           children: [
                             Flexible(
@@ -564,7 +564,7 @@ class SingleSectionContainer extends StatelessWidget {
                     : sectionStyle == STYLE3
                         ? Padding(
                             padding: const EdgeInsets.only(
-                              top: 20,
+                              top: 10,
                               right: 10,
                               left: 10,
                             ),
@@ -664,7 +664,7 @@ class SingleSectionContainer extends StatelessWidget {
                         : sectionStyle == STYLE4
                             ? Padding(
                                 padding: const EdgeInsets.only(
-                                    top: 20, right: 10, left: 10),
+                                    top: 10, right: 10, left: 10),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [

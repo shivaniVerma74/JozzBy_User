@@ -136,8 +136,8 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
                   Expanded(
                     child: ClipRRect(
                       borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(circularBorderRadius5),
-                        topRight: Radius.circular(circularBorderRadius5),
+                        topLeft: Radius.circular(circularBorderRadius1),
+                        topRight: Radius.circular(circularBorderRadius1),
                       ),
                       child: Hero(
                         transitionOnUserGestures: true,
@@ -296,9 +296,9 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
                 top: 0,
                 end: 0,
                 child: Container(
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.white,
-                      borderRadius: const BorderRadiusDirectional.only(
+                  decoration: const BoxDecoration(
+                      color: Colors.transparent, //Theme.of(context).colorScheme.white,
+                      borderRadius: BorderRadiusDirectional.only(
                           bottomStart: Radius.circular(circularBorderRadius10),
                           topEnd: Radius.circular(circularBorderRadius5))),
                   child: model.isFavLoading!
@@ -322,6 +322,8 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
                                       ? Icons.favorite_border
                                       : Icons.favorite,
                                   size: 20,
+                                  color: !data.contains(model.id)
+                                  ?Colors.grey[400] : colors.red,
                                 ),
                               ),
                               onTap: () {

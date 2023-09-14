@@ -17,8 +17,8 @@ const String iosLink = 'your ios link here';
 const String appStoreId = '123456789';
 
 //Link for share product (get From Firebase)
-const String deepLinkUrlPrefix = 'https://eshopmultivendor.page.link';
-const String deepLinkName = 'eshop.com';
+const String deepLinkUrlPrefix = 'https://jozzbybazaar.page.link';
+const String deepLinkName = 'jozzby_bazar_new';
 
 //Set labguage
 String defaultLanguage = 'en';

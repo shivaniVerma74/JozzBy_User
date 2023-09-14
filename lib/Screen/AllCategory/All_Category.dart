@@ -95,10 +95,11 @@ class _AllCategoryState extends State<AllCategory>
       backgroundColor:colors.primary1,
       appBar: AppBar(
         elevation: 0,
+        automaticallyImplyLeading: false,
         centerTitle: true,
-        backgroundColor:Theme.of(context).colorScheme.lightWhite,
+        backgroundColor: colors.primary1,//Theme.of(context).colorScheme.lightWhite,
         title: Container(
-          color: Theme.of(context).colorScheme.lightWhite,
+          color: colors.primary1,//Theme.of(context).colorScheme.lightWhite,
           padding: EdgeInsets.fromLTRB(
             10,
             context.watch<HomePageProvider>().getBars ? 10 : 30,
@@ -207,6 +208,7 @@ class _AllCategoryState extends State<AllCategory>
                   );
                 }
                 return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 50,),
                     Expanded(

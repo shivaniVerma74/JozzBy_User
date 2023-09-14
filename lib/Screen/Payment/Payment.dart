@@ -54,6 +54,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
   void initState() {
     super.initState();
      // getPhonpayURL();
+
     context.read<PaymentProvider>().payModel.clear();
     context.read<PaymentProvider>().getdateTime(context, setStateNow);
     context.read<PaymentProvider>().timeSlotList.length = 0;
@@ -63,6 +64,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+
 
     Future.delayed(
       Duration.zero,
@@ -86,6 +88,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
         ];
       },
     );
+
     if (widget.msg != '') {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => setSnackbar(
@@ -148,7 +151,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
         context.read<CartProvider>().cartList;
     return WillPopScope(
       onWillPop: () async {
-        if(paymentIndex== 3   && (isPhonePayPaymentSuccess ?? false)){
+       /* if(paymentIndex== 3   && (isPhonePayPaymentSuccess ?? false)){
           return true;
         }else if( paymentIndex== 3  && !(isPhonePayPaymentSuccess ?? false)){
           initiatePayment();
@@ -156,8 +159,26 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
           return true;
         }else if(razorAdvancePaySuccess!= true && paymentIndex==1){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please pay first advance payment in case on cash on delivery')));
+        }*/
+        if(paymentIndex== 3   && !(isPhonePayPaymentSuccess ?? false)){
+          setSnackbar(
+            'Payment Not Done',
+            context,
+          );
+          context.read<CartProvider>().payMethod = null ;
+          context.read<CartProvider>().selectedMethod = null;
+
+
         }
-        return false;
+        if(paymentIndex==1 && !(razorAdvancePaySuccess== true)) {
+          setSnackbar(
+            'Advance Payment Not Done',
+            context,
+          );
+          context.read<CartProvider>().payMethod = null ;
+          context.read<CartProvider>().selectedMethod = null;
+        }
+        return true;
       },
       child: Scaffold(
         key: _scaffoldKey,
@@ -178,7 +199,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                   onTap: () {
                     print("paymentIndex______$paymentIndex  isPhonePayPaymentSuccess________$isPhonePayPaymentSuccess    razorAdvancePaySuccess_____ $razorAdvancePaySuccess");
 
-                    if(paymentIndex== 3   && (isPhonePayPaymentSuccess ?? false)){
+                    /*if(paymentIndex== 3   && (isPhonePayPaymentSuccess ?? false)){
                       Navigator.of(context).pop();
                     }else if( paymentIndex== 3  && !(isPhonePayPaymentSuccess ?? false)){
                       initiatePayment();
@@ -186,7 +207,27 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                       Navigator.of(context).pop();
                     }else if(razorAdvancePaySuccess!= true && paymentIndex==1){
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please pay first advance payment in case on cash on delivery')));
+                    }*/
+                    if(paymentIndex== 3   && !(isPhonePayPaymentSuccess ?? false)){
+                      setSnackbar(
+                        'Payment Not Done',
+                        context,
+                      );
+                      context.read<CartProvider>().payMethod = null ;
+                      context.read<CartProvider>().selectedMethod = null;
+
+
                     }
+                    if(paymentIndex==1 && !(razorAdvancePaySuccess== true)) {
+                      setSnackbar(
+                        'Advance Payment Not Done',
+                        context,
+                      );
+                      context.read<CartProvider>().payMethod = null;
+                      context.read<CartProvider>().selectedMethod = null;
+
+                    }
+                    Navigator.of(context).pop();
 
                   },
                   child: const Center(

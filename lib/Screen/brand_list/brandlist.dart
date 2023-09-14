@@ -38,7 +38,6 @@ class _BrandListState extends State<BrandList> {
         for(var i=0;i<getBrandsModel!.data!.length;i++){
           brandId = getBrandsModel!.data![i].id;
 
-          print('----------brand_id--------------${brandId}');
 
         }
       });
@@ -98,7 +97,7 @@ class _BrandListState extends State<BrandList> {
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) => ProductList(getBrand: true,brandId: brandId,brandName: brandName,),
+                      builder: (context) => ProductList(getBrand: true, brandId: brandId,brandName: brandName,),
                     ),
                   );
 

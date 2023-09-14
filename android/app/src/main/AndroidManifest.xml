@@ -26,6 +26,7 @@
             <action android:name="android.intent.action.DIAL" />
             <data android:scheme="tel" />
         </intent>
+
         <!-- If your sends SMS messages -->
         <intent>
             <action android:name="android.intent.action.SENDTO" />
@@ -55,6 +56,15 @@
             <intent-filter>
                 <action android:name="rzp.device_token.share"/>
             </intent-filter>
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
+            <data
+                android:scheme="https"
+                android:host="https://alphawizzserver.com" />
+        </intent-filter>
         </receiver>
 
         <activity

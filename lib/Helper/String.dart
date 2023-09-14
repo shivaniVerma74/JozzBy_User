@@ -373,6 +373,7 @@ const String REJECTEd = 'Rejected';
 const String ProductBrandName = "brand";
 const String ProductSku = "sku";
 const String ProductBrandImage = "brand_image";
+const String ProductBrandID = "brand_id";
 
 String ISDARK = '';
 const String PAYPAL_RESPONSE_URL = '$baseUrl' 'app_payment_status';

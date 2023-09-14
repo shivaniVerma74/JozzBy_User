@@ -583,6 +583,7 @@ class _SellerProfileState extends State<SellerProfile>
   }
 
   _showContentOfProducts() {
+
     return Column(
       children: <Widget>[
         Divider(
@@ -1131,6 +1132,7 @@ class _SellerProfileState extends State<SellerProfile>
         borderRadius: BorderRadius.circular(circularBorderRadius10),
       ),
       builder: (builder) {
+
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return Column(

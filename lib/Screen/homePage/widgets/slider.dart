@@ -42,7 +42,6 @@ class _CustomSliderState extends State<CustomSlider> {
   Widget build(BuildContext context) {
     return Consumer<HomePageProvider>(
       builder: (context, homeProvider, _) {
-        print("----slider----------${ homeProvider.homeSliderList}");
         return homeProvider.sliderLoading
             ? sliderLoading(context)
             : homeProvider.homeSliderList.isEmpty
@@ -126,7 +125,7 @@ class _CustomSliderState extends State<CustomSlider> {
     double height = MediaQuery.of(context).size.width / 0.5;
     return GestureDetector(
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(circularBorderRadius5),
+        borderRadius: BorderRadius.circular(circularBorderRadius1),
         child: CachedNetworkImage(
           imageUrl: slider.image!,
           placeholder: (context, url) {
@@ -213,7 +212,7 @@ class _CustomSliderState extends State<CustomSlider> {
 
   _showSliderPosition() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,

@@ -87,6 +87,7 @@ class _ListViewLayOutState extends State<ListViewLayOut> {
 
   @override
   Widget build(BuildContext context) {
+
     return NotificationListener<OverscrollIndicatorNotification>(
       onNotification: (overscroll) {
         overscroll.disallowIndicator();
@@ -376,7 +377,8 @@ class _ListViewLayOutState extends State<ListViewLayOut> {
                                 selector: (_, provider) => provider.favIdList,
                               ),
                       ),
-                    )
+                    ),
+
                   ],
                 ),
                 onTap: () async {
