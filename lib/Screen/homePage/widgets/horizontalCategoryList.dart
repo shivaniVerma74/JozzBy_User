@@ -26,9 +26,9 @@ class HorizontalCategoryList extends StatelessWidget {
                 ),
               )
             : Container(
-                height: 140,
+                height: 120,
                 color: colors.primary1.withOpacity(0.4),
-                padding: const EdgeInsets.only(top: 15,left:10),
+                padding: const EdgeInsets.only(top: 2,left:10),
                 child: ListView.builder(
                   itemCount: categoryData.catList.length < 10
                       ? categoryData.catList.length
@@ -42,7 +42,7 @@ class HorizontalCategoryList extends StatelessWidget {
                       return Container();
                     } else {
                       return Padding(
-                        padding: const EdgeInsetsDirectional.only(end: 18),
+                        padding: const EdgeInsetsDirectional.only(end: 10),
                         child: GestureDetector(
                           onTap: () async {
                             if (categoryData.catList[index].subList == null ||
@@ -87,7 +87,7 @@ class HorizontalCategoryList extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                width:70,
+                               // width:70,
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 8.0),
                                   child: Text(

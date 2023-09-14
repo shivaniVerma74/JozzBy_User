@@ -122,6 +122,7 @@ class Product {
       brandName,
       sku,
       brandImage,
+  brandId,
       qtyStepSize;
   List<String>? itemsCounter;
   List<String>? otherImage;
@@ -193,6 +194,7 @@ class Product {
     this.brandName,
     this.sku,
     this.brandImage,
+    this.brandId,
     this.categoryId,
     this.subList,
     this.filterList,
@@ -320,6 +322,7 @@ class Product {
       brandName: json[ProductBrandName],
       sku : json[ProductSku],
       brandImage: json[ProductBrandImage],
+      brandId: json[ProductBrandID],
     );
   }
 

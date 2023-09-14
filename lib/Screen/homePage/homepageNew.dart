@@ -4,6 +4,10 @@ import 'dart:io';
 import 'dart:math';
 import 'package:eshop_multivendor/Screen/brand_list/brandlist.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:uni_links/uni_links.dart';
+
+import 'package:flutter/services.dart';
 import 'package:http/http.dart'as http;
 import 'package:eshop_multivendor/Helper/ApiBaseHelper.dart';
 import 'package:eshop_multivendor/Helper/Color.dart';
@@ -105,7 +109,10 @@ class _HomePageState extends State<HomePage>
 
   @override
   void initState() {
+    //_handleIncomingLinks();
     getImagesApi();
+    getImagesThirdSliderApi();
+    getImagesFourthdSliderApi();
     getBrandApi();
     getSeller();
 
@@ -157,6 +164,10 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: Brightness.dark,
+    ));
     return Scaffold(
       backgroundColor: colors.primary1,
       key: _scaffoldKey,
@@ -170,7 +181,7 @@ class _HomePageState extends State<HomePage>
                   onRefresh: _refresh,
                   child: CustomScrollView(
                     physics: const BouncingScrollPhysics(),
-                    controller: _scrollBottomBarController,
+                    //controller: _scrollBottomBarController,
                     slivers: [
                       // SliverPersistentHeader(
                       //   floating: false,
@@ -184,12 +195,14 @@ class _HomePageState extends State<HomePage>
                             const HorizontalCategoryList(),
                             const SizedBox(height: 20,),
                             CustomSlider(),
+                            getImagesModel?.data?.isEmpty ?? true ? SizedBox() :  imageCard(),
                             const Section(),
-                            SizedBox(height: 10,),
+                            const SizedBox(height: 10,),
                             const Divider(
                               thickness: 0.6,
                               color:Colors.grey,
                             ),
+                            getImagesModel2?.data?.isEmpty ?? true ? SizedBox() :  imageCard2(),
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Container(
@@ -212,7 +225,7 @@ class _HomePageState extends State<HomePage>
                             sellerList==""?Text('Seller Not Found',style: TextStyle(color: colors.blackTemp),):getSellerList(),
                             const MostLikeSection(),
                             const SizedBox(height: 10,),
-                            getImagesModel?.data?.isEmpty ?? true ? SizedBox() :  imageCard(),
+                            getImagesModel3?.data?.isEmpty ?? true ? SizedBox() :  imageCard3(),
                             const SizedBox(height: 50,),
                           ],
                         ),
@@ -426,8 +439,46 @@ class _HomePageState extends State<HomePage>
             itemBuilder: (context, index) {
             return ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network("${getImagesModel?.data?[index].image}",fit: BoxFit.fill,));
+                child: Image.network("${getImagesModel?.data?[index].image}",fit: BoxFit.fill,width: MediaQuery.of(context).size.width/1.05,));
           },)
+
+        ));
+  }
+  imageCard2(){
+    return SizedBox(
+        height:200,
+        width:double.infinity,
+        child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              itemCount:getImagesModel2?.data?.length ,
+              // physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network("${getImagesModel2?.data?[index].image}",fit: BoxFit.fill,width: MediaQuery.of(context).size.width/1.05,));
+              },)
+
+        ));
+  }
+  imageCard3(){
+    return SizedBox(
+        height:200,
+        width:double.infinity,
+        child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              itemCount:getImagesModel3?.data?.length ,
+              // physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network("${getImagesModel3?.data?[index].image}",fit: BoxFit.fill,width: MediaQuery.of(context).size.width/1.05,));
+              },)
 
         ));
   }
@@ -503,6 +554,9 @@ class _HomePageState extends State<HomePage>
     );
   }
   GetImagesModel? getImagesModel;
+  GetImagesModel? getImagesModel2;
+  GetImagesModel? getImagesModel3;
+
   getImagesApi() async {
     var headers = {
       'Cookie': 'ci_session=072b6f29be0b884e59f61a1530aec13e11b5f470'
@@ -526,9 +580,57 @@ class _HomePageState extends State<HomePage>
     }
 
   }
+  getImagesThirdSliderApi() async {
+    var headers = {
+      'Cookie': 'ci_session=072b6f29be0b884e59f61a1530aec13e11b5f470'
+    };
+    var request = http.MultipartRequest('GET', Uri.parse('$baseUrl/get_slider_images_third'));
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      print('_______________imagesPath_________________');
+      var  result = await response.stream.bytesToString();
+      var finalResult = GetImagesModel.fromJson(jsonDecode(result));
+      setState(() {
+        getImagesModel2 =  finalResult;
+      });
+
+      print('____imagesPath_______${result}__________');
+
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+
+  }
+
+  getImagesFourthdSliderApi() async {
+    var headers = {
+      'Cookie': 'ci_session=072b6f29be0b884e59f61a1530aec13e11b5f470'
+    };
+    var request = http.MultipartRequest('GET', Uri.parse('$baseUrl/get_slider_images_fourth'));
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      print('_______________imagesPath_________________');
+      var  result = await response.stream.bytesToString();
+      var finalResult = GetImagesModel.fromJson(jsonDecode(result));
+      setState(() {
+        getImagesModel3 =  finalResult;
+      });
+
+      print('____imagesPath_______${result}__________');
+
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+
+  }
 
 
   GetBrandsModel? getBrandsModel;
+
   getBrandApi() async {
     var headers = {
       'Cookie': 'ci_session=b458202437d40c57fd9d5ea22c70e00ddc4d2723'
@@ -557,6 +659,40 @@ class _HomePageState extends State<HomePage>
 
   }
 
+  StreamSubscription? _sub;
+  Uri? _latestUri;
+  Object? _err;
+
+
+  void _handleIncomingLinks() {
+
+    if (!kIsWeb) {
+
+      // It will handle app links while the app is already started - be it in
+      // the foreground or in the background.
+      _sub = uriLinkStream.listen((Uri? uri) {
+        if (!mounted) return;
+        print('got uri: $uri');
+        setState(() {
+          _latestUri = uri;
+          _err = null;
+        });
+      }, onError: (Object err) {
+        if (!mounted) return;
+        print('got err: $err');
+        setState(() {
+          _latestUri = null;
+          if (err is FormatException) {
+            _err = err;
+          } else {
+            _err = null;
+          }
+        });
+      });
+    }
+  }
+
+
   Future<void> _refresh() {
     context.read<HomePageProvider>().catLoading = true;
     context.read<HomePageProvider>().secLoading = true;
@@ -582,6 +718,8 @@ class _HomePageState extends State<HomePage>
     if (isNetworkAvail) {
       getSetting();
       getImagesApi();
+      getImagesThirdSliderApi();
+      getImagesFourthdSliderApi();
       getBrandApi();
 
       context.read<HomePageProvider>().getSections();

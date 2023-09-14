@@ -199,6 +199,7 @@ class _DashboardPageState extends State<Dashboard>
       },
       child: Scaffold(
         extendBodyBehindAppBar: false,
+
         extendBody: true,
         backgroundColor:colors.primary1,
         appBar: _selBottom == 0
@@ -250,7 +251,7 @@ class _DashboardPageState extends State<Dashboard>
       title = getTranslated(context, 'PROFILE');
     }
     final appBar = AppBar(
-      toolbarHeight: 250,
+      //toolbarHeight: 200,
       elevation: 0,
       centerTitle: false,
       automaticallyImplyLeading: false,
@@ -275,9 +276,9 @@ class _DashboardPageState extends State<Dashboard>
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(circularBorderRadius10),
-              color:colors.transparent,
+              color:colors.whiteTemp,
             ),
-            width: 40,
+            width: 50,
             child: InkWell(
               onTap: () {
                 CUR_USERID != null
@@ -310,9 +311,9 @@ class _DashboardPageState extends State<Dashboard>
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(circularBorderRadius10),
-              color: colors.transparent,
+              color: colors.whiteTemp,
             ),
-            width: 40,
+            width: 50,
             child: IconButton(
               icon: SvgPicture.asset(
                   DesignConfiguration.setSvgPath('fav_black'),
@@ -335,9 +336,9 @@ class _DashboardPageState extends State<Dashboard>
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(circularBorderRadius10),
-              color:colors.transparent,
+              color:colors.whiteTemp,
             ),
-            width: 40,
+            width: 50,
             child: IconButton(
               icon: SvgPicture.asset(
                 DesignConfiguration.setSvgPath('notification_black'),

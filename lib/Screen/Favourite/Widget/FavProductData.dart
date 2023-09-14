@@ -38,6 +38,9 @@ class FavProductData extends StatefulWidget {
 class _FavProductDataState extends State<FavProductData> {
   var db = DatabaseHelper();
 
+  int quantity = 0 ;
+  List <int> quantityList = [] ;
+
   removeFromCart(
     int index,
     List<Product> favList,
@@ -157,7 +160,7 @@ class _FavProductDataState extends State<FavProductData> {
                 .changeStatus(UpdateFavStatus.inProgress);
           }
 
-          String qty =
+          String qtyr =
               (int.parse(favList[widget.index!].prVarientList![0].cartCount!) +
                       int.parse(favList[widget.index!].qtyStepSize!))
                   .toString();
@@ -328,16 +331,23 @@ class _FavProductDataState extends State<FavProductData> {
       widget.updateNow();
     }
   }
-
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.favList.forEach((element) {quantityList.add(quantity); });
+  }
   @override
   Widget build(BuildContext context) {
     if (widget.index! < widget.favList.length && widget.favList.isNotEmpty) {
+
       if (context.read<FavoriteProvider>().controllerText.length <
           widget.index! + 1) {
         context
             .read<FavoriteProvider>()
             .controllerText
             .add(TextEditingController());
+
       }
       return Selector<CartProvider, Tuple2<List<String?>, String?>>(
         builder: (context, data, child) {
@@ -350,6 +360,7 @@ class _FavProductDataState extends State<FavProductData> {
                 .favList[widget.index!]
                 .prVarientList![widget.favList[widget.index!].selVarient!]
                 .price!);
+
           }
           double off = 0;
           if (widget
@@ -400,6 +411,11 @@ class _FavProductDataState extends State<FavProductData> {
                   .text = '0';
             }
           }
+          print('${widget
+              .favList[
+          widget.index!]
+              .prVarientList![0]
+              .price!}dfgfgdfggfgfg');
           return Padding(
             padding: const EdgeInsetsDirectional.only(
               end: 10,
@@ -432,7 +448,7 @@ class _FavProductDataState extends State<FavProductData> {
                           );
                         },
                         child: Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             // color: colors.primary,
                           ),
                           child: Row(
@@ -503,7 +519,7 @@ class _FavProductDataState extends State<FavProductData> {
                                         off != 0
                                             ? Row(
                                                 children: [
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 10,
                                                   ),
                                                   Container(
@@ -516,14 +532,14 @@ class _FavProductDataState extends State<FavProductData> {
                                                         const EdgeInsets.only(
                                                       left: 5,
                                                     ),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
+                                                    child: const Padding(
+                                                      padding: EdgeInsets
                                                               .symmetric(
                                                           vertical: 4,
                                                           horizontal: 10),
                                                       child: Text(
                                                         'new',
-                                                        style: const TextStyle(
+                                                        style: TextStyle(
                                                           color:
                                                               colors.whiteTemp,
                                                           fontWeight:
@@ -647,9 +663,9 @@ class _FavProductDataState extends State<FavProductData> {
                                                               .prVarientList![0]
                                                               .disPrice!) !=
                                                           0
-                                                      ? 'Margin: ${off}%'
+                                                      ? 'Margin: ${off.toStringAsFixed(2)}%'
                                                       : '',
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     color: Colors.green,
                                                     fontWeight:
                                                         FontWeight.normal,
@@ -659,7 +675,7 @@ class _FavProductDataState extends State<FavProductData> {
                                                 width: 10,
                                               ),
                                               Text(
-                                                'Profit : ${int.parse(DesignConfiguration.getPriceFormat(
+                                                'Profit : ${int.parse(/*DesignConfiguration.getPriceFormat(
                                                       context,
                                                       double.parse(
                                                         widget
@@ -668,8 +684,14 @@ class _FavProductDataState extends State<FavProductData> {
                                                             .prVarientList![0]
                                                             .price!,
                                                       ),
-                                                    )!.substring(1)) - int.parse(DesignConfiguration.getPriceFormat(context, price)!.substring(1))}',
-                                                style: TextStyle(
+                                                    )!.substring(1)*/double.parse(
+                                                  widget
+                                                      .favList[
+                                                  widget.index!]
+                                                      .prVarientList![0]
+                                                      .price!,
+                                                ).toStringAsFixed(0)) - int.parse(price.toStringAsFixed(0)/*DesignConfiguration.getPriceFormat(context, price)!.substring(1)*/)}',
+                                                style: const TextStyle(
                                                   color: Colors.green,
                                                   fontWeight: FontWeight.normal,
                                                   fontFamily: 'ubuntu',
@@ -717,7 +739,7 @@ class _FavProductDataState extends State<FavProductData> {
                                                                     color: colors
                                                                         .blackTemp),
                                                                 borderRadius:
-                                                                    BorderRadius
+                                                                BorderRadius
                                                                         .all(
                                                                   Radius
                                                                       .circular(
@@ -729,37 +751,39 @@ class _FavProductDataState extends State<FavProductData> {
                                                                     Widget>[
                                                                   InkWell(
                                                                     child:
-                                                                        Container(
-                                                                      child:
-                                                                          const Padding(
+                                                                        const Padding(
                                                                         padding:
-                                                                            EdgeInsets.all(
-                                                                          8.0,
+                                                                          EdgeInsets.all(
+                                                                        8.0,
                                                                         ),
                                                                         child:
-                                                                            Icon(
-                                                                          Icons
-                                                                              .remove,
-                                                                          size:
-                                                                              15,
-                                                                          color:
-                                                                              colors.blackTemp,
+                                                                          Icon(
+                                                                        Icons
+                                                                            .remove,
+                                                                        size:
+                                                                            15,
+                                                                        color:
+                                                                            colors.blackTemp,
                                                                         ),
                                                                       ),
-                                                                    ),
                                                                     onTap: () {
-                                                                      if (int.parse(context
+                                                                      if (/*int.parse(context
                                                                               .read<FavoriteProvider>()
                                                                               .controllerText[widget.index!]
-                                                                              .text) >
+                                                                              .text)*/quantityList[widget.index ?? 0] >
                                                                           0) {
-                                                                        removeFromCart(
+                                                                        quantityList[widget.index ?? 0] -= int.parse(widget.favList[widget.index!].qtyStepSize!);
+                                                                        context.read<FavoriteProvider>().controllerText[widget.index!].text = quantity.toString() ;
+                                                                        setState(() {
+
+                                                                        });
+                                                                        /*removeFromCart(
                                                                           widget
                                                                               .index!,
                                                                           widget
                                                                               .favList,
                                                                           context,
-                                                                        );
+                                                                        );*/
                                                                       }
                                                                     },
                                                                   ),
@@ -776,7 +800,7 @@ class _FavProductDataState extends State<FavProductData> {
                                                                           builder: (context,
                                                                               data,
                                                                               child) {
-                                                                            return TextField(
+                                                                            return/* TextField(
                                                                               textAlign: TextAlign.center,
                                                                               readOnly: true,
                                                                               style: TextStyle(
@@ -787,7 +811,10 @@ class _FavProductDataState extends State<FavProductData> {
                                                                               decoration: const InputDecoration(
                                                                                 border: InputBorder.none,
                                                                               ),
-                                                                            );
+                                                                            )*/ Text('  ${quantityList[widget.index ?? 0]}',textAlign: TextAlign.center, style: TextStyle(
+                                                                              fontSize: 16,
+                                                                              color: Theme.of(context).colorScheme.fontColor,
+                                                                            ),);
                                                                           },
                                                                           selector: (_, provider) => Tuple2(
                                                                               provider.cartIdList,
@@ -852,27 +879,83 @@ class _FavProductDataState extends State<FavProductData> {
                                                                     ),
                                                                     onTap:
                                                                         () async {
-                                                                      await addToCart(
+                                                                      /*await addToCart(
                                                                         (int.parse(context.read<FavoriteProvider>().controllerText[widget.index!].text) +
                                                                                 int.parse(widget.favList[widget.index!].qtyStepSize!))
                                                                             .toString(),
                                                                         2,
                                                                         widget
                                                                             .favList,
-                                                                      );
+                                                                      );*/
+
+                                                                          quantityList[widget.index ?? 0] += int.parse(widget.favList[widget.index!].qtyStepSize!);
+                                                                          context.read<FavoriteProvider>().controllerText[widget.index!].text = quantity.toString() ;
+                                                                      setState(() {
+
+                                                                      });
                                                                     },
                                                                   )
                                                                 ],
                                                               ),
                                                             ),
                                                           ),
+                                                          const SizedBox(width: 20,),
+                                                          SizedBox(
+                                                            height: 35,
+                                                            width: 35,
+                                                            child: ElevatedButton(
+                                                              style: ElevatedButton.styleFrom(
+                                                               /// fixedSize: const Size(20, 20),
+                                                                //maximumSize: const Size(20, 20),
+
+                                                                padding: EdgeInsets.zero,
+                                                                  backgroundColor: colors.primary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                                                                onPressed: () async{
+                                                                if(quantityList[widget.index ?? 0] == 0)
+                                                                  {
+                                                                    setSnackbar('Please add quantity', context);
+                                                                  }else{
+                                                                  await addToCart(
+                                                                    /*context.read<FavoriteProvider>().controllerText[widget.index!].text*/quantityList[widget.index ?? 0].toString(),
+                                                                    2,
+                                                                    widget
+                                                                        .favList,
+                                                                  );
+                                                                }
+
+
+                                                                }, child:Icon(Icons.add,color: colors.whiteTemp, size: 20,) ),
+                                                          )
+                                                          /*Container(
+                                                            height:25,
+                                                            width: 40,
+                                                            decoration: BoxDecoration(
+                                                                color: colors.primary,
+                                                                borderRadius: BorderRadius.circular(30)
+                                                            ),
+                                                            child: Center(
+                                                              child: Icon(Icons.add_shopping_cart,color: colors.whiteTemp)*//*Text(
+                                                                *//**//*getTranslated(context, 'ADD_CART')!*//**//*'Add To Cart',
+                                                                textAlign: TextAlign.center,
+                                                                style: Theme.of(context)
+                                                                    .textTheme
+                                                                    .subtitle1!
+                                                                    .copyWith(
+                                                                  color: colors.whiteTemp,
+                                                                  fontWeight: FontWeight.normal,
+                                                                  fontFamily: 'ubuntu',
+                                                                  fontSize: 12
+                                                                ),
+                                                              )*//*,
+                                                            ),
+                                                          )*/
                                                         ],
                                                       )
                                                     : Container(),
                                           ],
                                         ),
                                         Container(
-                                          margin: EdgeInsets.only(
+                                          margin: const EdgeInsets.only(
                                               left: 15, bottom: 10),
                                           child: StarRatingIndicators(
                                             noOfRatings: widget
@@ -958,7 +1041,7 @@ class _FavProductDataState extends State<FavProductData> {
                         ),
                       ),
                     ),
-                    Divider()
+                    const Divider()
                   ],
                 ),
               ],

@@ -70,19 +70,22 @@ class SingleProductContainer extends StatelessWidget {
                 children: [
                   Expanded(
                     flex: pictureFlex,
-                    child: ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(circularBorderRadius8),
-                      child: Hero(
-                        transitionOnUserGestures: true,
-                        tag: '$heroTagUniqueString$index${productDetails.id}',
-                        child: DesignConfiguration.getCacheNotworkImage(
-                          boxFit: BoxFit.cover,
-                          context: context,
-                          heightvalue: double.maxFinite,
-                          widthvalue: double.maxFinite,
-                          placeHolderSize: width,
-                          imageurlString: productDetails.image!,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(circularBorderRadius8),
+                        child: Hero(
+                          transitionOnUserGestures: true,
+                          tag: '$heroTagUniqueString$index${productDetails.id}',
+                          child: DesignConfiguration.getCacheNotworkImage(
+                            boxFit: BoxFit.cover,
+                            context: context,
+                            heightvalue: double.maxFinite,
+                            widthvalue: double.maxFinite,
+                            placeHolderSize: width,
+                            imageurlString: productDetails.image!,
+                          ),
                         ),
                       ),
                     ),
@@ -96,7 +99,7 @@ class SingleProductContainer extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsetsDirectional.only(
                             start: 10.0,
-                            top: 15,
+                            top: 0,
                           ),
                           child: Text(
                             productDetails.name!,
@@ -289,11 +292,11 @@ class SingleProductContainer extends StatelessWidget {
                 ],
               ),
               Positioned(
-                top: 0,
-                right: 0,
+                top: 5,
+                right: 5,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.white,
+                    color:Colors.transparent, //Theme.of(context).colorScheme.white,
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(circularBorderRadius10),
                       topRight: Radius.circular(circularBorderRadius8),
@@ -320,7 +323,7 @@ class SingleProductContainer extends StatelessWidget {
                                       ? Icons.favorite_border
                                       : Icons.favorite,
                                   size: 20,
-                                  color:Colors.grey,
+                                  color:Colors.grey[300],
                                 ),
                               ),
                               onTap: () {

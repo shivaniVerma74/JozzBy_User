@@ -470,6 +470,8 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
             }
           }
 
+          print('___________${controllerText[widget.index!].text}__________');
+
           return InkWell(
             child: Card(
               elevation: 0.2,
@@ -768,7 +770,7 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                           end: 0,
                           child: Container(
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.white,
+                                color: Colors.transparent,//Theme.of(context).colorScheme.white,
                                 borderRadius:
                                     const BorderRadiusDirectional.only(
                                   bottomStart:

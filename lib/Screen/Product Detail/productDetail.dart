@@ -3,9 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:eshop_multivendor/Helper/ApiBaseHelper.dart';
 import 'package:eshop_multivendor/Provider/homePageProvider.dart';
-import 'package:eshop_multivendor/Screen/AllCategory/All_Category.dart';
 import 'package:eshop_multivendor/Screen/Cart/Cart.dart';
-import 'package:eshop_multivendor/widgets/star_rating.dart';
 import 'package:eshop_multivendor/Helper/Color.dart';
 import 'package:eshop_multivendor/Helper/Constant.dart';
 import 'package:eshop_multivendor/Model/Section_Model.dart';
@@ -43,6 +41,7 @@ import '../NoInterNetWidget/NoInterNet.dart';
 import '../Search/Search.dart';
 import '../SubCategory/SubCategory.dart';
 import '../homePage/homepageNew.dart';
+import '../star_rating.dart';
 import 'Widget/ProductHighLight.dart';
 import 'Widget/allQuestionButton.dart';
 import 'Widget/commanFiledsofProduct.dart';
@@ -104,7 +103,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
   List<Product> productList = [];
   List<Product> productList1 = [];
 
-  late ShortDynamicLink shortenedLink;
+    ShortDynamicLink? shortenedLink;
   late String shareLink;
   late String curPin;
   late double growStepWidth, beginWidth, endWidth = 0.0;
@@ -535,13 +534,16 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
     final File imageFile = File('$documentDirectory/temp.png');
 
     imageFile.writeAsBytesSync(bytes1);
+    shareLink =
+    "\n$appName\n${getTranslated(context, 'APPFIND')}$androidLink$packageName\n${getTranslated(context, 'IOSLBL')}\n$iosLink";
     Share.shareXFiles(
       [XFile(imageFile.path)],
       text:
-          '${widget.model!.name}\n${shortenedLink.shortUrl.toString()}\n$shareLink',
+          '${widget.model!.name}\n${shortenedLink!.shortUrl.toString()}\n$shareLink',
       sharePositionOrigin: Rect.largest,
     );
   }
+
 
   Future<void> _playAnimation() async {
     try {
@@ -1745,7 +1747,7 @@ double qty = 0.0 ;
                                   children: [
 
                                     InkWell(
-                                      onTap: () {
+                                      onTap: () async{
 
                                         // Navigator.push(
                                         //   context,
@@ -1763,8 +1765,32 @@ double qty = 0.0 ;
                                         //   ),
                                         // );
 
+                                        if (widget.model?.subList == null || (widget.model?.subList?.isEmpty ?? false)) {
+                                         await Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      ProductList(
+                                                        name: widget.model?.catName,
+                                                        id: widget.model?.categoryId,
+                                                        tag: false,
+                                                        fromSeller: false,
+                                                      )));
+                                        }else {
 
-                                        Navigator.push(context,MaterialPageRoute(builder: (context)=>AllCategory()));
+                                          await Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                              builder: (context) => SubCategory(
+                                                title: widget.model?.catName ?? '',
+                                                subList: widget.model?.subList,
+                                              ),
+                                            ),
+                                          );
+
+                                        }
+
+                                        // Navigator.push(context,MaterialPageRoute(builder: (context)=>AllCategory()));
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.only(left:13.0,top: 10),
@@ -1785,6 +1811,13 @@ double qty = 0.0 ;
                                             from: false,
                                             model: widget.model,
                                           ),
+                                    /*StarRatingIndicators(
+                                      noOfRatings: widget
+                                          .favList[widget.index!]
+                                          .noOfRating!,
+                                      totalRating: widget
+                                          .favList[widget.index!].rating!,
+                                    ),*/
                                     GetRatttingWidget(
                                       ratting: widget.model!.rating!,
                                       noOfRatting: widget.model!.noOfRating!,
@@ -1818,7 +1851,7 @@ double qty = 0.0 ;
                                   Navigator.push(
                                     context,
                                     CupertinoPageRoute(
-                                      builder: (context) => ProductList(getBrand: true,brandId: brandId,brandName: brand_name,),
+                                      builder: (context) => ProductList(getBrand: true,brandId: widget.model?.brandId, brandName: widget.model?.brandName ?? '',),
                                     ),
                                   );
                                 },
@@ -2060,7 +2093,7 @@ double qty = 0.0 ;
                                       )
                                           : Routes.navigateToSearchScreen(context);
                                     },
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.search,color:colors.blackTemp,
 
                                     ),
@@ -2272,7 +2305,7 @@ double qty = 0.0 ;
                               InkWell(
                                 onTap: () async {
 
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart(fromBottom: true)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const Cart(fromBottom: true)));
                                   // addToCart(
                                   //   qtyController.text,
                                   //   false,
@@ -4058,6 +4091,8 @@ double qty = 0.0 ;
       },
     );
   }
+
+
 
   playIcon() {
     return Align(
