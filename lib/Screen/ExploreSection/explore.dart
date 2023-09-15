@@ -1318,6 +1318,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
 
   void filterDialog() {
     showModalBottomSheet(
+      backgroundColor: colors.primary1,
       context: context,
       enableDrag: false,
       isScrollControlled: true,
@@ -1366,7 +1367,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
                 ),
                 Expanded(
                     child: Container(
-                  color: Theme.of(context).colorScheme.lightWhite,
+                  color: colors.primary1,
                   padding: const EdgeInsetsDirectional.only(
                     start: 7.0,
                     end: 7.0,

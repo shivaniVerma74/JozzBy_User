@@ -28,7 +28,7 @@ class ListViewLayOutWidget extends StatelessWidget {
 
     return Expanded(
       child: Container(
-        color: Theme.of(context).colorScheme.lightWhite,
+        color: colors.primary1,
         padding:
             const EdgeInsetsDirectional.only(start: 7.0, end: 7.0, top: 7.0),
         child: filterList != null

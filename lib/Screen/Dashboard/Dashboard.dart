@@ -456,9 +456,9 @@ class _DashboardPageState extends State<Dashboard>
             tabs: [
               Tab(
                 child: getTabItem(
-                  (data == ThemeMode.system &&
+                  /*(data == ThemeMode.system &&
                               currentBrightness == Brightness.dark) ||
-                          data == ThemeMode.dark
+                          data == ThemeMode.dark*/false
                       ? 'dark_active_home'
                       : 'light_active_home',
                   'home',
@@ -468,9 +468,9 @@ class _DashboardPageState extends State<Dashboard>
               ),
               Tab(
                 child: getTabItem(
-                    (data == ThemeMode.system &&
+                    /*(data == ThemeMode.system &&
                                 currentBrightness == Brightness.dark) ||
-                            data == ThemeMode.dark
+                            data == ThemeMode.dark*/ false
                         ? 'dark_active_category'
                         : 'light_active_category',
                     'category',
@@ -479,9 +479,9 @@ class _DashboardPageState extends State<Dashboard>
               ),
               Tab(
                 child: getTabItem(
-                  (data == ThemeMode.system &&
+                  /*(data == ThemeMode.system &&
                               currentBrightness == Brightness.dark) ||
-                          data == ThemeMode.dark
+                          data == ThemeMode.dark*/false
                       ? 'dark_active_explorer'
                       : 'light_active_explorer',
                   'brands',
@@ -491,9 +491,9 @@ class _DashboardPageState extends State<Dashboard>
               ),
               Tab(
                 child: getTabItem(
-                  (data == ThemeMode.system &&
+                  /*(data == ThemeMode.system &&
                               currentBrightness == Brightness.dark) ||
-                          data == ThemeMode.dark
+                          data == ThemeMode.dark*/false
                       ? 'dark_active_cart'
                       : 'light_active_cart',
                   'cart',
@@ -503,9 +503,9 @@ class _DashboardPageState extends State<Dashboard>
               ),
               Tab(
                 child: getTabItem(
-                  (data == ThemeMode.system &&
+                  /*(data == ThemeMode.system &&
                               currentBrightness == Brightness.dark) ||
-                          data == ThemeMode.dark
+                          data == ThemeMode.dark*/ false
                       ? 'dark_active_profile'
                       : 'light_active_profile',
                   'profile',

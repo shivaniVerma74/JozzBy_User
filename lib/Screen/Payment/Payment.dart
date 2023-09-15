@@ -181,6 +181,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
         return true;
       },
       child: Scaffold(
+        backgroundColor: colors.whiteTemp,
         key: _scaffoldKey,
         // appBar: getSimpleAppBar(getTranslated(context, 'PAYMENT_METHOD_LBL')!, context),
         appBar: AppBar(
@@ -639,7 +640,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                             }else if(razorAdvancePaySuccess== true && paymentIndex==1 ){
                               Routes.pop(context);
                             }else if(razorAdvancePaySuccess!= true && paymentIndex==1){
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please pay first advance payment in case on cash on delivery')));
+                              setSnackbar('Please pay first advance payment in case on cash on delivery', context);
                             }
                              }
                         ),

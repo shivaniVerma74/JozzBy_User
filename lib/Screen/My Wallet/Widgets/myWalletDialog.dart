@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:my_fatoorah/my_fatoorah.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Helper/String.dart';
 import '../../../Helper/routes.dart';
 import '../../../widgets/desing.dart';
@@ -23,6 +24,9 @@ import '../../Language/languageSettings.dart';
 import '../../../widgets/snackbar.dart';
 import '../../../widgets/validation.dart';
 import '../../WebView/midtransWebView.dart';
+import 'package:http/http.dart'as http;
+
+import '../My_Wallet.dart';
 
 class MyWalletDialog {
   static showWithdrawAmountDialog(BuildContext context) async {
@@ -306,11 +310,38 @@ class _AddMoneyDialogState extends State<AddMoneyDialog> {
 
   final TextEditingController? messageTextController = TextEditingController();
 
-  final TextEditingController? amountTextController = TextEditingController();
+  final TextEditingController amountTextController = TextEditingController();
 
   bool payWarn = false;
   SystemProvider? systemProvider;
   late Razorpay _razorpay;
+
+  addwalletPayment() async{
+    var headers = {
+      'Cookie': 'ci_session=9f7f06b524a9ac470a477208730848bbd6b33b56'
+    };
+    var request = http.MultipartRequest('POST', Uri.parse('https://alphawizzserver.com/jozzby_bazar_new/app/v1/api/wallet_post'));
+    request.fields.addAll({
+      'user_id':CUR_USERID ?? '1',
+      'amount':amountTextController.text
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    print('___________${ request.fields}__________');
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+      Navigator.pop(context);
+     // await updateUserWalletAmount();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyWallet()));
+    }
+    else {
+    print(response.reasonPhrase);
+    }
+
+  }
 
   @override
   void initState() {
@@ -324,6 +355,9 @@ class _AddMoneyDialogState extends State<AddMoneyDialog> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+
+    updateUserWalletAmount();
+
 
     super.initState();
   }
@@ -413,7 +447,7 @@ class _AddMoneyDialogState extends State<AddMoneyDialog> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20.0, 10, 20.0, 5),
                       child: Text(
-                        getTranslated(context, 'SELECT_PAYMENT')!,
+                        'Payment Method:   RazorPay'/*getTranslated(context, 'SELECT_PAYMENT')!*/,
                         style: Theme.of(context).textTheme.subtitle2!.copyWith(
                               fontFamily: 'ubuntu',
                             ),
@@ -473,10 +507,13 @@ class _AddMoneyDialogState extends State<AddMoneyDialog> {
                 ),
           ),
           onPressed: () async {
+            //systemProvider!.selectedPaymentMethodName = getTranslated(context, 'RAZORPAY_LBL')!.trim() ;
             final form = formKey.currentState!;
             if (form.validate() && amountTextController!.text != '0') {
               form.save();
-              if (systemProvider!.selectedPaymentMethodName == null) {
+              openCheckout(amount: double.parse(amountTextController!.text));
+              //doPaymentWithRazorpay(price: int.parse(amountTextController!.text));
+              /*if (systemProvider!.selectedPaymentMethodName == null) {
                 setState(() {
                   payWarn = true;
                 });
@@ -530,9 +567,9 @@ class _AddMoneyDialogState extends State<AddMoneyDialog> {
                       await doMyFatoorah(price: amountTextController!.text);
                   await updateUserWalletAmount();
                   Navigator.pop(context, response);
-                }
+                }*/
               }
-            }
+
           },
         )
       ],
@@ -1009,10 +1046,34 @@ class _AddMoneyDialogState extends State<AddMoneyDialog> {
     }
   }
 
+  void openCheckout({double? amount}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString('email');
+    String? phone = prefs.getString('phone');
+   // int amt = deductAmount?.toInt() ?? 0 ;
+    var options = {
+      'key': 'rzp_test_1DP5mmOlF5G5ag',
+      'amount': (amount?.toInt() ?? 100)*100,
+      'name': 'Jozz by Bazar',
+      'description': 'Jozz by Bazar',
+      "currency": "INR",
+      'prefill': {'contact': '$phone', 'email': '$email'},
+      'external': {
+        'wallets': ['paytm']
+      }
+    };
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint('Error: $e');
+    }
+  }
+
   Future<void> updateUserWalletAmount() async {
     try {
       String currentBalance =
           await context.read<PaymentProvider>().getUserCurrentBalance();
+
       if (currentBalance != '') {
         Provider.of<UserProvider>(context, listen: false)
             .setBalance(currentBalance);
@@ -1021,9 +1082,10 @@ class _AddMoneyDialogState extends State<AddMoneyDialog> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    setSnackbar(getTranslated(context, 'Transaction Successful')!, context);
-    Navigator.pop(context, response);
-    await updateUserWalletAmount();
+    //setSnackbar(getTranslated(context, 'Transaction Successful')!, context);
+   // Navigator.pop(context, response);
+    addwalletPayment();
+
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {

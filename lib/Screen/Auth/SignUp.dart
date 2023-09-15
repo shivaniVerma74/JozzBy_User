@@ -120,7 +120,7 @@ class _SignUpPageState extends State<SignUp> with TickerProviderStateMixin {
                   area, address, pincode, latitude, longitude, '', context);
               Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
             } else {
-             // setSnackbar(msg!, context);
+              setSnackbar(msg!, context);
             }
           },
         ),

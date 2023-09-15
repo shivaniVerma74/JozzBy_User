@@ -11,6 +11,7 @@ import '../../Helper/Constant.dart';
 import '../../Helper/String.dart';
 import '../../Model/Transaction_Model.dart';
 import '../../Model/getWithdrawelRequest/withdrawTransactiponsModel.dart';
+import '../../Provider/paymentProvider.dart';
 import '../../widgets/ButtonDesing.dart';
 import '../../widgets/desing.dart';
 import '../Language/languageSettings.dart';
@@ -46,6 +47,7 @@ class StateWallet extends State<MyWallet> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    updateUserWalletAmount();
     Future.delayed(
       Duration.zero,
       () {
@@ -274,7 +276,7 @@ class StateWallet extends State<MyWallet> with TickerProviderStateMixin {
                         return Text(
                           ' ${DesignConfiguration.getPriceFormat(
                             context,
-                            double.parse(userProvider.curBalance),
+                            double.parse(currentBalance ?? '0.0'/*userProvider.curBalance*/),
                           )!}',
                           style: Theme.of(context)
                               .textTheme
@@ -404,5 +406,17 @@ class StateWallet extends State<MyWallet> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+  String? currentBalance ;
+  Future<void> updateUserWalletAmount() async {
+    try {
+      currentBalance =
+      await context.read<PaymentProvider>().getUserCurrentBalance();
+
+      if (currentBalance != '') {
+        Provider.of<UserProvider>(context, listen: false)
+            .setBalance(currentBalance ?? '0.0');
+      }
+    } catch (e) {}
   }
 }

@@ -22,9 +22,9 @@ class WalletTransactionItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
       child: Container(
-        padding: const EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(circularBorderRadius5),
+          borderRadius: BorderRadius.circular(circularBorderRadius1),
           border: Border.all(
               width: 0.5,
               color: Theme.of(context).disabledColor,

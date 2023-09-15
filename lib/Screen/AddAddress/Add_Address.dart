@@ -44,6 +44,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       landmarkC,
       stateC,
       countryC,
+  address2,
       altMobC;
   int? selectedType = 1;
   Animation? buttonSqueezeanimation;
@@ -874,6 +875,52 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
           padding: const EdgeInsets.symmetric(
             horizontal: 10.0,
           ),
+          child: TextFormField(
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.next,
+            focusNode: nameFocus,
+            controller: address2,
+            textCapitalization: TextCapitalization.words,
+            validator: (val) => StringValidation.validateUserName(
+                val!,
+                'Address 2 Required',
+                getTranslated(context, 'USER_LENGTH')),
+            onSaved: (String? value) {
+              context.read<AddressProvider>().name = value;
+            },
+            onFieldSubmitted: (v) {
+              _fieldFocusChange(context, nameFocus!, monoFocus);
+            },
+            style: Theme.of(context)
+                .textTheme
+                .subtitle2!
+                .copyWith(color: Theme.of(context).colorScheme.fontColor),
+            decoration: InputDecoration(
+              label: Text(
+                'Address 2',
+                style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                  fontFamily: 'ubuntu',
+                ),
+              ),
+              fillColor: Theme.of(context).colorScheme.white,
+              isDense: true,
+              hintText: 'Address 2',
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+      ),
+    )/*Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.white,
+          borderRadius: BorderRadius.circular(circularBorderRadius5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10.0,
+          ),
           child: GestureDetector(
             child: InputDecorator(
               decoration: InputDecoration(
@@ -921,7 +968,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
           ),
         ),
       ),
-    );
+    )*/;
   }
 
   setAddress() {

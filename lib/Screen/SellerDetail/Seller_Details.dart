@@ -1126,6 +1126,7 @@ class _SellerProfileState extends State<SellerProfile>
   void filterDialog() {
     showModalBottomSheet(
       context: context,
+      backgroundColor: colors.primary1,
       enableDrag: false,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(

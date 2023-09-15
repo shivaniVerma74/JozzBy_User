@@ -103,23 +103,24 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
   }
 
   Widget setNameField({required String userName}) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
         child: Container(
-
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+         // height: 50,
+          /*padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),*/
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.white,
             borderRadius: BorderRadius.circular(circularBorderRadius10),
           ),
           child: Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
             child: TextFormField(
               style: TextStyle(
                   color: Theme.of(context).colorScheme.fontColor,
                   fontWeight: FontWeight.bold),
               controller: nameController,
+              readOnly: false,
               decoration: InputDecoration(
                   label: Text(
                     getTranslated(
@@ -132,7 +133,7 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
                   ),
                   fillColor: Theme.of(context).colorScheme.primary,
                   border: InputBorder.none),
-              validator: (val) => StringValidation.validateUserName(
+                  validator: (val) => StringValidation.validateUserName(
                 val!,
                 getTranslated(context, 'USER_REQUIRED'),
                 getTranslated(context, 'USER_LENGTH'),
@@ -143,17 +144,18 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
       );
 
   Widget setEmailField({required String email}) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
         child: Container(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          //height: 50,
+          /*padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),*/
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.white,
             borderRadius: BorderRadius.circular(circularBorderRadius10),
           ),
           child: Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 0.0),
             child: TextFormField(
               style: TextStyle(
                   color: Theme.of(context).colorScheme.fontColor,
@@ -184,7 +186,7 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
         Expanded(
           child: Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 9.0),
             child: InkWell(
               onTap: onBtnSelected,
               child: Container(
@@ -267,25 +269,19 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
           .then(
         (value) {
           if (value['error'] == false) {
-            var settingProvider =
-                Provider.of<SettingProvider>(context, listen: false);
-            var userProvider =
-                Provider.of<UserProvider>(context, listen: false);
-
+            var settingProvider = Provider.of<SettingProvider>(context, listen: false);
+            var userProvider = Provider.of<UserProvider>(context, listen: false);
             settingProvider.setPrefrence(USERNAME, nameController.text);
             userProvider.setName(nameController.text);
             settingProvider.setPrefrence(EMAIL, emailController.text);
             userProvider.setEmail(emailController.text);
-
             setSnackbar(getTranslated(context, 'USER_UPDATE_MSG')!, context);
           } else {
             setSnackbar(value['message'], context);
           }
         },
       );
-
       Routes.pop(context);
-
       return true;
     }
     return false;
@@ -304,49 +300,53 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: [
-        Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Form(
-            key: _changeUserDetailsKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                CustomBottomSheet.bottomSheetHandle(context),
-                CustomBottomSheet.bottomSheetLabel(context, 'EDIT_PROFILE_LBL'),
-                Selector<UserProvider, String>(
-                    selector: (_, provider) => provider.profilePic,
-                    builder: (context, profileImage, child) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: getUserImage(profileImage, _imgFromGallery),
-                      );
-                    }),
-                Selector<UserProvider, String>(
-                    selector: (_, provider) => provider.curUserName,
-                    builder: (context, userName, child) {
-                      return setNameField(userName: userName);
-                    }),
-                Selector<UserProvider, String>(
-                    selector: (_, provider) => provider.email,
-                    builder: (context, userEmail, child) {
-                      return setEmailField(email: userEmail);
-                    }),
-
-                setGST(),
-                saveButton(
-                  title: getTranslated(context, 'SAVE_LBL')!,
-                  onBtnSelected: () {
-                    validateAndSave(_changeUserDetailsKey, context);
-                  },
+    return SingleChildScrollView(
+      child: Wrap(
+        children: [
+          Padding(
+            padding:
+                EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Form(
+              key: _changeUserDetailsKey,
+              child: Container(
+                height: 600,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomBottomSheet.bottomSheetHandle(context),
+                    CustomBottomSheet.bottomSheetLabel(context, 'EDIT_PROFILE_LBL'),
+                    Selector<UserProvider, String>(
+                        selector: (_, provider) => provider.profilePic,
+                        builder: (context, profileImage, child) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 1.0),
+                            child: getUserImage(profileImage, _imgFromGallery),
+                          );
+                        }),
+                    Selector<UserProvider, String>(
+                        selector: (_, provider) => provider.curUserName,
+                        builder: (context, userName, child) {
+                          return setNameField(userName: userName);
+                        }),
+                    Selector<UserProvider, String>(
+                        selector: (_, provider) => provider.email,
+                        builder: (context, userEmail, child) {
+                          return setEmailField(email: userEmail);
+                        }),
+                    setGST(),
+                    saveButton(
+                      title: getTranslated(context, 'SAVE_LBL')!,
+                      onBtnSelected: () {
+                        validateAndSave(_changeUserDetailsKey, context);
+                      },
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
   _fieldFocusChange(
@@ -359,7 +359,7 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
     return Padding(
       padding: const EdgeInsets.only(top: 20,left: 10,right: 10),
       child: Container(
-        height:60,
+        height:50,
         width: double.maxFinite,
         decoration: BoxDecoration(
           color: colors.whiteTemp,
@@ -377,8 +377,8 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
           controller: gstController,
           decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(
-                horizontal: 13,
-                vertical: 5,
+                horizontal: 10,
+                vertical: 1,
               ),
               hintText: getTranslated(context, 'GST_LBL'),
               hintStyle: TextStyle(

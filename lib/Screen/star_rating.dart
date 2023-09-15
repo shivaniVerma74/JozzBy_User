@@ -75,12 +75,15 @@ class StarRating extends StatelessWidget {
 
 class StarRatingIndicators extends StatelessWidget {
   String totalRating, noOfRatings;
+  double ? iconSize;
 
 
   StarRatingIndicators({
     Key? key,
     required this.totalRating,
     required this.noOfRatings,
+    this.iconSize,
+
   }) : super(key: key);
 
   @override
@@ -90,17 +93,18 @@ class StarRatingIndicators extends StatelessWidget {
         RatingBarIndicator(
           rating: double.parse(noOfRatings),
           itemCount: 5,
-          itemSize: 20,
+          itemSize:iconSize ?? 20,
           physics: BouncingScrollPhysics(),
           itemBuilder: (context, _) => Icon(
             Icons.star,
             color: Colors.amber,
+
           ),
         ),
         Flexible(
           child: Text(
             '($noOfRatings)',
-            style: const TextStyle(
+            style:  const TextStyle(
               fontSize: textFontSize10,
               fontWeight: FontWeight.w300,
               fontStyle: FontStyle.normal,

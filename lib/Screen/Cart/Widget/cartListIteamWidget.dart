@@ -269,10 +269,19 @@ class _CartListViewLayOutState extends State<CartListViewLayOut> {
                               children: <Widget>[
                                 Container(
                                   height:35,
-                                  width:100,
+                                  width:101,
                                   decoration: BoxDecoration(
-                                      color:const Color(0xffEFEFEF),
-                                      borderRadius: BorderRadius.circular(10)),
+                                    border: Border.all(
+                                        color: colors
+                                            .blackTemp),
+                                    borderRadius:
+                                    BorderRadius
+                                        .all(
+                                      Radius
+                                          .circular(
+                                          5),
+                                    ),
+                                  ),
                                   child: Row(
                                     children: <Widget>[
                                       cartList[index].productList![0].type ==

@@ -453,6 +453,7 @@ class PaymentProvider extends ChangeNotifier {
         USER_ID: CUR_USERID,
         TRANS_TYPE: WALLET
       };
+      print('___________${parameter}__________');
 
       String currentBalance = await PaymentRepository.fetchUserCurrentBalance(
         apiParameter: parameter,

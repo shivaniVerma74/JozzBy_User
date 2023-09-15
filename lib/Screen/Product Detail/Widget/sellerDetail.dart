@@ -1,4 +1,5 @@
 import 'package:eshop_multivendor/Helper/Color.dart';
+import 'package:eshop_multivendor/Screen/star_rating.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../Helper/Constant.dart';
@@ -45,7 +46,7 @@ class SellerDetail extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    getTranslated(context, 'Seller Details')!,
+                    getTranslated(context, 'Seller')!,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.black,
                       fontWeight: FontWeight.w500,
@@ -54,17 +55,33 @@ class SellerDetail extends StatelessWidget {
                       fontSize: textFontSize16,
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  Text(
-                    model!.store_name ?? '',
-                    style: const TextStyle(
-                      color: Color(0xfffc6a57),
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Ubuntu',
-                      fontStyle: FontStyle.normal,
-                      fontSize: textFontSize16,
+                  const SizedBox(width: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    Text(
+                      model!.store_name ?? '',
+                      style: const TextStyle(
+                        color: Color(0xfffc6a57),
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Ubuntu',
+                        fontStyle: FontStyle.normal,
+                        fontSize: textFontSize16,
+                      ),
                     ),
-                  ),
+                      SizedBox(
+                        height: 20,
+                        width: 80,
+                        child: StarRatingIndicators(
+                          noOfRatings: model!.seller_rating ?? '',
+                          totalRating: model!.rating ?? '',
+                          iconSize: 10,
+                        ),
+                      ),
+
+                  ],),
+                  const SizedBox(width: 20),
+                  Image.network(model!.seller_profile ??'', scale: 15,)
                 ],
               ),
               Icon(

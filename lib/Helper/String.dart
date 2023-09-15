@@ -107,6 +107,7 @@ const String PRODUCT_DETAIL = 'product_details';
 const String DESC = 'description';
 const String SUB = 'subject';
 const String CATID = 'category_id';
+const String BRAND = 'brand_id';
 const String CAT_NAME = 'category_name';
 const String OTHER_IMAGE = 'other_images_md';
 const String PRODUCT_VARIENT = 'variants';

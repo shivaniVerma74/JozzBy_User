@@ -16,6 +16,7 @@ class SubCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:colors.primary1,
       appBar: getAppBar(title, context, setStateNow),
       body: GridView.count(
         padding: const EdgeInsets.all(20),

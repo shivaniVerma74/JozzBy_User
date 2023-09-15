@@ -432,6 +432,7 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
       if (price == 0) {
         price = double.parse(model.prVarientList![model.selVarient!].price!);
       }
+      double margin =double.parse(model.prVarientList![model.selVarient!].price!) - double.parse(model.prVarientList![model.selVarient!].disPrice!) ;
 
       double off = 0;
       if (model.prVarientList![model.selVarient!].disPrice! != '0') {
@@ -488,8 +489,8 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                       children: [
                         ClipRRect(
                           borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(circularBorderRadius5),
-                            topRight: Radius.circular(circularBorderRadius5),
+                            topLeft: Radius.circular(circularBorderRadius1),
+                            topRight: Radius.circular(circularBorderRadius1),
                           ),
                           child: Hero(
                             tag:
@@ -580,17 +581,19 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                                             }
                                           },
                                           child: Card(
+                                            color: colors.primary,
                                             elevation: 1,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(
-                                                      circularBorderRadius50),
+                                                      circularBorderRadius1),
                                             ),
                                             child: const Padding(
                                               padding: EdgeInsets.all(8.0),
                                               child: Icon(
-                                                Icons.shopping_cart_outlined,
+                                                Icons.add,
                                                 size: 15,
+                                                color: colors.whiteTemp,
                                               ),
                                             ),
                                           ),
@@ -801,7 +804,9 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                                               !data.contains(model.id)
                                                   ? Icons.favorite_border
                                                   : Icons.favorite,
-                                              size: 15,
+                                              size: 20,
+                                              color: !data.contains(model.id)
+                                              ?Colors.grey[400] : colors.primary,
                                             ),
                                           ),
                                           onTap: () {
@@ -859,7 +864,7 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                       widget.productList![widget.index!].name!,
                       style: Theme.of(context).textTheme.caption!.copyWith(
                             color: Theme.of(context).colorScheme.lightBlack,
-                            fontSize: textFontSize12,
+                            fontSize: textFontSize16,
                             fontWeight: FontWeight.w400,
                             fontStyle: FontStyle.normal,
                             fontFamily: 'ubuntu',
@@ -877,7 +882,7 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                     child: Row(
                       children: [
                         Text(
-                          ' ${DesignConfiguration.getPriceFormat(context, price)!}',
+                          'Price: ${DesignConfiguration.getPriceFormat(context, price)!}',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.blue,
                             fontSize: textFontSize14,
@@ -886,7 +891,7 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                             fontFamily: 'ubuntu',
                           ),
                         ),
-                        Expanded(
+                        /*Expanded(
                           child: Padding(
                             padding: const EdgeInsetsDirectional.only(
                               start: 10.0,
@@ -921,7 +926,98 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                               ],
                             ),
                           ),
-                        )
+                        )*/
+                      ],
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsetsDirectional.only(
+                        start: 8.0,
+                        top: 5,
+                      ),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          double.parse(widget
+                              .productList![widget.index!]
+                              .prVarientList![0]
+                              .disPrice!) !=
+                              0
+                              ? 'MRP: ${DesignConfiguration.getPriceFormat(context, double.parse(widget.productList![widget.index!].prVarientList![0].price!))}'
+                              : '',
+                          style: Theme.of(context)
+                              .textTheme
+                              .overline!
+                              .copyWith(
+                            color: colors.darkColor3,
+                            fontFamily: 'ubuntu',
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor: colors.darkColor3,
+                            decorationStyle:
+                            TextDecorationStyle.solid,
+                            decorationThickness: 2,
+                            letterSpacing: 0,
+                            fontSize: textFontSize16,
+                            fontWeight: FontWeight.w400,
+                            fontStyle: FontStyle.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 8.0,
+                      top: 5,
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Margin: ${DesignConfiguration.getPriceFormat(context, margin)!}',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.green,
+                            fontSize: textFontSize14,
+                            fontWeight: FontWeight.w700,
+                            fontStyle: FontStyle.normal,
+                            fontFamily: 'ubuntu',
+                          ),
+                        ),
+                        /*Expanded(
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.only(
+                              start: 10.0,
+                              top: 5,
+                            ),
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  double.parse(widget
+                                              .productList![widget.index!]
+                                              .prVarientList![0]
+                                              .disPrice!) !=
+                                          0
+                                      ? '${DesignConfiguration.getPriceFormat(context, double.parse(widget.productList![widget.index!].prVarientList![0].price!))}'
+                                      : '',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .overline!
+                                      .copyWith(
+                                        fontFamily: 'ubuntu',
+                                        decoration: TextDecoration.lineThrough,
+                                        decorationColor: colors.darkColor3,
+                                        decorationStyle:
+                                            TextDecorationStyle.solid,
+                                        decorationThickness: 2,
+                                        letterSpacing: 0,
+                                        fontSize: textFontSize10,
+                                        fontWeight: FontWeight.w400,
+                                        fontStyle: FontStyle.normal,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )*/
                       ],
                     ),
                   ),

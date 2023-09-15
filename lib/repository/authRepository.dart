@@ -61,6 +61,7 @@ class AuthRepository {
     required Map<String, dynamic> parameter,
   }) async {
     print('___________${parameter}__________');
+    print('___________${getUserSignUpApi}__________');
     try {
       var loginDetail =
           await ApiBaseHelper().postAPICall(getUserSignUpApi, parameter);

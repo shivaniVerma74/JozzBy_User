@@ -110,7 +110,7 @@ class SingleProductContainer extends StatelessWidget {
                                   fontFamily: 'ubuntu',
                                   color:
                                       Theme.of(context).colorScheme.lightBlack,
-                                  fontSize: textFontSize10,
+                                  fontSize: textFontSize16,
                                   fontWeight: FontWeight.w400,
                                   fontStyle: FontStyle.normal,
                                 ),
@@ -118,6 +118,64 @@ class SingleProductContainer extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
+                        double.parse(productDetails
+                            .prVarientList![0].disPrice!) !=
+                            0 &&
+                            !showDiscountAtSameLine
+                            ? Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                            start: 10.0,
+                            top: 5,
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                double.parse(productDetails
+                                    .prVarientList![0]
+                                    .disPrice!) !=
+                                    0
+                                    ? 'MRP: ${DesignConfiguration.getPriceFormat(context, double.parse(productDetails.prVarientList![0].price!))}'
+                                    : '',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .overline!
+                                    .copyWith(
+                                  color: colors.darkColor3,
+                                  fontFamily: 'ubuntu',
+                                  decoration:
+                                  TextDecoration.lineThrough,
+                                  decorationColor: colors.darkColor3,
+                                  decorationStyle:
+                                  TextDecorationStyle.solid,
+                                  decorationThickness: 2,
+                                  letterSpacing: 0,
+                                  fontSize: textFontSize16,
+                                  fontWeight: FontWeight.w400,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  '   ${double.parse(offPer).round().toStringAsFixed(2)}%',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .overline!
+                                      .copyWith(
+                                    fontFamily: 'ubuntu',
+                                    color: colors.primary,
+                                    letterSpacing: 0,
+                                    fontSize: textFontSize10,
+                                    fontWeight: FontWeight.w400,
+                                    fontStyle: FontStyle.normal,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                            : Container(),
                         Padding(
                           padding: const EdgeInsetsDirectional.only(
                             start: 8.0,
@@ -156,6 +214,7 @@ class SingleProductContainer extends StatelessWidget {
                                                   .textTheme
                                                   .overline!
                                                   .copyWith(
+                                                color: colors.darkColor3,
                                                     fontFamily: 'ubuntu',
                                                     decoration: TextDecoration
                                                         .lineThrough,
@@ -166,7 +225,7 @@ class SingleProductContainer extends StatelessWidget {
                                                             .solid,
                                                     decorationThickness: 2,
                                                     letterSpacing: 0,
-                                                    fontSize: textFontSize10,
+                                                    fontSize: textFontSize16,
                                                     fontWeight: FontWeight.w400,
                                                     fontStyle: FontStyle.normal,
                                                   ),
@@ -195,63 +254,7 @@ class SingleProductContainer extends StatelessWidget {
                             ],
                           ),
                         ),
-                        double.parse(productDetails
-                                        .prVarientList![0].disPrice!) !=
-                                    0 &&
-                                !showDiscountAtSameLine
-                            ? Padding(
-                                padding: const EdgeInsetsDirectional.only(
-                                  start: 10.0,
-                                  top: 5,
-                                ),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      double.parse(productDetails
-                                                  .prVarientList![0]
-                                                  .disPrice!) !=
-                                              0
-                                          ? 'MRP: ${DesignConfiguration.getPriceFormat(context, double.parse(productDetails.prVarientList![0].price!))}'
-                                          : '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .overline!
-                                          .copyWith(
-                                            fontFamily: 'ubuntu',
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                            decorationColor: colors.darkColor3,
-                                            decorationStyle:
-                                                TextDecorationStyle.solid,
-                                            decorationThickness: 2,
-                                            letterSpacing: 0,
-                                            fontSize: textFontSize10,
-                                            fontWeight: FontWeight.w400,
-                                            fontStyle: FontStyle.normal,
-                                          ),
-                                    ),
-                                    Flexible(
-                                      child: Text(
-                                        '   ${double.parse(offPer).round().toStringAsFixed(2)}%',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .overline!
-                                            .copyWith(
-                                              fontFamily: 'ubuntu',
-                                              color: colors.primary,
-                                              letterSpacing: 0,
-                                              fontSize: textFontSize10,
-                                              fontWeight: FontWeight.w400,
-                                              fontStyle: FontStyle.normal,
-                                            ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : Container(),
+
                         Padding(
                           padding: const EdgeInsetsDirectional.only(
                             start: 9.0,

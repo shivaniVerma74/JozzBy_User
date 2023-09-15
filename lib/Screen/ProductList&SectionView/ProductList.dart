@@ -1113,6 +1113,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
       context: context,
       enableDrag: false,
       isScrollControlled: true,
+      backgroundColor: colors.primary1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(circularBorderRadius10),
       ),
@@ -1157,7 +1158,7 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                 ),
                 Expanded(
                   child: Container(
-                    color: Theme.of(context).colorScheme.lightWhite,
+                    color:colors.primary1,
                     padding: const EdgeInsetsDirectional.only(
                       start: 7.0,
                       end: 7.0,

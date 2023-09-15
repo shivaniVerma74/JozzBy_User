@@ -166,7 +166,7 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
                       context.read<ExploreProvider>().productList[index].name!,
                       style: Theme.of(context).textTheme.caption!.copyWith(
                             color: Theme.of(context).colorScheme.lightBlack,
-                            fontSize: textFontSize10,
+                            fontSize: textFontSize16,
                             fontWeight: FontWeight.w400,
                             fontFamily: 'ubuntu',
                             fontStyle: FontStyle.normal,
@@ -237,6 +237,7 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
                                     .textTheme
                                     .overline!
                                     .copyWith(
+                                  color: colors.darkColor3,
                                       fontFamily: 'ubuntu',
                                       decoration: TextDecoration.lineThrough,
                                       decorationColor: colors.darkColor3,
@@ -244,7 +245,7 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
                                           TextDecorationStyle.solid,
                                       decorationThickness: 2,
                                       letterSpacing: 0,
-                                      fontSize: textFontSize10,
+                                      fontSize: textFontSize16,
                                       fontWeight: FontWeight.w400,
                                       fontStyle: FontStyle.normal,
                                     ),

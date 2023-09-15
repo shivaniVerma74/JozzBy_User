@@ -391,11 +391,7 @@ class _AllCategoryState extends State<AllCategory>
                                         context
                                             .read<CategoryProvider>()
                                             .setCurSelected(index);
-                                        if (context
-                                                    .read<HomePageProvider>()
-                                                    .catList[index]
-                                                    .subList ==
-                                                null ||
+                                        if (context.read<HomePageProvider>().catList[index].subList == null ||
                                             context
                                                 .read<HomePageProvider>()
                                                 .catList[index]
@@ -565,15 +561,11 @@ class _AllCategoryState extends State<AllCategory>
                                                                   color:colors.primary,
                                                                   fontWeight: FontWeight.w700,
                                                                   fontSize: textFontSize13,
-
-
-
                                                               ),
                                                         ),
                                                             ),
                                                           )
                                                         ],
-
                                                       ),
                                                       onTap: ()  async {
 

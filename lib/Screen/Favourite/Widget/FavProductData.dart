@@ -723,6 +723,7 @@ class _FavProductDataState extends State<FavProductData> {
                                                 ? Container()
                                                 : cartBtnList
                                                     ? Row(
+
                                                         children: <Widget>[
                                                           // SizedBox(height: 50,),
                                                           Padding(
@@ -811,7 +812,11 @@ class _FavProductDataState extends State<FavProductData> {
                                                                               decoration: const InputDecoration(
                                                                                 border: InputBorder.none,
                                                                               ),
-                                                                            )*/ Text('  ${quantityList[widget.index ?? 0]}',textAlign: TextAlign.center, style: TextStyle(
+                                                                            )*/quantityList[widget.index ?? 0] !=0 ? Text('  ${quantityList[widget.index ?? 0]}',textAlign: TextAlign.center, style: TextStyle(
+                                                                              fontSize: 16,
+                                                                              color: Theme.of(context).colorScheme.fontColor,
+                                                                            ),)
+                                                                            : Text('  ${widget.favList[widget.index!].qtyStepSize}',textAlign: TextAlign.center, style: TextStyle(
                                                                               fontSize: 16,
                                                                               color: Theme.of(context).colorScheme.fontColor,
                                                                             ),);
@@ -905,6 +910,7 @@ class _FavProductDataState extends State<FavProductData> {
                                                             width: 35,
                                                             child: ElevatedButton(
                                                               style: ElevatedButton.styleFrom(
+                                                                elevation: 0,
                                                                /// fixedSize: const Size(20, 20),
                                                                 //maximumSize: const Size(20, 20),
 

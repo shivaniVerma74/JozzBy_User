@@ -203,8 +203,14 @@ class _HomePageState extends State<HomePage>
                               color:Colors.grey,
                             ),
                             getImagesModel2?.data?.isEmpty ?? true ? SizedBox() :  imageCard2(),
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
+                            InkWell(
+                              onTap: (){
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BrandList()));
+                              },
+                                child: Image.asset('assets/images/png/app products_1.gif'))
+
+                            /*Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: Container(
                                 color: colors.primary1,
                                   width: MediaQuery.of(context).size.width/1,
@@ -212,7 +218,7 @@ class _HomePageState extends State<HomePage>
                                   child: const Center(child: Text("All Brand List",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold,fontSize: 20),))),
                             ),
                             const SizedBox(height: 10,),
-                           brandcard(),
+                           brandcard()*/,
                             const Divider(
                               thickness: 1,
                               color:Colors.grey,
@@ -222,10 +228,10 @@ class _HomePageState extends State<HomePage>
                               child: Text("All Seller",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold,fontSize: 20),),
                             ),
                             const SizedBox(height: 10,),
-                            sellerList==""?Text('Seller Not Found',style: TextStyle(color: colors.blackTemp),):getSellerList(),
+                            sellerList==""?const Text('Seller Not Found',style: TextStyle(color: colors.blackTemp),):getSellerList(),
                             const MostLikeSection(),
                             const SizedBox(height: 10,),
-                            getImagesModel3?.data?.isEmpty ?? true ? SizedBox() :  imageCard3(),
+                            getImagesModel3?.data?.isEmpty ?? true ? const SizedBox() :  imageCard3(),
                             const SizedBox(height: 50,),
                           ],
                         ),

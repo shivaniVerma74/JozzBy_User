@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Helper/String.dart';
 import '../repository/authRepository.dart';
+import 'package:http/http.dart' as http;
 
 class AuthenticationProvider extends ChangeNotifier {
   // value for parameter
@@ -150,21 +152,44 @@ class AuthenticationProvider extends ChangeNotifier {
   Future<Map<String, dynamic>> getSingUPData( String? mobile) async {
 
     try {
-      var parameter = {
-        MOBILE: mobile,
-        NAME: name,
-        EMAIL: singUPemail,
-        PASSWORD: sinUpPassword,
-        COUNTRY_CODE: countrycode,
-        REFERCODE: referCode,
-        FRNDCODE: friendCode,
-        GSTKEY: gst
+
+
+      var headers = {
+        'Cookie': 'ci_session=e385397905c87228193b6d52283c2a83c33b72d4'
       };
+      var request = http.MultipartRequest('POST', getUserSignUpApi);
+      request.fields.addAll({
+        MOBILE: mobile ?? '',
+        NAME: name ?? '',
+        EMAIL: singUPemail ?? '',
+        PASSWORD: sinUpPassword ?? '',
+        COUNTRY_CODE: countrycode ?? '',
+        REFERCODE: referCode ?? '',
+        FRNDCODE: friendCode ?? '',
+        GSTKEY: gst ?? ''
+      });
 
-      print('___________${parameter}__________');
+      request.headers.addAll(headers);
 
-      var result = await AuthRepository.fetchSingUpData(parameter: parameter);
-      return result;
+      http.StreamedResponse response = await request.send();
+
+
+      if (response.statusCode == 200) {
+       var result = await response.stream.bytesToString();
+       var fainalResult = jsonDecode(result);
+       return fainalResult ;
+      }
+      else {
+        print(response.reasonPhrase);
+        var result = await response.stream.bytesToString();
+        var fainalResult = jsonDecode(result);
+        return fainalResult ;
+
+      }
+
+
+      /*var result = await AuthRepository.fetchSingUpData(parameter: parameter);
+      return result;*/
     } catch (e) {
       errorMessage = e.toString();
       return {};

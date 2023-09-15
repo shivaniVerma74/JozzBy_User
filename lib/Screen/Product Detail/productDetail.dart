@@ -950,6 +950,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
     try {
       isNetworkAvail = await isNetworkAvailable();
       if (isNetworkAvail) {
+
         setState(
           () {
             context.read<ProductDetailProvider>().qtyChange = true;
@@ -1701,6 +1702,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
   }
 double qty = 0.0 ;
   _showContent() {
+    print('___________${widget.model?.brandImage}__________');
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -1868,8 +1870,8 @@ double qty = 0.0 ;
                                           name: widget.model!.brandName!,
                                         )
                                             : Container(),
-                                        SizedBox(width: 10,),
-                                        Container(
+                                        const SizedBox(width: 10,),
+                                        SizedBox(
                                             height: 50,
                                             width: 50,
                                             child:widget.model?.brandImage==null?Image.asset('assets/images/png/placeholder.png'): Image.network('${widget.model?.brandImage}'))
@@ -2137,6 +2139,12 @@ double qty = 0.0 ;
                                           ),
 
                                           onTap: () {
+                                            if(qty > double.parse(widget.model?.qtyStepSize ?? '0.0'))
+                                            {
+                                              setState(() {
+                                                qty -= double.parse(widget.model?.qtyStepSize ?? '0.0');
+                                              });
+                                            }
                                             // if (context
                                             //     .read<CartProvider>()
                                             //     .isProgress ==
@@ -2229,8 +2237,17 @@ double qty = 0.0 ;
                                     width: 33,
                                     height: 33,
                                     child: Center(
-                                      child: Text(
-                                        widget.model?.qtyStepSize ?? '',
+                                      child: qty == 0.0 ? Text(
+                                        widget.model?.qtyStepSize ?? '0',
+                                        style: const TextStyle(
+                                          fontSize:16,
+                                          fontFamily: 'ubuntu',
+                                          fontWeight: FontWeight.bold,
+                                          color:colors.primary,
+
+                                        ),
+                                      ) : Text(
+                                        qty.toStringAsFixed(0),
                                         style: const TextStyle(
                                           fontSize:16,
                                           fontFamily: 'ubuntu',
@@ -2305,13 +2322,19 @@ double qty = 0.0 ;
                               InkWell(
                                 onTap: () async {
 
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const Cart(fromBottom: true)));
+                                 // Navigator.push(context, MaterialPageRoute(builder: (context)=> const Cart(fromBottom: true)));
                                   // addToCart(
                                   //   qtyController.text,
                                   //   false,
                                   //   true,
                                   //   widget.model!,
                                   // );
+                                  addToCart(
+                                    qty == 0.0 ? widget.model?.qtyStepSize ?? '' : qty.toStringAsFixed(0),
+                                    true,
+                                    true,
+                                    widget.model!,
+                                  );
                                 },
                                 child: Container(
                                   height:45,
@@ -2445,7 +2468,7 @@ double qty = 0.0 ;
                                   );
 
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.home_outlined,color:colors.blackTemp,
 
                                 ),
@@ -2483,7 +2506,7 @@ double qty = 0.0 ;
                                   )
                                       : Routes.navigateToSearchScreen(context);
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.search,color:colors.blackTemp,
 
                                 ),
@@ -2645,7 +2668,7 @@ double qty = 0.0 ;
                               ),
                             ),
                           ),
-                           SizedBox(width: 20,),
+                           const SizedBox(width: 20,),
                           InkWell(
                             onTap: () async {
 
@@ -2656,6 +2679,8 @@ double qty = 0.0 ;
                               //   true,
                               //   widget.model!,
                               // );
+                              print('ddfsfsdffsffdfsd_____________');
+
                               addToCart(
                                 qty == 0.0 ? widget.model?.qtyStepSize ?? '' : qty.toStringAsFixed(0),
                                 true,
