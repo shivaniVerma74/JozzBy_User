@@ -63,7 +63,8 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
           ) async {
             bool? error = value['error'];
             String? msg = value['message'];
-            int? receivedOTP = value['data'] ;
+            int? receivedOTP = value['data'];
+            print('____receivedOTP_______${receivedOTP}__________');
             await buttonController!.reverse();
             SettingProvider settingsProvider =
                 Provider.of<SettingProvider>(context, listen: false);
@@ -90,19 +91,16 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
               }
             }
             if (widget.title == getTranslated(context, 'FORGOT_PASS_TITLE')) {
-              if (error!) {
+              print('${error} ------------terter-------');
+              if (error == false) {
                 settingsProvider.setPrefrence(MOBILE,
                     context.read<AuthenticationProvider>().mobilenumbervalue);
                 settingsProvider.setPrefrence(COUNTRY_CODE, countrycode!);
                 Future.delayed(const Duration(seconds: 1)).then(
                   (_) {
-                    Navigator.pushReplacement(
-                      context,
-                      CupertinoPageRoute(
+                    Navigator.pushReplacement(context, CupertinoPageRoute(
                         builder: (context) => VerifyOtp(
-                          mobileNumber: context
-                              .read<AuthenticationProvider>()
-                              .mobilenumbervalue,
+                          mobileNumber: context.read<AuthenticationProvider>().mobilenumbervalue,
                           countryCode: countrycode,
                           responseOtp: receivedOTP.toString(),
                           title: getTranslated(context, 'FORGOT_PASS_TITLE'),

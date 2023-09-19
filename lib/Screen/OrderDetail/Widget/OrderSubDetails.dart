@@ -326,6 +326,8 @@ class GetOrderDetails extends StatelessWidget {
     OrderModel model,
     Function update,
   ) {
+    print('_____surendra______${model.invoice}______${model.id}____');
+    print('____ssssss_______${model.id}_________');
     return FutureBuilder<List<Directory>?>(
       future: _externalStorageDirectories,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -351,6 +353,7 @@ class GetOrderDetails extends StatelessWidget {
               ),
             ),
             onTap: () async {
+              Directory? directory ;
               final status = await Permission.storage.request();
               if (status == PermissionStatus.granted) {
                 context
@@ -364,17 +367,24 @@ class GetOrderDetails extends StatelessWidget {
                 var target = await getApplicationDocumentsDirectory();
                 targetPath = target.path.toString();
               } else {
-                if (snapshot.hasData) {
+                directory = Directory('/storage/emulated/0/Download');
+                if (!await directory.exists()) directory = await getExternalStorageDirectory();
+                /*if (snapshot.hasData) {
+
                   targetPath = (snapshot.data as List<Directory>).first.path;
-                }
+                  print('___________${targetPath}__________');
+
+                }*/
               }
               var targetFileName = 'Invoice_${model.id!}';
               var generatedPdfFile, filePath;
               try {
                 generatedPdfFile =
                     await FlutterHtmlToPdf.convertFromHtmlContent(
-                        model.invoice!, targetPath, targetFileName);
+                        model.invoice ?? '<br>NO DATA</br>', directory?.path ?? '', targetFileName);
                 filePath = generatedPdfFile.path;
+
+
               } catch (e) {
 
                 context

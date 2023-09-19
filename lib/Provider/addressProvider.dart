@@ -203,7 +203,7 @@ class AddressProvider extends ChangeNotifier {
         MOBILE: mobile,
         PINCODE: pincodeC!.text,
         CITY_ID: city,
-        AREA_ID: area,
+        // AREA_ID: area,
         ADDRESS: address,
         STATE: state,
         COUNTRY: country,

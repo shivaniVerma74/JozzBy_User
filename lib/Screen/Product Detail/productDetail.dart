@@ -3523,6 +3523,7 @@ double qty = 0.0 ;
       String? offPer;
       double price =
           double.parse(productList[index].prVarientList![0].disPrice!);
+      double margin =  double.parse(productList[index].prVarientList![0].price!) - double.parse(productList[index].prVarientList![0].disPrice!);
       if (price == 0) {
         price = double.parse(productList[index].prVarientList![0].price!);
       } else {
@@ -3550,7 +3551,7 @@ double qty = 0.0 ;
                     Expanded(
                       child: ClipRRect(
                         borderRadius:
-                            BorderRadius.circular(circularBorderRadius5),
+                            BorderRadius.circular(circularBorderRadius1),
                         child: Hero(
                           transitionOnUserGestures: true,
                           tag: '$heroTagUniqueString${productList[index].id}',
@@ -3565,16 +3566,17 @@ double qty = 0.0 ;
                         ),
                       ),
                     ),
+
                     Padding(
                       padding: const EdgeInsetsDirectional.only(
                         start: 10.0,
-                        top: 15,
+                        top: 5,
                       ),
                       child: Text(
                         productList[index].name!,
                         style: Theme.of(context).textTheme.caption!.copyWith(
                               color: Theme.of(context).colorScheme.lightBlack,
-                              fontSize: textFontSize12,
+                              fontSize: textFontSize16,
                               fontWeight: FontWeight.w400,
                               fontFamily: 'ubuntu',
                               fontStyle: FontStyle.normal,
@@ -3584,18 +3586,72 @@ double qty = 0.0 ;
                       ),
                     ),
                     Padding(
+                        padding: const EdgeInsetsDirectional.only(
+                          start: 10.0,
+                          top: 0,
+                        ),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            double.parse(productList
+                            [index].prVarientList![0]
+                                .disPrice!) !=
+                                0
+                                ? 'MRP: ${DesignConfiguration.getPriceFormat(context, double.parse(productList
+                            [index].prVarientList![0].price!))}'
+                                : '',
+                            style: Theme.of(context)
+                                .textTheme
+                                .overline!
+                                .copyWith(
+                              color: colors.darkColor3,
+                              fontFamily: 'ubuntu',
+                              decoration:
+                              TextDecoration.lineThrough,
+                              decorationColor: colors.darkColor3,
+                              decorationStyle:
+                              TextDecorationStyle.solid,
+                              decorationThickness: 2,
+                              letterSpacing: 0,
+                              fontSize: textFontSize14,
+                              fontWeight: FontWeight.normal,
+                              fontStyle: FontStyle.normal,
+                            ),
+                          ),
+                          // Flexible(
+                          //   child: Text(
+                          //     '   ${double.parse(offPer).round().toStringAsFixed(2)}%',
+                          //     maxLines: 1,
+                          //     overflow: TextOverflow.ellipsis,
+                          //     style: Theme.of(context)
+                          //         .textTheme
+                          //         .overline!
+                          //         .copyWith(
+                          //       fontFamily: 'ubuntu',
+                          //       color: colors.primary,
+                          //       letterSpacing: 0,
+                          //       fontSize: textFontSize10,
+                          //       fontWeight: FontWeight.w400,
+                          //       fontStyle: FontStyle.normal,
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ),
+                    Padding(
                       padding: const EdgeInsetsDirectional.only(
                         start: 8.0,
-                        top: 5,
+                        top: 0,
                       ),
                       child: Row(
                         children: [
                           Text(
-                            ' ${DesignConfiguration.getPriceFormat(context, price)!}',
+                            'Price: ${DesignConfiguration.getPriceFormat(context, price)!}',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.blue,
                               fontSize: textFontSize14,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.normal,
                               fontStyle: FontStyle.normal,
                               fontFamily: 'ubuntu',
                             ),
@@ -3658,7 +3714,7 @@ double qty = 0.0 ;
                         ],
                       ),
                     ),
-                    double.parse(productList[index]
+                    /*double.parse(productList[index]
                                     .prVarientList![0]
                                     .disPrice!) !=
                                 0 &&
@@ -3714,7 +3770,46 @@ double qty = 0.0 ;
                               ],
                             ),
                           )
-                        : Container(),
+                        : Container(),*/
+                    double.parse(productList[index]
+                        .prVarientList![0]
+                        .disPrice!) !=
+                        0 &&
+                        !showDiscountAtSameLine ? Padding(
+                      padding: const EdgeInsetsDirectional.only(
+                        start: 8.0,
+                        top: 1,
+                      ),
+                      child: Text(
+                        'Margin: ${double.parse(offPer ?? '0.0').round().toStringAsFixed(2)}%',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.green,
+                          fontSize: textFontSize14,
+                          fontWeight: FontWeight.normal,
+                          fontStyle: FontStyle.normal,
+                          fontFamily: 'ubuntu',
+
+                        ),
+                      ),
+                    ) : Container(),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(
+                        start: 9.0,
+                        top: 1,
+                      ),
+                      child: Text(
+                        'Profit: ${DesignConfiguration.getPriceFormat(context, margin)!}',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.green,
+                          fontSize: textFontSize14,
+                          fontWeight: FontWeight.normal,
+                          fontStyle: FontStyle.normal,
+                          fontFamily: 'ubuntu',
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsetsDirectional.only(
                         start: 10.0,
@@ -3734,7 +3829,7 @@ double qty = 0.0 ;
                   right: 0,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.white,
+                      color: Colors.transparent,
                       borderRadius: const BorderRadiusDirectional.only(
                         bottomStart: Radius.circular(circularBorderRadius10),
                         topEnd: Radius.circular(circularBorderRadius5),

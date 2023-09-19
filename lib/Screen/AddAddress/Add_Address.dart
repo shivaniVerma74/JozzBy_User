@@ -227,10 +227,10 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       if (context.read<AddressProvider>().city == null ||
           context.read<AddressProvider>().city!.isEmpty) {
         setSnackbar(getTranslated(context, 'cityWarning')!, context);
-      } else if (context.read<AddressProvider>().area == null ||
+      } /*else if (context.read<AddressProvider>().area == null ||
           context.read<AddressProvider>().area!.isEmpty) {
         setSnackbar(getTranslated(context, 'areaWarning')!, context);
-      } else if (context.read<AddressProvider>().latitude == null ||
+      }*/ else if (context.read<AddressProvider>().latitude == null ||
           context.read<AddressProvider>().longitude == null) {
         setSnackbar(getTranslated(context, 'locationWarning')!, context);
       } else {

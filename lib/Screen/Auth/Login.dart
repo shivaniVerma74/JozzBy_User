@@ -729,11 +729,13 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
               fontSize: textFontSize13),
           keyboardType: TextInputType.number,
           controller: mobileController,
+
           focusNode: monoFocus,
           maxLength: 10,
           textInputAction: TextInputAction.next,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           decoration: InputDecoration(
+              border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 13,
                 vertical: 5,
@@ -748,7 +750,8 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
                   fontWeight: FontWeight.bold,
                   fontSize: textFontSize13),
               fillColor: Theme.of(context).colorScheme.lightWhite,
-              border: InputBorder.none),
+
+          ),
           validator: (val) => StringValidation.validateMob(
               val!,
               getTranslated(context, 'MOB_REQUIRED'),

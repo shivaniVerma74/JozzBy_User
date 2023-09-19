@@ -110,8 +110,8 @@ class SingleProductContainer extends StatelessWidget {
                                   fontFamily: 'ubuntu',
                                   color:
                                       Theme.of(context).colorScheme.lightBlack,
-                                  fontSize: textFontSize16,
-                                  fontWeight: FontWeight.w400,
+                                  fontSize: textFontSize18,
+                                  // fontWeight: FontWeight.normal,
                                   fontStyle: FontStyle.normal,
                                 ),
                             maxLines: 1,
@@ -149,29 +149,29 @@ class SingleProductContainer extends StatelessWidget {
                                   TextDecorationStyle.solid,
                                   decorationThickness: 2,
                                   letterSpacing: 0,
-                                  fontSize: textFontSize16,
-                                  fontWeight: FontWeight.w400,
+                                  fontSize: textFontSize14,
+                                  fontWeight: FontWeight.normal,
                                   fontStyle: FontStyle.normal,
                                 ),
                               ),
-                              Flexible(
-                                child: Text(
-                                  '   ${double.parse(offPer).round().toStringAsFixed(2)}%',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .overline!
-                                      .copyWith(
-                                    fontFamily: 'ubuntu',
-                                    color: colors.primary,
-                                    letterSpacing: 0,
-                                    fontSize: textFontSize10,
-                                    fontWeight: FontWeight.w400,
-                                    fontStyle: FontStyle.normal,
-                                  ),
-                                ),
-                              ),
+                              // Flexible(
+                              //   child: Text(
+                              //     '   ${double.parse(offPer).round().toStringAsFixed(2)}%',
+                              //     maxLines: 1,
+                              //     overflow: TextOverflow.ellipsis,
+                              //     style: Theme.of(context)
+                              //         .textTheme
+                              //         .overline!
+                              //         .copyWith(
+                              //       fontFamily: 'ubuntu',
+                              //       color: colors.primary,
+                              //       letterSpacing: 0,
+                              //       fontSize: textFontSize10,
+                              //       fontWeight: FontWeight.w400,
+                              //       fontStyle: FontStyle.normal,
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         )
@@ -179,7 +179,7 @@ class SingleProductContainer extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsetsDirectional.only(
                             start: 8.0,
-                            top: 5,
+                            top: 1,
                           ),
                           child: Row(
                             children: [
@@ -188,18 +188,19 @@ class SingleProductContainer extends StatelessWidget {
                                 style: TextStyle(
                                   color: Theme.of(context).colorScheme.blue,
                                   fontSize: textFontSize14,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w300,
                                   fontStyle: FontStyle.normal,
                                   fontFamily: 'ubuntu',
                                 ),
                               ),
+
                               showDiscountAtSameLine
                                   ? Expanded(
                                       child: Padding(
                                         padding:
                                             const EdgeInsetsDirectional.only(
                                           start: 8.0,
-                                          top: 5,
+                                          top: 1,
                                         ),
                                         child: Row(
                                           children: <Widget>[
@@ -225,8 +226,8 @@ class SingleProductContainer extends StatelessWidget {
                                                             .solid,
                                                     decorationThickness: 2,
                                                     letterSpacing: 0,
-                                                    fontSize: textFontSize16,
-                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: textFontSize14,
+                                                    fontWeight: FontWeight.normal,
                                                     fontStyle: FontStyle.normal,
                                                   ),
                                             ),
@@ -242,7 +243,7 @@ class SingleProductContainer extends StatelessWidget {
                                                     color: colors.primary,
                                                     letterSpacing: 0,
                                                     fontSize: textFontSize10,
-                                                    fontWeight: FontWeight.w400,
+                                                    fontWeight: FontWeight.normal,
                                                     fontStyle: FontStyle.normal,
                                                   ),
                                             ),
@@ -256,21 +257,42 @@ class SingleProductContainer extends StatelessWidget {
                         ),
 
                         Padding(
-                          padding: const EdgeInsetsDirectional.only(
-                            start: 9.0,
-                            top: 5,
-                          ),
+                            padding: const EdgeInsetsDirectional.only(
+                              start: 8.0,
+                              top: 1,
+                            ),
                           child: Text(
-                            'Margin: ${DesignConfiguration.getPriceFormat(context, margin)!}',
+                            'Margin: ${double.parse(offPer).round().toStringAsFixed(2)}%',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.green,
                               fontSize: textFontSize14,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.normal,
+                              fontStyle: FontStyle.normal,
+                              fontFamily: 'ubuntu',
+
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                            start: 9.0,
+                            top: 1,
+                          ),
+                          child: Text(
+                            'Profit: ${DesignConfiguration.getPriceFormat(context, margin)!}',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.green,
+                              fontSize: textFontSize14,
+                              fontWeight: FontWeight.normal,
                               fontStyle: FontStyle.normal,
                               fontFamily: 'ubuntu',
                             ),
                           ),
                         ),
+
                         Padding(
                           padding: const EdgeInsetsDirectional.only(
                             start: 10.0,
@@ -326,7 +348,7 @@ class SingleProductContainer extends StatelessWidget {
                                       ? Icons.favorite_border
                                       : Icons.favorite,
                                   size: 20,
-                                  color:Colors.grey[300],
+                                  color:Colors.red,
                                 ),
                               ),
                               onTap: () {

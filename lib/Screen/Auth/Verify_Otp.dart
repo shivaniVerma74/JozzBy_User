@@ -810,8 +810,9 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
           InkWell(
             onTap: () async {
               await buttonController!.reverse();
-              resendOTP() ;
-             // checkNetworkOtp();
+              print('___________sdeferfergfer__________');
+               resendOTP2() ;
+             //checkNetworkOtp();
             },
             child: Text(
               getTranslated(context, 'RESEND_OTP')!,
@@ -850,6 +851,58 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
       ),
     );
   }
+
+  Future<void> resendOTP2() async {
+    isNetworkAvail = await isNetworkAvailable();
+    if (isNetworkAvail) {
+      Future.delayed(Duration.zero).then(
+            (value) => context.read<AuthenticationProvider>().getVerifyUser().then(
+              (
+              value,
+              ) async {
+            bool? error = value['error'];
+            String? msg = value['message'];
+            int? receivedOTP = value['data'] ;
+            widget.responseOtp = receivedOTP.toString() ;
+            await buttonController!.reverse();
+            SettingProvider settingsProvider =
+            Provider.of<SettingProvider>(context, listen: false);
+            if (widget.title == getTranslated(context, 'SEND_OTP_TITLE')) {
+              if (!error!) {
+                setSnackbar(msg!, context);
+              } else {
+                setSnackbar(msg!, context);
+              }
+            }
+            if (widget.title == getTranslated(context, 'FORGOT_PASS_TITLE')) {
+              if (error!) {
+
+              } else {
+                // setSnackbar(
+                //     getTranslated(context, 'FIRSTSIGNUP_MSG')!, context);
+              }
+            }
+          },
+        ),
+      );
+    } else {
+      Future.delayed(const Duration(seconds: 2)).then(
+            (_) async {
+          if (mounted) {
+            setState(
+                  () {
+                isNetworkAvail = false;
+              },
+            );
+          }
+          await buttonController!.reverse();
+        },
+      );
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -870,7 +923,7 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
               monoVarifyText(),
               otpText(),
               mobText(),
-              otpTextVisible(),
+             // otpTextVisible(),
               otpLayout(),
               resendText(),
               verifyBtn(),

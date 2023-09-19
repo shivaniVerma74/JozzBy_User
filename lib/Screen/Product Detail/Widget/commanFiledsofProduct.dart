@@ -56,7 +56,7 @@ class GetTitleWidget extends StatelessWidget {
         style: TextStyle(
           fontWeight: FontWeight.w400,
           color: Theme.of(context).colorScheme.black,
-          fontSize: textFontSize16,
+          fontSize: textFontSize20,
         ),
       ),
     );
@@ -102,16 +102,8 @@ class GetPrice extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Price: ${DesignConfiguration.getPriceFormat(context, price)!} ',
-                style: Theme.of(context).textTheme.headline6!.copyWith(
-                  color: Theme.of(context).colorScheme.blue,
-                  fontWeight: FontWeight.w700,
-                  fontStyle: FontStyle.normal,
-                  fontSize: textFontSize20,
-                ),
-              ),
-              const SizedBox(height:5),
+
+              const SizedBox(height:1),
               off != 0.00
                   ? Text(
                 'MRP: ${DesignConfiguration.getPriceFormat(context, double.parse(model!.prVarientList![pos].price!))!} ',
@@ -126,23 +118,31 @@ class GetPrice extends StatelessWidget {
                       .fontColor
                       .withOpacity(0.7),
                   fontStyle: FontStyle.normal,
-                  fontSize: textFontSize18,
-                  fontWeight: FontWeight.w300,
+                  fontSize: textFontSize16,
+                  fontWeight: FontWeight.normal,
                 ),
               )
                   : Container(),
               const SizedBox(width: 10),
+              Text(
+                'Price: ${DesignConfiguration.getPriceFormat(context, price)!} ',
+                style: Theme.of(context).textTheme.headline6!.copyWith(
+                  color: Theme.of(context).colorScheme.blue,
+                  fontWeight: FontWeight.normal,
+                  fontStyle: FontStyle.normal,
+                  fontSize: textFontSize16,
+                ),
+              ),
               //const Icon(Icons.share),
-              SizedBox(height:5,),
               off != 0.00
                 ? Text(
-                    ' ${off.toStringAsFixed(2)}% OFF',
+                    '${off.toStringAsFixed(2)}% OFF',
                     style: Theme.of(context).textTheme.overline!.copyWith(
                           color: colors.primary,
                           letterSpacing: 0,
                           fontWeight: FontWeight.w400,
                           fontStyle: FontStyle.normal,
-                          fontSize: textFontSize18,
+                          fontSize: textFontSize16,
                         ),
                   )
                 : Container(),
@@ -170,8 +170,8 @@ class GetPrice extends StatelessWidget {
                   return Padding(
                     padding: const EdgeInsetsDirectional.only(
                       start: 3.0,
-                      bottom: 5,
-                      top: 3,
+                      bottom: 0,
+                      top: 0,
                     ),
                     child: model!.availability == '0'
                         ? Container()
@@ -195,9 +195,9 @@ class GetPrice extends StatelessWidget {
             'Margin: ${DesignConfiguration.getPriceFormat(context, margin)!} ',
             style: Theme.of(context).textTheme.headline6!.copyWith(
               color: Theme.of(context).colorScheme.green,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.normal,
               fontStyle: FontStyle.normal,
-              fontSize: textFontSize20,
+              fontSize: textFontSize16,
             ),
           ),
 
@@ -205,7 +205,7 @@ class GetPrice extends StatelessWidget {
       );
     } else {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -213,9 +213,9 @@ class GetPrice extends StatelessWidget {
               '${DesignConfiguration.getPriceFormat(context, nodisPrice)!} ',
               style: Theme.of(context).textTheme.headline6!.copyWith(
                     color: Theme.of(context).colorScheme.blue,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.normal,
                     fontStyle: FontStyle.normal,
-                    fontSize: textFontSize20,
+                    fontSize: textFontSize16,
                   ),
             ),
           ],
