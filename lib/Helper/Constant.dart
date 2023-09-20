@@ -75,7 +75,9 @@ const String bankDetail =
 ApiBaseHelper apiBaseHelper = ApiBaseHelper();
 
 // for demo panels
-const String imageUrl = 'https://alphawizzserver.com/jozzby_bazar_new/';
-const String baseUrl = 'https://alphawizzserver.com/jozzby_bazar_new/app/v1/api/';
+// const String imageUrl = 'https://alphawizzserver.com/jozzby_bazar_new/';
+const String imageUrl = 'https://admin.jossbuy.com/';
+const String baseUrl = 'https://admin.jossbuy.com/app/v1/api/';
+// const String baseUrl = 'https://alphawizzserver.com/jozzby_bazar_new/app/v1/api/';
 const String ecomExpressUrl = 'https://clbeta.ecomexpress.in/track_me/api/mawbd/';
 const String jwtKey = 'https://alphawizzserver.com/';
