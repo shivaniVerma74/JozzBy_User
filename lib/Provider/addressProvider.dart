@@ -215,7 +215,6 @@ class AddressProvider extends ChangeNotifier {
       if (update!) {
         parameter[ID] = context.read<CartProvider>().addressList[index].id;
       }
-
       dynamic result = await AddressRepository.addAndUpdateAddress(
         parameter: parameter,
         update: update,

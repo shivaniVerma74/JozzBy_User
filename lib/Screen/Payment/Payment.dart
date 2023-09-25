@@ -590,7 +590,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                                                child: Column(children: [
                                                Text('*Pay ${ADVANCE_PERCENT}% Advance amount of Order amount'),
                                                ElevatedButton(onPressed: (){
-                                                 print('___________${context.read<CartProvider>().totalPrice}__________');
+                                                 print('_____sddssssds______${context.read<CartProvider>().totalPrice}__________');
                                                  double percent = double.parse(ADVANCE_PERCENT ?? '0.0');
                                                  deductAmount = context.read<CartProvider>().totalPrice*percent /100 ;
                                                  openCheckout();
@@ -1038,6 +1038,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
   String? availableCredit;
 
   void openCheckout({double? amount}) async {
+    print('___________ddddddddd__________');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? email = prefs.getString('email');
     String? phone = prefs.getString('phone');

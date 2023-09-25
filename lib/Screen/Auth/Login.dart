@@ -103,8 +103,7 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
 
   otpModel? otpData;
   Future<void> sendOTP()async {
-
-    var request = http.MultipartRequest('POST', Uri.parse('https://alphawizzserver.com/jozzby_bazar_new/app/v1/api/send_otp'));
+    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl}send_otp'));
     request.fields.addAll({
       'mobile': '${mobileController.text}',
       'device_token': ''
@@ -151,10 +150,6 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
 
 
   }
-
-
-
-
 
   Future<void> checkNetwork1() async {
     isNetworkAvail = await isNetworkAvailable();

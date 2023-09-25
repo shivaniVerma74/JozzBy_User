@@ -320,7 +320,7 @@ class _AddMoneyDialogState extends State<AddMoneyDialog> {
     var headers = {
       'Cookie': 'ci_session=9f7f06b524a9ac470a477208730848bbd6b33b56'
     };
-    var request = http.MultipartRequest('POST', Uri.parse('https://alphawizzserver.com/jozzby_bazar_new/app/v1/api/wallet_post'));
+    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl}wallet_post'));
     request.fields.addAll({
       'user_id':CUR_USERID ?? '1',
       'amount':amountTextController.text

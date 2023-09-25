@@ -421,6 +421,7 @@ class StateAddress extends State<ManageAddress> with TickerProviderStateMixin {
             await Navigator.push(
               context,
               CupertinoPageRoute(
+
                 builder: (context) => AddAddress(
                   update: true,
                   index: i,
@@ -428,6 +429,7 @@ class StateAddress extends State<ManageAddress> with TickerProviderStateMixin {
               ),
             ).then(
               (value) {
+
                 context.read<CartProvider>().addressList.clear();
                 addModel.clear();
                 if (!ISFLAT_DEL) {

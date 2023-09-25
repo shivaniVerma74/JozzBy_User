@@ -843,33 +843,33 @@ class _ListIteamListWidgetState extends State<ListIteamListWidget> {
                     },
                   ),
                 ),
-                controllerText[widget.index!].text == '0'
-                    ? Positioned.directional(
-                        textDirection: Directionality.of(context),
-                        bottom: 4,
-                        end: 4,
-                        child: InkWell(
-                          onTap: () {
-                            if (isProgress == false) {
-                              addToCart(
-                                widget.index!,
-                                (int.parse(controllerText[widget.index!].text) +
-                                        int.parse(model.qtyStepSize!))
-                                    .toString(),
-                                1,
-                              );
-                            }
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.shopping_cart_outlined,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      )
-                    : Container(),
+                // controllerText[widget.index!].text == '0'
+                //     ? Positioned.directional(
+                //         textDirection: Directionality.of(context),
+                //         bottom: 4,
+                //         end: 4,
+                //         child: InkWell(
+                //           onTap: () {
+                //             if (isProgress == false) {
+                //               addToCart(
+                //                 widget.index!,
+                //                 (int.parse(controllerText[widget.index!].text) +
+                //                         int.parse(model.qtyStepSize!))
+                //                     .toString(),
+                //                 1,
+                //               );
+                //             }
+                //           },
+                //           child: const Padding(
+                //             padding: EdgeInsets.all(8.0),
+                //             child: Icon(
+                //               Icons.shopping_cart_outlined,
+                //               size: 20,
+                //             ),
+                //           ),
+                //         ),
+                //       )
+                //     : Container(),
                 Positioned.directional(
                   textDirection: Directionality.of(context),
                   top: 4,

@@ -555,218 +555,210 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                         const Divider(
                           height: 1,
                         ),
-                        Positioned.directional(
-                          textDirection: Directionality.of(context),
-                          end: 0,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              model.availability == '0' && !cartBtnList
-                                  ? Container()
-                                  : controllerText[widget.index!].text == '0'
-                                      ? InkWell(
-                                          onTap: () {
-                                            if (isProgress == false) {
-                                              addToCart(
-                                                widget.index!,
-                                                (int.parse(controllerText[
-                                                                widget.index!]
-                                                            .text) +
-                                                        int.parse(
-                                                          model.qtyStepSize!,
-                                                        ))
-                                                    .toString(),
-                                                1,
-                                              );
-                                            }
-                                          },
-                                          child: Card(
-                                            color: colors.primary,
-                                            elevation: 1,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      circularBorderRadius1),
-                                            ),
-                                            child: const Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Icon(
-                                                Icons.add,
-                                                size: 15,
-                                                color: colors.whiteTemp,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : Padding(
-                                          padding:
-                                              const EdgeInsetsDirectional.only(
-                                            start: 3.0,
-                                            bottom: 5,
-                                            top: 3,
-                                          ),
-                                          child: Row(
-                                            children: <Widget>[
-                                              InkWell(
-                                                child: Card(
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            circularBorderRadius50),
-                                                  ),
-                                                  child: const Padding(
-                                                    padding:
-                                                        EdgeInsets.all(8.0),
-                                                    child: Icon(
-                                                      Icons.remove,
-                                                      size: 15,
-                                                    ),
-                                                  ),
-                                                ),
-                                                onTap: () {
-                                                  if (isProgress == false &&
-                                                      (int.parse(controllerText[
-                                                                  widget.index!]
-                                                              .text) >
-                                                          0)) {
-                                                    removeFromCart(
-                                                        widget.index!);
-                                                  }
-                                                },
-                                              ),
-                                              Container(
-                                                width: 37,
-                                                height: 20,
-                                                decoration: BoxDecoration(
-                                                  color: colors.white70,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          circularBorderRadius5),
-                                                ),
-                                                child: Stack(
-                                                  children: [
-                                                    Selector<
-                                                        CartProvider,
-                                                        Tuple2<List<String?>,
-                                                            String?>>(
-                                                      builder: (context, data,
-                                                          child) {
-                                                        return TextField(
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          readOnly: true,
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                                  textFontSize12,
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .colorScheme
-                                                                  .fontColor),
-                                                          controller:
-                                                              controllerText[
-                                                                  widget
-                                                                      .index!],
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                          ),
-                                                        );
-                                                      },
-                                                      selector: (_, provider) =>
-                                                          Tuple2(
-                                                              provider
-                                                                  .cartIdList,
-                                                              provider.qtyList(
-                                                                  model.id!,
-                                                                  model
-                                                                      .prVarientList![
-                                                                          0]
-                                                                      .id!)),
-                                                    ),
-                                                    PopupMenuButton<String>(
-                                                      tooltip: '',
-                                                      icon: const Icon(
-                                                        Icons.arrow_drop_down,
-                                                        size: 0,
-                                                      ),
-                                                      onSelected:
-                                                          (String value) {
-                                                        if (isProgress ==
-                                                            false) {
-                                                          addToCart(
-                                                              widget.index!,
-                                                              value,
-                                                              2);
-                                                        }
-                                                      },
-                                                      itemBuilder: (BuildContext
-                                                          context) {
-                                                        return model
-                                                            .itemsCounter!
-                                                            .map<
-                                                                PopupMenuItem<
-                                                                    String>>(
-                                                          (String value) {
-                                                            return PopupMenuItem(
-                                                              value: value,
-                                                              child: Text(
-                                                                value,
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .colorScheme
-                                                                      .fontColor,
-                                                                  fontFamily:
-                                                                      'ubuntu',
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ).toList();
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              InkWell(
-                                                child: Card(
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            circularBorderRadius50),
-                                                  ),
-                                                  child: const Padding(
-                                                    padding:
-                                                        EdgeInsets.all(8.0),
-                                                    child: Icon(
-                                                      Icons.add,
-                                                      size: 15,
-                                                    ),
-                                                  ),
-                                                ),
-                                                onTap: () {
-                                                  if (isProgress == false) {
-                                                    addToCart(
-                                                        widget.index!,
-                                                        (int.parse(controllerText[
-                                                                        widget
-                                                                            .index!]
-                                                                    .text) +
-                                                                int.parse(model
-                                                                    .qtyStepSize!))
-                                                            .toString(),
-                                                        2);
-                                                  }
-                                                },
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                            ],
-                          ),
-                        ),
+                        // Positioned.directional(
+                        //   textDirection: Directionality.of(context),
+                        //   end: 0,
+                        //   child: Row(
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     children: [
+                        //       model.availability == '0' && !cartBtnList
+                        //           ? Container()
+                        //           : controllerText[widget.index!].text == '0'
+                        //               ? InkWell(
+                        //                   onTap: () {
+                        //                     if (isProgress == false) {
+                        //                       addToCart(
+                        //                         widget.index!,
+                        //                         (int.parse(controllerText[
+                        //                                         widget.index!]
+                        //                                     .text) +
+                        //                                 int.parse(
+                        //                                   model.qtyStepSize!,
+                        //                                 ))
+                        //                             .toString(),
+                        //                         1,
+                        //                       );
+                        //                     }
+                        //                   },
+                        //                   child: Card(
+                        //                     color: colors.primary,
+                        //                     elevation: 1,
+                        //                     shape: RoundedRectangleBorder(
+                        //                       borderRadius:
+                        //                           BorderRadius.circular(
+                        //                               circularBorderRadius1),
+                        //                     ),
+                        //                     child: const Padding(
+                        //                       padding: EdgeInsets.all(8.0),
+                        //                       child: Icon(
+                        //                         Icons.add,
+                        //                         size: 15,
+                        //                         color: colors.whiteTemp,
+                        //                       ),
+                        //                     ),
+                        //                   ),
+                        //                 )
+                        //               : Padding(
+                        //                   padding:
+                        //                       const EdgeInsetsDirectional.only(
+                        //                     start: 3.0,
+                        //                     bottom: 5,
+                        //                     top: 3,
+                        //                   ),
+                        //                   child: Row(
+                        //                     children: <Widget>[
+                        //                       InkWell(
+                        //                         child: Card(
+                        //                           shape: RoundedRectangleBorder(
+                        //                             borderRadius:
+                        //                                 BorderRadius.circular(
+                        //                                     circularBorderRadius50),
+                        //                           ),
+                        //                           child: const Padding(
+                        //                             padding:
+                        //                                 EdgeInsets.all(8.0),
+                        //                             child: Icon(
+                        //                               Icons.remove,
+                        //                               size: 15,
+                        //                             ),
+                        //                           ),
+                        //                         ),
+                        //                         onTap: () {
+                        //                           if (isProgress == false &&
+                        //                               (int.parse(controllerText[widget.index!].text) >
+                        //                                   0)) {
+                        //                             removeFromCart(
+                        //                                 widget.index!);
+                        //                           }
+                        //                         },
+                        //                       ),
+                        //                       Container(
+                        //                         width: 37,
+                        //                         height: 20,
+                        //                         decoration: BoxDecoration(
+                        //                           color: colors.white70,
+                        //                           borderRadius:
+                        //                               BorderRadius.circular(
+                        //                                   circularBorderRadius5),
+                        //                         ),
+                        //                         child: Stack(
+                        //                           children: [
+                        //                             Selector<
+                        //                                 CartProvider,
+                        //                                 Tuple2<List<String?>,
+                        //                                     String?>>(
+                        //                               builder: (context, data,
+                        //                                   child) {
+                        //                                 return TextField(
+                        //                                   textAlign:
+                        //                                       TextAlign.center,
+                        //                                   readOnly: true,
+                        //                                   style: TextStyle(
+                        //                                       fontSize:
+                        //                                           textFontSize12,
+                        //                                       color: Theme.of(
+                        //                                               context)
+                        //                                           .colorScheme
+                        //                                           .fontColor),
+                        //                                   controller:
+                        //                                       controllerText[
+                        //                                           widget
+                        //                                               .index!],
+                        //                                   decoration:
+                        //                                       const InputDecoration(
+                        //                                     border: InputBorder
+                        //                                         .none,
+                        //                                   ),
+                        //                                 );
+                        //                               },
+                        //                               selector: (_, provider) =>
+                        //                                   Tuple2(
+                        //
+                        //                                       provider.cartIdList, provider.qtyList(model.id!, model.prVarientList![0].id!)),
+                        //                             ),
+                        //                             PopupMenuButton<String>(
+                        //                               tooltip: '',
+                        //                               icon: const Icon(
+                        //                                 Icons.arrow_drop_down,
+                        //                                 size: 0,
+                        //                               ),
+                        //                               onSelected:
+                        //                                   (String value) {
+                        //                                 if (isProgress ==
+                        //                                     false) {
+                        //                                   addToCart(
+                        //                                       widget.index!,
+                        //                                       value,
+                        //                                       2);
+                        //                                 }
+                        //                               },
+                        //                               itemBuilder: (BuildContext
+                        //                                   context) {
+                        //                                 return model
+                        //                                     .itemsCounter!
+                        //                                     .map<
+                        //                                         PopupMenuItem<
+                        //                                             String>>(
+                        //                                   (String value) {
+                        //                                     return PopupMenuItem(
+                        //                                       value: value,
+                        //                                       child: Text(
+                        //                                         value,
+                        //                                         style:
+                        //                                             TextStyle(
+                        //                                           color: Theme.of(
+                        //                                                   context)
+                        //                                               .colorScheme
+                        //                                               .fontColor,
+                        //                                           fontFamily:
+                        //                                               'ubuntu',
+                        //                                         ),
+                        //                                       ),
+                        //                                     );
+                        //                                   },
+                        //                                 ).toList();
+                        //                               },
+                        //                             ),
+                        //                           ],
+                        //                         ),
+                        //                       ),
+                        //                       // InkWell(
+                        //                       //   child: Card(
+                        //                       //     shape: RoundedRectangleBorder(
+                        //                       //       borderRadius:
+                        //                       //           BorderRadius.circular(
+                        //                       //               circularBorderRadius50),
+                        //                       //     ),
+                        //                       //     child: const Padding(
+                        //                       //       padding:
+                        //                       //           EdgeInsets.all(8.0),
+                        //                       //       child: Icon(
+                        //                       //         Icons.add,
+                        //                       //         size: 15,
+                        //                       //       ),
+                        //                       //     ),
+                        //                       //   ),
+                        //                       //   onTap: () {
+                        //                       //     if (isProgress == false) {
+                        //                       //       print(
+                        //                       //           '_____hhhhhh______${controllerText[widget.index!].text}__________');
+                        //                       //       addToCart(
+                        //                       //           widget.index!,
+                        //                       //           (int.parse(controllerText[widget.index!].text) +
+                        //                       //                   int.parse(model
+                        //                       //                       .qtyStepSize!))
+                        //                       //               .toString(),
+                        //                       //           2);
+                        //                       //     }
+                        //                       //   },
+                        //                       // ),
+                        //
+                        //                     ],
+                        //                   ),
+                        //                 ),
+                        //     ],
+                        //   ),
+                        // ),
                         Positioned.directional(
                           textDirection: Directionality.of(context),
                           top: 0,
@@ -1035,11 +1027,13 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
               ),
             ),
             onTap: () {
+              print('___________ssssssss__________');
               Product model = widget.productList![widget.index!];
               Navigator.push(
                 context,
                 PageRouteBuilder(
                   pageBuilder: (_, __, ___) => ProductDetail(
+
                     model: model,
                     index: widget.index,
                     secPos: 0,
@@ -1051,10 +1045,9 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
           );
         },
         selector: (_, provider) => Tuple2(
-          provider.cartIdList,
-          provider.qtyList(
-            model.id!,
-            model.prVarientList![0].id!,
+
+          provider.cartIdList, provider.qtyList(model.id!, model.prVarientList![0].id!,
+
           ),
         ),
       );

@@ -109,9 +109,10 @@ class CartProvider extends ChangeNotifier {
   get cartIdList => _cartList.map((fav) => fav.varientId).toList();
 
   String? qtyList(String id, String vId) {
+    print('______ssss1111111${qtyList}_____${cartList}______${id}_${vId}___');
     SectionModel? tempId =
         _cartList.firstWhereOrNull((cp) => cp.id == id && cp.varientId == vId);
-    notifyListeners();
+   notifyListeners();
     if (tempId != null) {
       return tempId.qty;
     } else {

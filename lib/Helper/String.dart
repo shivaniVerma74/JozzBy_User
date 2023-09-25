@@ -15,6 +15,7 @@ final Uri getProductApi = Uri.parse('${baseUrl}get_products');
 final Uri manageCartApi = Uri.parse('${baseUrl}manage_cart');
 final Uri phonePayPaymentIntiat = Uri.parse('${baseUrl}initiate_phone_payment');
 final Uri getUserLoginApi = Uri.parse('${baseUrl}login');
+final Uri verifyOtp = Uri.parse("${baseUrl}verify_otp");
 final Uri getUserSignUpApi = Uri.parse('${baseUrl}register_user');
 final Uri getVerifyUserApi = Uri.parse('${baseUrl}verify_user');
 final Uri sendOtpApi = Uri.parse('${baseUrl}send_otp');

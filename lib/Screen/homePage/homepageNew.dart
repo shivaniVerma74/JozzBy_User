@@ -254,7 +254,7 @@ class _HomePageState extends State<HomePage>
       LIMIT: perPage.toString(),
       OFFSET: sellerListOffset.toString(),
     };
-
+    print('______sdsssd_____${parameter}__________');
     // if (_controller.text != '') {
     //   parameter = {
     //     SEARCH: _controller.text.trim(),
@@ -263,6 +263,7 @@ class _HomePageState extends State<HomePage>
 
     apiBaseHelper.postAPICall(getSellerApi, parameter).then(
           (getdata) {
+            print('_____cccccccccccc______${getSellerApi}______${parameter}____');
         bool error = getdata['error'];
         String? msg = getdata['message'];
         List<Product> tempSellerList = [];

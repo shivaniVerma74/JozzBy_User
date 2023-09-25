@@ -2013,7 +2013,7 @@ bool notForCheckout = false ;
           }
         }
 
-        print('___________${request.fields}__________');
+        print('______place order parameterr _____${request.fields}_____${request.url}_____');
         var response = await request.send();
         print(request.fields);
         print(request.url);

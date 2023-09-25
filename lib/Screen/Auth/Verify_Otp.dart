@@ -132,7 +132,6 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
           btnAnim: buttonSqueezeanimation,
           btnCntrl: buttonController,
           onBtnSelected: () async {
-
             if(widget.isMobile ==true){
               verifyuser();
             }else{
@@ -301,7 +300,6 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
             if (value.user != null) {
               SettingProvider settingsProvider =
                   Provider.of<SettingProvider>(context, listen: false);
-
               setSnackbar(getTranslated(context, 'OTPMSG')!, context);
               settingsProvider.setPrefrence(MOBILE, widget.mobileNumber!);
               settingsProvider.setPrefrence(COUNTRY_CODE, widget.countryCode!);
@@ -394,12 +392,13 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
    var headers = {
      'Cookie': 'ci_session=02250dbf2e1d3cccb38f822763edbb0ad432555e'
    };
-   var request = http.MultipartRequest('POST', Uri.parse('https://alphawizzserver.com/jozzby_bazar_new/app/v1/api/verify_otp'));
+   var request = http.MultipartRequest('POST', Uri.parse('${baseUrl}verify_otp'));
    request.fields.addAll({
      'mobile': '${widget.mobileNumber}',
-     'otp': '${widget.responseOtp}',
+     'otp': '${otp}',
      'fcm_id': ''
    });
+   print("otp patramater ${baseUrl}verify_otp ${request.fields}");
    request.headers.addAll(headers);
    http.StreamedResponse response = await request.send();
    if (response.statusCode == 200) {
@@ -784,12 +783,12 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
         codeLength: 6,
         onCodeChanged: (String? code) {
           otp = code;
+          print("otp enterrr ${otp}");
         },
         onCodeSubmitted: (String code) {
           otp = code;
         },
       ),
-
     );
   }
 

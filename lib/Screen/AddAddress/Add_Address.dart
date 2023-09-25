@@ -44,7 +44,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       landmarkC,
       stateC,
       countryC,
-  address2,
+      address2,
       altMobC;
   int? selectedType = 1;
   Animation? buttonSqueezeanimation;
@@ -104,7 +104,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       context.read<AddressProvider>().selectedCity = item.city!;
       context.read<AddressProvider>().selectedArea = item.area!;
       context.read<AddressProvider>().selAreaPos = int.parse(item.cityId!);
-      context.read<AddressProvider>().selCityPos = int.parse(item.areaId!);
+     // context.read<AddressProvider>().selCityPos = int.parse(item.areaId!);
       context.read<AddressProvider>().type = item.type;
       context.read<AddressProvider>().city = item.cityId;
       context.read<AddressProvider>().area = item.areaId;
@@ -175,6 +175,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print('______aaaaa_____${address2}__________');
     return Scaffold(
       backgroundColor:colors.primary1,
       key: _scaffoldKey,
