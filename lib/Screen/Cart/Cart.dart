@@ -82,7 +82,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
   String razorpayOrderId = '';
   String? rozorpayMsg;
   String orderId = '';
-
+  double deliveryCharge = 0;
   List<DeliveryChargeData> deliveryChargeList = [];
 
   Future<void> cartFun({
@@ -188,6 +188,118 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
     );
   }
 
+  orderSummary(){
+    return Card(
+      elevation: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${getTranslated(context, 'ORDER_SUMMARY')!} (${context
+                  .read<CartProvider>()
+                  .cartList.length} items)',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.fontColor,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'ubuntu',
+              ),
+            ),
+            const Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  getTranslated(context, 'SUBTOTAL')!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.lightBlack2,
+                    fontFamily: 'ubuntu',
+                  ),
+                ),
+                Text(
+                  '${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().oriPrice)!} ',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.fontColor,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'ubuntu',
+                  ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  getTranslated(context, 'DELIVERY_CHARGE')!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.lightBlack2,
+                    fontFamily: 'ubuntu',
+                  ),
+                ),
+                Text(
+                  '${DesignConfiguration.getPriceFormat(context,
+                      //double.parse(deliCharge!) ??
+                      deliveryCharge
+                      // context.read<CartProvider>().deliveryCharge
+                  )!} ',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.fontColor,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'ubuntu',
+                  ),
+                )
+              ],
+            ),
+            context.read<CartProvider>().isPromoValid!
+                ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  getTranslated(context, 'PROMO_CODE_DIS_LBL')!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.lightBlack2,
+                    fontFamily: 'ubuntu',
+                  ),
+                ),
+                Text(
+                  '${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().promoAmt)!} ',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.fontColor,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'ubuntu',
+                  ),
+                )
+              ],
+            )
+                : Container(),
+            context.read<CartProvider>().isUseWallet!
+                ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  getTranslated(context, 'WALLET_BAL')!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.lightBlack2,
+                    fontFamily: 'ubuntu',
+                  ),
+                ),
+                Text(
+                  '${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().usedBalance)!} ',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.fontColor,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'ubuntu',
+                  ),
+                )
+              ],
+            )
+                : Container(),
+          ],
+        ),
+      ),
+    );
+  }
 
 
   callApi() async {
@@ -381,17 +493,68 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
             deliveryChargeList = value['deliveryCharge'];
             //context.read<CartProvider>().deliveryChargeList = value['deliveryCharge'];
 
+            // for(var i = 0 ; i < deliveryChargeList.length; i++) {
+            //   if (context
+            //       .read<CartProvider>()
+            //       .oriPrice <
+            //       double.parse(deliveryChargeList[i].maximum ?? '0.0')) {
+            //     setState(() {
+            //       context
+            //           .read<CartProvider>()
+            //           .deliveryCharge = double.parse(
+            //           deliveryChargeList[i].deliveryCharge ?? '0.0');
+            //     });
+            //     print('this is my delivery charge--->>> ${context
+            //         .read<CartProvider>()
+            //         .deliveryCharge}');
+            //   }
+            // }
+            // // print('this is my delivery charge--->>> ${context
+            // //     .read<CartProvider>()
+            // //     .deliveryCharge}');
+            // // context.read<CartProvider>().totalPrice =
+            // //     context.read<CartProvider>().deliveryCharge +
+            // //         context.read<CartProvider>().oriPrice ;
+            // setState(() {});
+
 
             if(context.read<CartProvider>().oriPrice < double.parse(deliveryChargeList.first.maximum ?? '0.0')){
               context.read<CartProvider>().deliveryCharge = double.parse(deliveryChargeList.first.deliveryCharge ??'0.0');
-              context.read<CartProvider>().totalPrice =
-                  context.read<CartProvider>().deliveryCharge +
-                      context.read<CartProvider>().oriPrice;
+              deliveryCharge = double.parse(deliveryChargeList.first.deliveryCharge ??'0.0');
+              print('__________${context.read<CartProvider>().deductAmount == 0}_________');
 
-             // print('___________${context.read<CartProvider>().deliveryCharge}__________');
+              context.read<CartProvider>().totalPrice =   context.read<CartProvider>().deliveryCharge +
+                  context.read<CartProvider>().oriPrice ;
+
+
+              // print('___________${context.read<CartProvider>().deliveryCharge}__________');
             //  print('___________${context.read<CartProvider>().totalPrice}__________');
 
             }else {
+              for(var i = 1 ; i < deliveryChargeList.length; i++) {
+                if (double.parse(deliveryChargeList[i].minimum ?? '0.0') <
+                    context
+                    .read<CartProvider>()
+                    .oriPrice && context
+                    .read<CartProvider>()
+                    .oriPrice <
+                    double.parse(deliveryChargeList[i].maximum ?? '0.0')) {
+
+                context
+                    .read<CartProvider>()
+                    .deliveryCharge = double.parse(
+                    deliveryChargeList[i].deliveryCharge ?? '0.0');
+                deliveryCharge = double.parse(
+                    deliveryChargeList[i].deliveryCharge ?? '0.0');
+                }
+              }
+              print('this is my delivery charge--->>> ${context
+                  .read<CartProvider>()
+                  .deliveryCharge}');
+
+              print('this is my delivery charge--->>> ${context.read<CartProvider>().oriPrice}');
+
+
               context.read<CartProvider>().totalPrice =
                   context.read<CartProvider>().deliveryCharge +
                       context.read<CartProvider>().oriPrice ;
@@ -399,6 +562,10 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
 
               });
             }
+            checkout();
+            print('this is my delivery charge--->>> ${context
+                .read<CartProvider>()
+                .deliveryCharge} ${context.read<CartProvider>().totalPrice}');
 
           }
         },
@@ -431,7 +598,7 @@ bool notForCheckout = false ;
                 context.read<CartProvider>().deliveryCharge +
                     context.read<CartProvider>().oriPrice;*/
 
-            await getDeliveryCharge();
+            // await getDeliveryCharge();
 
            List<SectionModel> cartList = (data as List)
                 .map((data) => SectionModel.fromCart(data))
@@ -1176,13 +1343,16 @@ bool notForCheckout = false ;
 
                         if (context.read<CartProvider>().isPromoLen == false) {
                           if (context.read<CartProvider>().oriPrice > 0) {
-                            FocusScope.of(context).unfocus();
+                            // await getDeliveryCharge();
+                            // checkout();
+                            // FocusScope.of(context).unfocus();
+                            await getDeliveryCharge();
                             if (isAvailable) {
 
                               if (context.read<CartProvider>().totalPrice !=
                                   0) {
-                                await getDeliveryCharge();
-                                checkout();
+
+
                               }
                             } else {
                               setSnackbar(
@@ -1281,11 +1451,14 @@ bool notForCheckout = false ;
                                                 cartItems(context
                                                     .read<CartProvider>()
                                                     .cartList),
-                                                OrderSummery(
+                                                orderSummary(),
+                                               /* OrderSummery(
                                                   cartList: context
                                                       .read<CartProvider>()
                                                       .cartList,
-                                                ),
+                                                  // deliCharge: context.read<CartProvider>().deliveryCharge.toString(),
+
+                                                ),*/
                                               ],
                                             ),
                                           ),
@@ -1527,7 +1700,7 @@ bool notForCheckout = false ;
                                                         },
                                                       );
                                                     }*/ else {
-                                                      confirmDialog();
+                                                      confirmDialog(deliveryCharge: deliveryCharge);
                                                       context
                                                           .read<CartProvider>()
                                                           .checkoutState!(
@@ -1654,7 +1827,7 @@ bool notForCheckout = false ;
             );
           }
           if (context.read<CartProvider>().checkoutState != null) {
-            context.read<CartProvider>().checkoutState!(() {});
+            // context.read<CartProvider>().checkoutState!(() {});
           }
         }, onError: (error) {
           setSnackbar(error.toString(), _scaffoldKey);
@@ -2705,7 +2878,7 @@ bool notForCheckout = false ;
     }
   }
 
-  void confirmDialog() {
+  void confirmDialog({double? deliveryCharge}) {
     showGeneralDialog(
       barrierColor: Theme.of(context).colorScheme.black.withOpacity(0.5),
       transitionBuilder: (context, a1, a2, widget) {
@@ -2721,7 +2894,7 @@ bool notForCheckout = false ;
                   Radius.circular(circularBorderRadius5),
                 ),
               ),
-              content: const GetContent(),
+              content:  GetContent(deliveryCharge: deliveryCharge),
               actions: <Widget>[
                 TextButton(
                   child: Text(

@@ -168,7 +168,7 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
             Provider.of<SettingProvider>(context, listen: false);
             if (isMobile==true) {
               if (!error!) {
-                setSnackbar(msg!, context);
+                //setSnackbar(msg!, context);
 
                 Future.delayed(const Duration(seconds: 1)).then(
                       (_) {
@@ -186,6 +186,7 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
                     ));
                   },
                 );
+                setSnackbar(msg!, context);
               } else {
                 setSnackbar(msg!, context);
               }

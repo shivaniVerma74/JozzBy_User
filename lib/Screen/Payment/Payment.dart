@@ -589,7 +589,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                                                elevation: 0,
                                                child: Column(children: [
                                                Text('*Pay ${ADVANCE_PERCENT}% Advance amount of Order amount'),
-                                               ElevatedButton(onPressed: (){
+                                                 razorAdvancePaySuccess == true ?SizedBox():   ElevatedButton(onPressed: (){
                                                  print('_____sddssssds______${context.read<CartProvider>().totalPrice}__________');
                                                  double percent = double.parse(ADVANCE_PERCENT ?? '0.0');
                                                  deductAmount = context.read<CartProvider>().totalPrice*percent /100 ;
@@ -640,6 +640,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                             }else if(razorAdvancePaySuccess== true && paymentIndex==1 ){
                               Routes.pop(context);
                             }else if(razorAdvancePaySuccess!= true && paymentIndex==1){
+                              print('___________${razorAdvancePaySuccess}__________');
                               setSnackbar('Please pay first advance payment in case on cash on delivery', context);
                             }
                              }
@@ -662,7 +663,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
   void initiatePayment() {
     // Replace this with the actual PhonePe payment URL you have
     String phonePePaymentUrl = url;
-     callBackUrl = "https://alphawizzserver.com/jozzby_bazar_new/home/phonepay_success";
+     callBackUrl = "https://admin.jossbuy.com/home/phonepay_success";
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -1071,12 +1072,14 @@ bool razorAdvancePaySuccess = false;
             .assignmentId
             .toString(),
         response.paymentId);*/
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment Success")));
     isAdvancePaymentSuccess = false ;
     razorAdvancePaySuccess = true ;
 
+
     context.read<CartProvider>().totalPrice = context.read<CartProvider>().totalPrice - deductAmount!;
     context.read<CartProvider>().deductAmount = deductAmount!;
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment Success")));
+
     setState(() {
     });
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:eshop_multivendor/Screen/brand_list/brandlist.dart';
+import 'package:eshop_multivendor/Screen/star_rating.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uni_links/uni_links.dart';
@@ -110,11 +111,11 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     //_handleIncomingLinks();
-    getImagesApi();
+    //getImagesApi();
     getImagesThirdSliderApi();
     getImagesFourthdSliderApi();
     getBrandApi();
-    getSeller();
+   // getSeller();
 
     isSet =true;
 
@@ -195,19 +196,24 @@ class _HomePageState extends State<HomePage>
                             const HorizontalCategoryList(),
                             const SizedBox(height: 20,),
                             CustomSlider(),
-                            getImagesModel?.data?.isEmpty ?? true ? SizedBox() :  imageCard(),
-                            const Section(),
+                            InkWell(
+                            onTap: (){
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BrandList()));
+                            },
+                            child: Image.asset('assets/images/png/app products_1.gif')),
+
                             const SizedBox(height: 10,),
-                            const Divider(
+                            const Section(),
+                            //getImagesModel?.data?.isEmpty ?? true ? const SizedBox() :  imageCard(),
+
+                           // context.read<HomePageProvider>().sellerList.isEmpty ? const Text('Seller Not Found',style: TextStyle(color: colors.blackTemp),):getSellerList(),
+                            const SizedBox(height: 10,),
+                           /* const Divider(
                               thickness: 0.6,
                               color:Colors.grey,
-                            ),
-                            getImagesModel2?.data?.isEmpty ?? true ? SizedBox() :  imageCard2(),
-                            InkWell(
-                              onTap: (){
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BrandList()));
-                              },
-                                child: Image.asset('assets/images/png/app products_1.gif'))
+                            ),*/
+                            //getImagesModel2?.data?.isEmpty ?? true ? SizedBox() :  imageCard2(),
+
 
                             /*Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -218,17 +224,12 @@ class _HomePageState extends State<HomePage>
                                   child: const Center(child: Text("All Brand List",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold,fontSize: 20),))),
                             ),
                             const SizedBox(height: 10,),
-                           brandcard()*/,
+                           brandcard()*/
                             const Divider(
                               thickness: 1,
                               color:Colors.grey,
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(left:10.0,top: 5),
-                              child: Text("All Seller",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold,fontSize: 20),),
-                            ),
-                            const SizedBox(height: 10,),
-                            sellerList==""?const Text('Seller Not Found',style: TextStyle(color: colors.blackTemp),):getSellerList(),
+
                             const MostLikeSection(),
                             const SizedBox(height: 10,),
                             getImagesModel3?.data?.isEmpty ?? true ? const SizedBox() :  imageCard3(),
@@ -249,12 +250,11 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  void getSeller() {
+  /*void getSeller() {
     Map parameter = {
       LIMIT: perPage.toString(),
       OFFSET: sellerListOffset.toString(),
     };
-    print('______sdsssd_____${parameter}__________');
     // if (_controller.text != '') {
     //   parameter = {
     //     SEARCH: _controller.text.trim(),
@@ -281,12 +281,7 @@ class _HomePageState extends State<HomePage>
         }
         sellerList.addAll(tempSellerList);
         context.read<HomePageProvider>().setSellerLoading(false);
-        print('My seller list------------${sellerList}');
-        for(var i=0;i<sellerList.length;i++){
 
-          print('---------seller id-3333----------${seller_id}');
-
-        }
 
       },
       onError: (error) {
@@ -296,7 +291,7 @@ class _HomePageState extends State<HomePage>
     );
 
     setState(() {});
-  }
+  }*/
 
   setSnackbar1(String msg) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -310,13 +305,13 @@ class _HomePageState extends State<HomePage>
     ));
   }
 
- getSellerList(){
+/* getSellerList(){
 
     return Container(
       color: colors.primary1,
-      height: 180,
+      height: 190,
       child: ListView.separated(
-          itemCount:sellerList.length,
+          itemCount:context.read<HomePageProvider>().sellerList.length,
           separatorBuilder: (BuildContext context, int index) => const Divider(),
           scrollDirection: Axis.horizontal,
 
@@ -326,15 +321,15 @@ class _HomePageState extends State<HomePage>
               child: InkWell(onTap: (){
 
                 setState(() {
-                  s_id = sellerList[i].seller_id;
+                  s_id = context.read<HomePageProvider>().sellerList[i].seller_id;
 
                 });
 
-                seller_id = sellerList[i].seller_id;
-                sellerImage =sellerList[i].seller_profile;
-                sellerStoreName =sellerList[i].store_name;
-                sellerRating = sellerList[i].seller_rating;
-                storeDesc = sellerList[i].store_description;
+                seller_id = context.read<HomePageProvider>().sellerList[i].seller_id;
+                sellerImage =context.read<HomePageProvider>().sellerList[i].seller_profile;
+                sellerStoreName =context.read<HomePageProvider>().sellerList[i].store_name;
+                sellerRating = context.read<HomePageProvider>().sellerList[i].seller_rating;
+                storeDesc = context.read<HomePageProvider>().sellerList[i].store_description;
                 //
                 Navigator.push(
                   context,
@@ -356,7 +351,7 @@ class _HomePageState extends State<HomePage>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: 10,),
+                        const SizedBox(height: 10,),
                         Container(
                           height: 100,width: 100,
                           decoration: BoxDecoration(
@@ -365,12 +360,20 @@ class _HomePageState extends State<HomePage>
                           ),
                           child: ClipRRect(
                              borderRadius: BorderRadius.circular(60),
-                              child: Image.network("${sellerList[i].seller_profile}",fit: BoxFit.fill,)),
+                              child: Image.network("${context.read<HomePageProvider>().sellerList[i].seller_profile}",fit: BoxFit.fill,)),
                         ),
                         const SizedBox(height:15,),
                         Container(
                             width: 90,
-                            child: Center(child: Text("${sellerList[i].seller_name}",overflow: TextOverflow.ellipsis,maxLines: 2,textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),))),
+                            child: Center(child: Text("${context.read<HomePageProvider>().sellerList[i].seller_name}",overflow: TextOverflow.ellipsis,maxLines: 2,textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),))),
+                    Container(
+                      margin: const EdgeInsets.only(
+                          left: 15, bottom: 10),
+                      child: StarRatingIndicators(
+                        noOfRatings: context.read<HomePageProvider>().sellerList[i]
+                            .noOfRating ?? '0.0',
+                        totalRating: context.read<HomePageProvider>().sellerList[i].rating ?? '0.0',
+                      ),),
 
                       ],
                     )
@@ -381,7 +384,7 @@ class _HomePageState extends State<HomePage>
     );
 
 
- }
+ }*/
 
   brandcard(){
     return Padding(
@@ -470,6 +473,7 @@ class _HomePageState extends State<HomePage>
 
         ));
   }
+
   imageCard3(){
     return SizedBox(
         height:200,
@@ -587,6 +591,7 @@ class _HomePageState extends State<HomePage>
     }
 
   }
+
   getImagesThirdSliderApi() async {
     var headers = {
       'Cookie': 'ci_session=072b6f29be0b884e59f61a1530aec13e11b5f470'
@@ -700,6 +705,7 @@ class _HomePageState extends State<HomePage>
   }
 
 
+
   Future<void> _refresh() {
     context.read<HomePageProvider>().catLoading = true;
     context.read<HomePageProvider>().secLoading = true;
@@ -724,12 +730,15 @@ class _HomePageState extends State<HomePage>
     print('ccccccccccccccccc${isNetworkAvail}');
     if (isNetworkAvail) {
       getSetting();
-      getImagesApi();
+      //getImagesApi();
       getImagesThirdSliderApi();
       getImagesFourthdSliderApi();
       getBrandApi();
+      context.read<HomePageProvider>().getSeller();
 
       context.read<HomePageProvider>().getSections();
+      context.read<HomePageProvider>().getImagesApi();
+      context.read<HomePageProvider>().getImagesThirdSliderApi();
       print('kkkkkkkkkkkkkk');
       context.read<HomePageProvider>().getSliderImages();
       context.read<HomePageProvider>().getCategories(context);

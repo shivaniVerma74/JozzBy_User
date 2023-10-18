@@ -35,7 +35,7 @@ class _ChatState extends State<Chat> {
         getExternalStorageDirectories(type: StorageDirectory.downloads);
     context.read<ChatProvider>().downloadlist = <String?, String>{};
     CUR_TICK_ID = widget.id;
-    FlutterDownloader.registerCallback(downloadCallback);
+    //FlutterDownloader.registerCallback(downloadCallback);
     setupChannel();
 
     context.read<ChatProvider>().getMsg(

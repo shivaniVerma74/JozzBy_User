@@ -1010,7 +1010,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                       Routes.navigateToCartScreen(context, false);
                     }
                   }
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart(fromBottom: true)));
+                 // Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart(fromBottom: true)));
                 } else {
                   if (msg !=
                       getTranslated(context,

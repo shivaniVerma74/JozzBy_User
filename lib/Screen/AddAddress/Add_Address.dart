@@ -40,11 +40,13 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController? nameC,
       mobileC,
+      pincodeC,
       addressC,
       landmarkC,
       stateC,
+      cityC,
       countryC,
-      address2,
+      address2C,
       altMobC;
   int? selectedType = 1;
   Animation? buttonSqueezeanimation;
@@ -55,6 +57,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       landFocus,
       locationFocus = FocusNode();
   final ScrollController _cityScrollController = ScrollController();
+  final ScrollController _stateScrollController = ScrollController();
   final ScrollController _areaScrollController = ScrollController();
 
   @override
@@ -77,6 +80,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       ),
     );
     _cityScrollController.addListener(_scrollListener);
+    _stateScrollController.addListener(_scrollStateListener);
     _areaScrollController.addListener(_areaScrollListener);
     callApi();
     mobileC = TextEditingController();
@@ -85,7 +89,10 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
     context.read<AddressProvider>().pincodeC = TextEditingController();
     addressC = TextEditingController();
     stateC = TextEditingController();
+    cityC = TextEditingController();
     countryC = TextEditingController();
+    pincodeC = TextEditingController();
+    address2C = TextEditingController();
     landmarkC = TextEditingController();
 
     if (widget.update!) {
@@ -94,20 +101,30 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       nameC!.text = item.name!;
       altMobC!.text = item.altMob!;
       landmarkC!.text = item.landmark!;
-      context.read<AddressProvider>().pincodeC!.text = item.pincode!;
+
+      //context.read<AddressProvider>().
+      pincodeC!.text = item.pincode!;
       addressC!.text = item.address!;
       stateC!.text = item.state!;
       countryC!.text = item.country!;
-      stateC!.text = item.state!;
+      cityC!.text = item.city!;
+      address2C!.text =  item.area!;
+      // stateC!.text = item.state!;
       context.read<AddressProvider>().setLatitude(item.latitude);
       context.read<AddressProvider>().setLongitude(item.longitude);
       context.read<AddressProvider>().selectedCity = item.city!;
       context.read<AddressProvider>().selectedArea = item.area!;
       context.read<AddressProvider>().selAreaPos = int.parse(item.cityId!);
-     // context.read<AddressProvider>().selCityPos = int.parse(item.areaId!);
+      //context.read<AddressProvider>().selCityPos = int.parse(item.area!);
       context.read<AddressProvider>().type = item.type;
+      context.read<AddressProvider>().type = item.pincode;
       context.read<AddressProvider>().city = item.cityId;
-      context.read<AddressProvider>().area = item.areaId;
+      context.read<AddressProvider>().state = item.state;
+      print('_____sxsasa______${item.area ?? ''}__________');
+      print('___________${item.pincode}__________');
+      print('_____city______${item.city}______${item.cityId}____');
+      //address2C?.text = item.area ?? '';
+      pincodeC?.text = item.pincode ?? '';
 
       if (context.read<AddressProvider>().type!.toLowerCase() ==
           HOME.toLowerCase()) {
@@ -146,6 +163,28 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
           },
         );
         await context.read<AddressProvider>().getCities(
+            false,context.read<AddressProvider>().selectedStateId,
+            false, context, setStateNow, widget.update, widget.index);
+      }
+    }
+  }
+
+  _scrollStateListener() async {
+    if (_stateScrollController.offset >=
+        _stateScrollController.position.maxScrollExtent &&
+        !_stateScrollController.position.outOfRange) {
+      if (mounted) {
+        setState(
+              () {},
+        );
+
+        context.read<AddressProvider>().stateState!(
+              () {
+            context.read<AddressProvider>().isLoadingMoreState = true;
+            context.read<AddressProvider>().isProgress = true;
+          },
+        );
+        await context.read<AddressProvider>().getState(
             false, context, setStateNow, widget.update, widget.index);
       }
     }
@@ -175,7 +214,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print('______aaaaa_____${address2}__________');
+
     return Scaffold(
       backgroundColor:colors.primary1,
       key: _scaffoldKey,
@@ -228,10 +267,10 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       if (context.read<AddressProvider>().city == null ||
           context.read<AddressProvider>().city!.isEmpty) {
         setSnackbar(getTranslated(context, 'cityWarning')!, context);
-      } /*else if (context.read<AddressProvider>().area == null ||
-          context.read<AddressProvider>().area!.isEmpty) {
-        setSnackbar(getTranslated(context, 'areaWarning')!, context);
-      }*/ else if (context.read<AddressProvider>().latitude == null ||
+      } else if (context.read<AddressProvider>().state == null ||
+          context.read<AddressProvider>().state!.isEmpty) {
+        setSnackbar('please select address', context);
+      } else if (context.read<AddressProvider>().latitude == null ||
           context.read<AddressProvider>().longitude == null) {
         setSnackbar(getTranslated(context, 'locationWarning')!, context);
       } else {
@@ -604,6 +643,8 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                             );
                             await context.read<AddressProvider>().getCities(
                                   true,
+                              context.read<AddressProvider>().selectedStateId,
+                                  false,
                                   context,
                                   setStateNow,
                                   widget.update,
@@ -671,6 +712,158 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                                   const EdgeInsets.symmetric(vertical: 20.0),
                               child: DesignConfiguration.getNoItem(context),
                             )
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  stateDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setStater) {
+            context.read<AddressProvider>().stateState = setStater;
+
+            return AlertDialog(
+              contentPadding: const EdgeInsets.all(0.0),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(circularBorderRadius5),
+                ),
+              ),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0, 0),
+                    child: Text(
+                      'Select State',
+                      style: Theme.of(this.context)
+                          .textTheme
+                          .subtitle1!
+                          .copyWith(
+                          fontFamily: 'ubuntu',
+                          color: Theme.of(context).colorScheme.fontColor),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: TextField(
+                            controller:
+                            context.read<AddressProvider>().stateController,
+                            autofocus: false,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.fontColor,
+                            ),
+                            decoration: InputDecoration(
+                              contentPadding:
+                              const EdgeInsets.fromLTRB(0, 15.0, 0, 15.0),
+                              hintText: getTranslated(context, 'SEARCH_LBL'),
+                              hintStyle: TextStyle(
+                                  color: colors.primary.withOpacity(0.5)),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: IconButton(
+                          onPressed: () async {
+                            setState(
+                                  () {
+                                context
+                                    .read<AddressProvider>()
+                                    .isLoadingMoreState = true;
+                              },
+                            );
+                            await context.read<AddressProvider>().getState(
+                              true,
+                              context,
+                              setStateNow,
+                              widget.update,
+                              widget.index,
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.search,
+                            size: 20,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  context.read<AddressProvider>().stateLoading
+                      ? const Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 50.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                      : (context
+                      .read<AddressProvider>()
+                      .stateSearchLIst
+                      .isNotEmpty)
+                      ? Flexible(
+                    child: SizedBox(
+                      height:
+                      MediaQuery.of(context).size.height * 0.4,
+                      child: SingleChildScrollView(
+                        controller: _stateScrollController,
+                        child: Stack(
+                          children: [
+                            Column(
+                              children: [
+                                Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: getStateList(),
+                                ),
+                                Center(
+                                  child: DesignConfiguration
+                                      .showCircularProgress(
+                                    context
+                                        .read<AddressProvider>()
+                                        .isLoadingMoreState!,
+                                    colors.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            DesignConfiguration.showCircularProgress(
+                              context
+                                  .read<AddressProvider>()
+                                  .isProgress,
+                              colors.primary,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                      : Padding(
+                    padding:
+                    const EdgeInsets.symmetric(vertical: 20.0),
+                    child: DesignConfiguration.getNoItem(context),
+                  )
                 ],
               ),
             );
@@ -800,6 +993,84 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
         .toList();
   }
 
+  getStateList() {
+    return context
+        .read<AddressProvider>()
+        .stateSearchLIst
+        .asMap()
+        .map(
+          (index, element) => MapEntry(
+        index,
+        InkWell(
+          onTap: () {
+            if (mounted) {
+
+              setState(
+                    () {
+                  context.read<AddressProvider>().isArea = false;
+                  context.read<AddressProvider>().selStatePos = index;
+                  context.read<AddressProvider>().selAreaPos = null;
+                  context.read<AddressProvider>().city = null;
+                  context.read<AddressProvider>().pincodeC!.text = '';
+                  Navigator.of(context).pop();
+                },
+              );
+            }
+
+            context.read<AddressProvider>().state = context
+                .read<AddressProvider>()
+                .stateSearchLIst[context.read<AddressProvider>().selStatePos!]
+                .name;
+
+            context.read<AddressProvider>().selectedState = context
+                .read<AddressProvider>()
+                .stateSearchLIst[context.read<AddressProvider>().selStatePos!]
+                .name;
+            context.read<AddressProvider>().selectedStateId =context
+                .read<AddressProvider>()
+                .stateSearchLIst[context.read<AddressProvider>().selStatePos!]
+                .id;
+
+             context.read<AddressProvider>().getCities(
+            false,
+               context
+                   .read<AddressProvider>()
+                   .stateSearchLIst[context.read<AddressProvider>().selStatePos!]
+                   .id,
+               true,
+            context,
+            setStateNow,
+            widget.update,
+            widget.index,
+          );
+            /*context.read<AddressProvider>().getArea(
+              context.read<AddressProvider>().city,
+              true,
+              true,
+              context,
+              setStateNow,
+              widget.update!,
+            );*/
+          },
+          child: SizedBox(
+            width: double.maxFinite,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                context.read<AddressProvider>().stateSearchLIst[index].name!,
+                style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                  fontFamily: 'ubuntu',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    )
+        .values
+        .toList();
+  }
+
   setCities() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -836,7 +1107,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                           context.read<AddressProvider>().selCityPos != null &&
                                   context.read<AddressProvider>().selCityPos !=
                                       -1
-                              ? context.read<AddressProvider>().selectedCity!
+                              ? context.read<AddressProvider>().selectedCity ?? ''
                               : '',
                           style: TextStyle(
                             color: context.read<AddressProvider>().selCityPos !=
@@ -863,55 +1134,8 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       ),
     );
   }
-
-  setArea() {
+  setStateWithCity() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.white,
-          borderRadius: BorderRadius.circular(circularBorderRadius5),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10.0,
-          ),
-          child: TextFormField(
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            focusNode: nameFocus,
-            controller: address2,
-            textCapitalization: TextCapitalization.words,
-            validator: (val) => StringValidation.validateUserName(
-                val!,
-                'Address 2 Required',
-                getTranslated(context, 'USER_LENGTH')),
-            onSaved: (String? value) {
-              context.read<AddressProvider>().name = value;
-            },
-            onFieldSubmitted: (v) {
-              _fieldFocusChange(context, nameFocus!, monoFocus);
-            },
-            style: Theme.of(context)
-                .textTheme
-                .subtitle2!
-                .copyWith(color: Theme.of(context).colorScheme.fontColor),
-            decoration: InputDecoration(
-              label: Text(
-                'Address 2',
-                style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                  fontFamily: 'ubuntu',
-                ),
-              ),
-              fillColor: Theme.of(context).colorScheme.white,
-              isDense: true,
-              hintText: 'Address 2',
-              border: InputBorder.none,
-            ),
-          ),
-        ),
-      ),
-    )/*Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Container(
         decoration: BoxDecoration(
@@ -925,9 +1149,10 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
           child: GestureDetector(
             child: InputDecorator(
               decoration: InputDecoration(
-                  fillColor: Theme.of(context).colorScheme.white,
-                  isDense: true,
-                  border: InputBorder.none),
+                fillColor: Theme.of(context).colorScheme.white,
+                isDense: true,
+                border: InputBorder.none,
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -936,18 +1161,20 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          getTranslated(context, 'AREASELECT_LBL')!,
-                          style: Theme.of(context).textTheme.caption,
+                          'Select State',
+                          style: Theme.of(context).textTheme.caption!.copyWith(
+                            fontFamily: 'ubuntu',
+                          ),
                         ),
                         Text(
-                          context.read<AddressProvider>().selAreaPos != null &&
-                                  context.read<AddressProvider>().selAreaPos !=
-                                      -1
-                              ? context.read<AddressProvider>().selectedArea!
+                          context.read<AddressProvider>().selStatePos != null &&
+                              context.read<AddressProvider>().selStatePos !=
+                                  -1
+                              ? context.read<AddressProvider>().selectedState!
                               : '',
                           style: TextStyle(
-                            color: context.read<AddressProvider>().selAreaPos !=
-                                    null
+                            color: context.read<AddressProvider>().selStatePos !=
+                                null
                                 ? Theme.of(context).colorScheme.fontColor
                                 : Colors.grey,
                             fontFamily: 'ubuntu',
@@ -956,20 +1183,179 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
-                  const Icon(Icons.keyboard_arrow_right),
+                  const Icon(
+                    Icons.keyboard_arrow_right,
+                  )
                 ],
               ),
             ),
             onTap: () {
-              if (context.read<AddressProvider>().selCityPos != null &&
-                  context.read<AddressProvider>().selCityPos != -1) {
-                areaDialog();
-              }
+              stateDialog();
+
             },
           ),
         ),
       ),
-    )*/;
+    );
+  }
+
+  // setArea() {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 5.0),
+  //     child: Container(
+  //       decoration: BoxDecoration(
+  //         color: Theme.of(context).colorScheme.white,
+  //         borderRadius: BorderRadius.circular(circularBorderRadius5),
+  //       ),
+  //       child: Padding(
+  //         padding: const EdgeInsets.symmetric(
+  //           horizontal: 10.0,
+  //         ),
+  //         child: TextFormField(
+  //           keyboardType: TextInputType.text,
+  //           textInputAction: TextInputAction.next,
+  //           focusNode: nameFocus,
+  //           controller: address2C,
+  //           textCapitalization: TextCapitalization.words,
+  //           validator: (val) => StringValidation.validateUserName(
+  //               val!,
+  //               'Address 2 Required',
+  //               getTranslated(context, 'USER_LENGTH')),
+  //           onSaved: (String? value) {
+  //             context.read<AddressProvider>().name = value;
+  //           },
+  //           onFieldSubmitted: (v) {
+  //             _fieldFocusChange(context, nameFocus!, monoFocus);
+  //           },
+  //           style: Theme.of(context)
+  //               .textTheme
+  //               .subtitle2!
+  //               .copyWith(color: Theme.of(context).colorScheme.fontColor),
+  //           decoration: InputDecoration(
+  //             label: Text(
+  //               'Address 2',
+  //               style: Theme.of(context).textTheme.bodyText2!.copyWith(
+  //                 fontFamily: 'ubuntu',
+  //               ),
+  //             ),
+  //             fillColor: Theme.of(context).colorScheme.white,
+  //             isDense: true,
+  //             hintText: 'Address 2',
+  //             border: InputBorder.none,
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   )
+  //   /*Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 5.0),
+  //     child: Container(
+  //       decoration: BoxDecoration(
+  //         color: Theme.of(context).colorScheme.white,
+  //         borderRadius: BorderRadius.circular(circularBorderRadius5),
+  //       ),
+  //       child: Padding(
+  //         padding: const EdgeInsets.symmetric(
+  //           horizontal: 10.0,
+  //         ),
+  //         child: GestureDetector(
+  //           child: InputDecorator(
+  //             decoration: InputDecoration(
+  //                 fillColor: Theme.of(context).colorScheme.white,
+  //                 isDense: true,
+  //                 border: InputBorder.none),
+  //             child: Row(
+  //               children: [
+  //                 Expanded(
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     mainAxisSize: MainAxisSize.min,
+  //                     children: [
+  //                       Text(
+  //                         getTranslated(context, 'AREASELECT_LBL')!,
+  //                         style: Theme.of(context).textTheme.caption,
+  //                       ),
+  //                       Text(
+  //                         context.read<AddressProvider>().selAreaPos != null &&
+  //                                 context.read<AddressProvider>().selAreaPos !=
+  //                                     -1
+  //                             ? context.read<AddressProvider>().selectedArea!
+  //                             : '',
+  //                         style: TextStyle(
+  //                           color: context.read<AddressProvider>().selAreaPos !=
+  //                                   null
+  //                               ? Theme.of(context).colorScheme.fontColor
+  //                               : Colors.grey,
+  //                           fontFamily: 'ubuntu',
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //                 const Icon(Icons.keyboard_arrow_right),
+  //               ],
+  //             ),
+  //           ),
+  //           onTap: () {
+  //             if (context.read<AddressProvider>().selCityPos != null &&
+  //                 context.read<AddressProvider>().selCityPos != -1) {
+  //               areaDialog();
+  //             }
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //   )*/;
+  // }
+  set(){
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.white,
+          borderRadius: BorderRadius.circular(circularBorderRadius5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10.0,
+          ),
+          child: TextFormField(
+            keyboardType: TextInputType.text,
+            textCapitalization: TextCapitalization.sentences,
+            controller:address2C,
+            readOnly: false,
+            style: Theme.of(context)
+                .textTheme
+                .subtitle2!
+                .copyWith(color: Theme.of(context).colorScheme.fontColor),
+            onChanged: (value){
+
+                  context.read<AddressProvider>().address2 = value;
+
+            },
+            onSaved: (String? value) {
+            //  context.read<AddressProvider>().address2= value;
+            },
+            validator: (val) => StringValidation.validateField(
+              val!,
+              getTranslated(context, 'FIELD_REQUIRED'),
+            ),
+            decoration: InputDecoration(
+              label: const Text(
+                'Address 2',
+                style: TextStyle(
+                  fontFamily: 'ubuntu',
+                ),
+              ),
+              fillColor: Theme.of(context).colorScheme.white,
+              isDense: true,
+              hintText: 'Address 2',//getTranslated(context, 'ADDRESS2'),
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   setAddress() {
@@ -1082,21 +1468,28 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                                 context.read<AddressProvider>().longitude!),
                           );
                           var address;
+
                           address = placemark[0].name;
                           address = address + ',' + placemark[0].subLocality;
                           address = address + ',' + placemark[0].locality;
+                          countryC?.text = placemark[0].locality ?? '' ;
+                          //cityC?.text =  placemark[0].locality ?? "" ;
+                          pincodeC?.text = placemark[0].postalCode ?? '';
                           context.read<AddressProvider>().state =
                               placemark[0].administrativeArea;
                           context.read<AddressProvider>().country =
                               placemark[0].country;
+
+
                           if (mounted) {
                             setState(
                               () {
                                 countryC!.text =
                                     context.read<AddressProvider>().country!;
-                                stateC!.text =
-                                    context.read<AddressProvider>().state!;
+                                stateC!.text = context.read<AddressProvider>().state!;
+                                //cityC!.text =  context.read<AddressProvider>().city!;
                                 addressC!.text = address;
+
                               },
                             );
                           }
@@ -1126,14 +1519,23 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
             horizontal: 10.0,
           ),
           child: TextFormField(
+
             keyboardType: TextInputType.number,
-            controller: context.read<AddressProvider>().pincodeC,
+            controller:pincodeC,
             style: Theme.of(context)
                 .textTheme
                 .subtitle2!
                 .copyWith(color: Theme.of(context).colorScheme.fontColor),
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            onSaved: (String? value) {},
+            onSaved: (String? value) {
+                                context.read<AddressProvider>().pincode = value;
+
+
+              },
+            onChanged: (value){
+              context.read<AddressProvider>().pincode = value;
+              print('___________${context.read<AddressProvider>().pincode}__________');
+            },
             decoration: InputDecoration(
               label: Text(
                 getTranslated(context, 'PINCODEHINT_LBL')!,
@@ -1155,13 +1557,14 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
   Future<void> callApi() async {
     isNetworkAvail = await isNetworkAvailable();
     if (isNetworkAvail) {
-      await context.read<AddressProvider>().getCities(
-            false,
-            context,
-            setStateNow,
-            widget.update,
-            widget.index,
-          );
+
+      await context.read<AddressProvider>().getState(
+        false,
+        context,
+        setStateNow,
+        widget.update,
+        widget.index,
+      );
       if (widget.update!) {
         context.read<AddressProvider>().getArea(
               context.read<CartProvider>().addressList[widget.index!].cityId,
@@ -1254,7 +1657,96 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       ),
     );
   }
-
+  selectState() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.white,
+          borderRadius: BorderRadius.circular(circularBorderRadius5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10.0,
+          ),
+          child: TextFormField(
+            keyboardType: TextInputType.text,
+            textCapitalization: TextCapitalization.sentences,
+            controller: stateC,
+            readOnly: false,
+            style: Theme.of(context)
+                .textTheme
+                .subtitle2!
+                .copyWith(color: Theme.of(context).colorScheme.fontColor),
+            onSaved: (String? value) {
+              context.read<AddressProvider>().state = value;
+            },
+            validator: (val) => StringValidation.validateField(
+              val!,
+              getTranslated(context, 'FIELD_REQUIRED'),
+            ),
+            decoration: InputDecoration(
+              label: Text(
+                getTranslated(context, 'STATE_LBL')!,
+                style: const TextStyle(
+                  fontFamily: 'ubuntu',
+                ),
+              ),
+              fillColor: Theme.of(context).colorScheme.white,
+              isDense: true,
+              hintText: getTranslated(context, 'STATE_LBL'),
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  selectCity() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.white,
+          borderRadius: BorderRadius.circular(circularBorderRadius5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10.0,
+          ),
+          child: TextFormField(
+            keyboardType: TextInputType.text,
+            textCapitalization: TextCapitalization.sentences,
+            controller: cityC,
+            readOnly: false,
+            style: Theme.of(context)
+                .textTheme
+                .subtitle2!
+                .copyWith(color: Theme.of(context).colorScheme.fontColor),
+            onSaved: (String? value) {
+              context.read<AddressProvider>().city = value;
+            },
+            validator: (val) => StringValidation.validateField(
+              val!,
+              getTranslated(context, 'FIELD_REQUIRED'),
+            ),
+            decoration: InputDecoration(
+              label: Text(
+                getTranslated(context, 'CITYSELECT_LBL')!,
+                style: const TextStyle(
+                  fontFamily: 'ubuntu',
+                ),
+              ),
+              fillColor: Theme.of(context).colorScheme.white,
+              isDense: true,
+              hintText: getTranslated(context, 'CITYSELECT_LBL'),
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
   setCountry() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -1308,9 +1800,12 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
     nameC?.dispose();
     stateC?.dispose();
     countryC?.dispose();
+    cityC?.dispose();
+    address2C?.dispose();
+    pincodeC?.dispose();
     altMobC?.dispose();
     landmarkC?.dispose();
-    addressC!.dispose();
+    address2C!.dispose();
     context.read<AddressProvider>().pincodeC?.dispose();
 
     super.dispose();
@@ -1512,10 +2007,15 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                     setUserName(),
                     setMobileNo(),
                     setAddress(),
-                    setCities(),
-                    setArea(),
+                    selectState(),
+                    selectCity(),
+                    // setStateWithCity(),
+                    // setCities(),
+                   // setArea(),
+                    //set(),
+                    set(),
                     setPincode(),
-                    setStateField(),
+                    //setStateField(),
                     setCountry(),
                     typeOfAddress(),
                     defaultAdd(),
@@ -1566,7 +2066,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       setState(
         () {
           countryC!.text = context.read<AddressProvider>().country!;
-          stateC!.text = context.read<AddressProvider>().state!;
+          //stateC!.text = context.read<AddressProvider>().state!;
         },
       );
     }

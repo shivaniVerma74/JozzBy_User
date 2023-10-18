@@ -16,7 +16,7 @@ class MostLikeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Selector<HomePageProvider, bool>(
       builder: (context, data, child) {
-        return true
+        return false
             ? Container()
             : data
                 ? SizedBox(

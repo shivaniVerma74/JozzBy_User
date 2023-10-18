@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:eshop_multivendor/Helper/Color.dart';
+import 'package:eshop_multivendor/Helper/String.dart';
+import 'package:eshop_multivendor/Helper/routes.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
@@ -79,7 +81,12 @@ class GetOrderDetails extends StatelessWidget {
                   Text("${getTranslated(context, 'TAX_AMOUNT')!} :",
                       style: Theme.of(context).textTheme.button!.copyWith(
                           color: Theme.of(context).colorScheme.lightBlack2)),
-                  Text(
+                  model.taxAmount == '' || model.taxAmount==null ? Text(
+                    ' ${DesignConfiguration.getPriceFormat(context, double.parse('0.0'))}',
+                    style: Theme.of(context).textTheme.button!.copyWith(
+                      color: Theme.of(context).colorScheme.lightBlack2,
+                    ),
+                  ) :Text(
                     ' ${DesignConfiguration.getPriceFormat(context, double.parse(model.taxAmount!))!}',
                     style: Theme.of(context).textTheme.button!.copyWith(
                           color: Theme.of(context).colorScheme.lightBlack2,
@@ -267,25 +274,120 @@ class GetOrderDetails extends StatelessWidget {
   void _launchURL(String url) async => await canLaunchUrlString(url)
       ? await launchUrlString(url)
       : throw 'Could not launch $url';
-
+bool isvisible = true ;
+String? itemIdies ;
+List <String> itemIdList = [] ;
   shippingDetails(BuildContext context, OrderModel model) {
-    return Card(
+    model.itemList?.forEach((element) {
+      if(element.status == 'received' || element.status == 'processed' || element.status == 'shipped' || element.status == 'cancelled' || element.status == 'returned' || element.status== 'return_request_pending' || element.status== 'return_request_approved' ){
+        isvisible = false ;
+      }
+
+      itemIdList.add(element.id ?? '');
+    });
+    itemIdies = itemIdList.join(',');
+    return  Card(
       elevation: 0,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 15.0, 0, 15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsetsDirectional.only(start: 15.0, end: 15.0),
-              child: Text(
-                getTranslated(context, 'SHIPPING_DETAIL')!,
-                style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                      color: Theme.of(context).colorScheme.fontColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+              Padding(
+                padding: const EdgeInsetsDirectional.only(start: 15.0, end: 15.0),
+                child: Text(
+                  getTranslated(context, 'SHIPPING_DETAIL')!,
+                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                    color: Theme.of(context).colorScheme.fontColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
+              isvisible ? Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                 child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                              getTranslated(
+                                  context, 'ARE_YOU_SURE?')!,
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .fontColor),
+                            ),
+                            content: Text(
+                              getTranslated(context,
+                                  'Would you like to return all these product?')!,
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .fontColor,
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: Text(
+                                  getTranslated(context, 'YES')!,
+                                  style: const TextStyle(
+                                      color: colors.primary),
+                                ),
+                                onPressed: () {
+                                  Routes.pop(context);
+                                  context
+                                      .read<UpdateOrdProvider>()
+                                      .isReturnClick = true;
+                                  context
+                                      .read<UpdateOrdProvider>()
+                                      .changeStatus(
+                                      UpdateOrdStatus.inProgress);
+                                  setSnackbar(
+                                      getTranslated(context,
+                                          'Status Updated Successfully')!,
+                                      context);
+                                  Future.delayed(Duration.zero).then(
+                                        (value) => context
+                                        .read<UpdateOrdProvider>()
+                                        .cancelOrder(
+                                        /*model.itemList?.first.id ??'',*/itemIdies ?? '',
+                                        updateOrderItemApi,
+                                        RETURNED,
+                                        context)
+                                        .then(
+                                          (value) {},
+                                    ),
+                                  );
+                                },
+                              ),
+                              TextButton(
+                                child: Text(
+                                  getTranslated(context, 'NO')!,
+                                  style: const TextStyle(
+                                      color: colors.primary),
+                                ),
+                                onPressed: () {
+                                  Routes.pop(context);
+                                },
+                              )
+                            ],
+                          );
+                        },
+                      );
+                    },
+
+                    child: const Text("Return All"),
+                  ),
+                ),
+              ) : SizedBox.shrink()
+            ],),
             Divider(
               color: Theme.of(context).colorScheme.lightBlack,
             ),

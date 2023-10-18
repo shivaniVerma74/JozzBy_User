@@ -1,11 +1,14 @@
 
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:eshop_multivendor/Model/Get_Images_model.dart';
 import 'package:eshop_multivendor/Screen/SQLiteData/SqliteData.dart';
 import 'package:eshop_multivendor/repository/homeRepository.dart';
 import 'package:eshop_multivendor/widgets/desing.dart';
 import 'package:eshop_multivendor/Screen/Language/languageSettings.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Helper/Constant.dart';
 import '../Helper/String.dart';
@@ -16,6 +19,7 @@ import '../widgets/networkAvailablity.dart';
 import '../widgets/snackbar.dart';
 import 'CategoryProvider.dart';
 import 'Favourite/FavoriteProvider.dart';
+import 'package:http/http.dart' as http;
 
 class HomePageProvider extends ChangeNotifier {
   int _curSlider = 0;
@@ -37,6 +41,8 @@ class HomePageProvider extends ChangeNotifier {
   List<Model> sliderList = [];
   DateTime? _currentBackPressTime;
   List<Model> homeSliderList = [];
+  List<GetImageModelList> homeImageSliderList = [];
+  List<GetImageModelList> homeImageThiredSliderList = [];
   List<Widget> pages = [];
   List<Model> offerImagesList = [];
   List<Product> mostFavouriteProductList = [];
@@ -139,6 +145,104 @@ class HomePageProvider extends ChangeNotifier {
     );
   }
 
+  getImagesApi() async {
+    var headers = {
+      'Cookie': 'ci_session=072b6f29be0b884e59f61a1530aec13e11b5f470'
+    };
+    var request = http.MultipartRequest('GET', Uri.parse('$baseUrl/get_slider_images_bottom'));
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var  result = await response.stream.bytesToString();
+      var finalResult = GetImagesModel.fromJson(jsonDecode(result));
+
+        homeImageSliderList =  finalResult.data ?? [];
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+
+  }
+
+  getImagesThirdSliderApi() async {
+    var headers = {
+      'Cookie': 'ci_session=072b6f29be0b884e59f61a1530aec13e11b5f470'
+    };
+    var request = http.MultipartRequest('GET', Uri.parse('$baseUrl/get_slider_images_third'));
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var  result = await response.stream.bytesToString();
+      var finalResult = GetImagesModel.fromJson(jsonDecode(result));
+
+      homeImageThiredSliderList =  finalResult.data ?? [];
+
+
+
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+
+  }
+
+  int sellerListOffset = 0;
+  int totalSelletCount = 0;
+  List<Product> sellerList = [];
+
+
+
+  void getSeller() {
+    Map parameter = {
+      LIMIT: perPage.toString(),
+      OFFSET: sellerListOffset.toString(),
+    };
+    print('______sdsssd_____${parameter}__________');
+    // if (_controller.text != '') {
+    //   parameter = {
+    //     SEARCH: _controller.text.trim(),
+    //   };
+    // }
+
+    apiBaseHelper.postAPICall(getSellerApi, parameter).then(
+          (getdata) {
+        print('_____cccccccccccc______${getSellerApi}______${parameter}____');
+        bool error = getdata['error'];
+        String? msg = getdata['message'];
+        List<Product> tempSellerList = [];
+        tempSellerList.clear();
+        if (!error) {
+          totalSelletCount = int.parse(getdata['total']);
+          var data = getdata['data'];
+
+          tempSellerList =
+              (data as List).map((data) => Product.fromSeller(data)).toList();
+          sellerListOffset += perPage;
+        } else {
+         // setSnackbar1(msg!,);
+        }
+        sellerList.addAll(tempSellerList);
+        print('___________${sellerList.length}____selletLength______');
+        setSellerLoading(false);
+        notifyListeners();
+        for(var i=0;i<sellerList.length;i++){
+
+
+        }
+
+      },
+      onError: (error) {
+       // setSnackbar1(error.toString());
+        setSellerLoading(false);
+        notifyListeners();
+
+      },
+    );
+
+  }
+
+
+
   //This method is used to get Categories from server
   Future<void> getCategories(
     BuildContext context,
@@ -212,6 +316,7 @@ class HomePageProvider extends ChangeNotifier {
       },
     );
   }
+
 
   //
   //This method is used to get offer Images from server
@@ -336,6 +441,7 @@ class HomePageProvider extends ChangeNotifier {
               String? msg = getdata['message'];
             if (!error) {
               var data = getdata['data'];
+
 
               List<Product> tempList =
                   (data as List).map((data) => Product.fromJson(data)).toList();

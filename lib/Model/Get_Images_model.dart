@@ -4,7 +4,7 @@
 class GetImagesModel {
   GetImagesModel({
       bool? error, 
-      List<Data>? data,}){
+      List<GetImageModelList>? data,}){
     _error = error;
     _data = data;
 }
@@ -14,19 +14,19 @@ class GetImagesModel {
     if (json['data'] != null) {
       _data = [];
       json['data'].forEach((v) {
-        _data?.add(Data.fromJson(v));
+        _data?.add(GetImageModelList.fromJson(v));
       });
     }
   }
   bool? _error;
-  List<Data>? _data;
+  List<GetImageModelList>? _data;
 GetImagesModel copyWith({  bool? error,
-  List<Data>? data,
+  List<GetImageModelList>? data,
 }) => GetImagesModel(  error: error ?? _error,
   data: data ?? _data,
 );
   bool? get error => _error;
-  List<Data>? get data => _data;
+  List<GetImageModelList>? get data => _data;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -48,8 +48,8 @@ GetImagesModel copyWith({  bool? error,
 /// date_added : "2023-08-26 19:31:21"
 /// data : []
 
-class Data {
-  Data({
+class GetImageModelList {
+  GetImageModelList({
       String? id, 
       String? type, 
       String? typeId, 
@@ -68,7 +68,7 @@ class Data {
     _data = data;
 }
 
-  Data.fromJson(dynamic json) {
+  GetImageModelList.fromJson(dynamic json) {
     _id = json['id'];
     _type = json['type'];
     _typeId = json['type_id'];
@@ -91,7 +91,7 @@ class Data {
   String? _image;
   String? _dateAdded;
   List<dynamic>? _data;
-Data copyWith({  String? id,
+  GetImageModelList copyWith({  String? id,
   String? type,
   String? typeId,
   String? sliderShowType,
@@ -99,7 +99,7 @@ Data copyWith({  String? id,
   String? image,
   String? dateAdded,
   List<dynamic>? data,
-}) => Data(  id: id ?? _id,
+}) => GetImageModelList(  id: id ?? _id,
   type: type ?? _type,
   typeId: typeId ?? _typeId,
   sliderShowType: sliderShowType ?? _sliderShowType,

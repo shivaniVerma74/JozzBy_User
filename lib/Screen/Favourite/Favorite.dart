@@ -217,7 +217,7 @@ class StateFav extends State<Favorite> with TickerProviderStateMixin {
   }
 
   noCartImage(BuildContext context) {
-    return Image(image: AssetImage("assets/images/png/Wishlistpng.png"),
+    return const Image(image: AssetImage("assets/images/png/Wishlistpng.png"),
       fit: BoxFit.contain,
       height: 300,
       width: 300);

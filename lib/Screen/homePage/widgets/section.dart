@@ -1,14 +1,17 @@
 import 'package:eshop_multivendor/Helper/Color.dart';
 import 'package:eshop_multivendor/Helper/Constant.dart';
+import 'package:eshop_multivendor/Model/Get_Images_model.dart';
 import 'package:eshop_multivendor/Model/Model.dart';
 import 'package:eshop_multivendor/Model/Section_Model.dart';
 import 'package:eshop_multivendor/Provider/homePageProvider.dart';
 import 'package:eshop_multivendor/Screen/Product%20Detail/productDetail.dart';
 import 'package:eshop_multivendor/Screen/ProductList&SectionView/ProductList.dart';
 import 'package:eshop_multivendor/Screen/ProductList&SectionView/SectionList.dart';
+import 'package:eshop_multivendor/Screen/SellerDetail/Seller_Details.dart';
 import 'package:eshop_multivendor/Screen/SubCategory/SubCategory.dart';
 import 'package:eshop_multivendor/Screen/homePage/widgets/offerImage.dart';
 import 'package:eshop_multivendor/Screen/homePage/widgets/singleProductContainer.dart';
+import 'package:eshop_multivendor/Screen/star_rating.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +43,10 @@ class Section extends StatelessWidget {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
+                    print('___________${context
+                        .read<HomePageProvider>()
+                        .sectionList[index]
+                        .title}__________');
                     return SingleSection(
                       index: index,
                       from: 1,
@@ -64,6 +71,12 @@ class Section extends StatelessWidget {
                               .productList ??
                           [],
                       wantToShowOfferImageBelowSection: false,
+                      imageList: context
+                          .read<HomePageProvider>()
+                          .homeImageSliderList,
+                      sellerList: context.read<HomePageProvider>().sellerList,
+                      imageList2: context.read<HomePageProvider>().homeImageThiredSliderList,
+
                     );
 
 
@@ -156,6 +169,7 @@ class SectionHeadingContainer extends StatelessWidget {
   final String subTitle;
   final int index;
   final List<Product> productList;
+
 
   const SectionHeadingContainer({
     Key? key,
@@ -252,6 +266,9 @@ class SingleSection extends StatelessWidget {
   final int from;
   final List<Product> productList;
   final bool wantToShowOfferImageBelowSection;
+  final List<GetImageModelList>? imageList ;
+  final List<GetImageModelList>? imageList2 ;
+  final List<Product>? sellerList ;
 
   const SingleSection({
     Key? key,
@@ -262,6 +279,7 @@ class SingleSection extends StatelessWidget {
     required this.sectionSubTitle,
     required this.sectionStyle,
     required this.wantToShowOfferImageBelowSection,
+    this.imageList, this.sellerList,this.imageList2,
   }) : super(key: key);
 
   @override
@@ -278,6 +296,11 @@ class SingleSection extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
 
+                    sectionTitle.toLowerCase().contains('best selling') ?  imageCard(imageList) : const SizedBox.shrink(),
+                    sectionTitle.toLowerCase().contains('best selling') ?
+                    getSellerList(sellerList, context): const SizedBox.shrink(),
+                    sectionTitle.toLowerCase().contains('feature') ? imageCard(imageList2): const SizedBox.shrink(),
+                    const SizedBox(height: 10,),
 
                     SectionHeadingContainer(
                       title: sectionTitle,
@@ -290,6 +313,7 @@ class SingleSection extends StatelessWidget {
                       productList: productList,
                       sectionStyle: sectionStyle,
                     ),
+
                   ],
                 ),
               ),
@@ -354,6 +378,116 @@ class SingleSection extends StatelessWidget {
       }
     }
   }
+
+  imageCard(List<GetImageModelList>? imageList){
+    return SizedBox(
+        height:200,
+        width:double.infinity,
+        child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              itemCount:imageList?.length  ?? 0,
+              // physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network("${imageList?[index].image}",fit: BoxFit.fill,width: MediaQuery.of(context).size.width/1.05,));
+              },)
+
+        ));
+  }
+
+
+  getSellerList(List<Product>? sellerList, BuildContext context){
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left:10.0,top: 5),
+          child: Text("All Seller",style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold,fontSize: 20),),
+        ),
+        Container(
+          color: colors.primary1,
+          height: 190,
+          child: ListView.separated(
+              itemCount: sellerList?.length ?? 0,
+              separatorBuilder: (BuildContext context, int index) => const Divider(),
+              scrollDirection: Axis.horizontal,
+
+              itemBuilder: (c,i){
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(onTap: (){
+                    String? s_id,seller_id,sellerImage,sellerStoreName,sellerRating,storeDesc;
+
+                      s_id = sellerList?[i].seller_id;
+                    seller_id = context.read<HomePageProvider>().sellerList[i].seller_id;
+                    sellerImage =context.read<HomePageProvider>().sellerList[i].seller_profile;
+                    sellerStoreName =context.read<HomePageProvider>().sellerList[i].store_name;
+                    sellerRating = context.read<HomePageProvider>().sellerList[i].seller_rating;
+                    storeDesc = context.read<HomePageProvider>().sellerList[i].store_description;
+                    //
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => SellerProfile(totalProductsOfSeller: '',s_id:s_id,sellerImage: sellerImage,sellerStoreName:sellerStoreName,sellerRating: sellerRating,storeDesc: storeDesc
+                        ),
+                      ),
+                    );
+
+                  },
+                    child: Container(
+                        decoration: BoxDecoration(
+                            color:Color(0xffEFEFEF),
+                            border: Border.all(color: colors.blackTemp),
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                        width: 165,
+                        height: 180,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 10,),
+                            Container(
+                              height: 100,width: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(60),
+                                // border: Border.all(color: colors.blackTemp)
+                              ),
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(60),
+                                  child: Image.network("${context.read<HomePageProvider>().sellerList[i].seller_profile}",fit: BoxFit.fill,)),
+                            ),
+                            const SizedBox(height:15,),
+                            SizedBox(
+                                width: 90,
+                                child: Center(child: Text("${context.read<HomePageProvider>().sellerList[i].seller_name}",overflow: TextOverflow.ellipsis,maxLines: 2,textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),))),
+                            Container(
+                              margin: const EdgeInsets.only(
+                                  left: 15, bottom: 10),
+                              child: StarRatingIndicators(
+                                noOfRatings: context.read<HomePageProvider>().sellerList[i].seller_rating ?? '0.0',
+                                totalRating: context.read<HomePageProvider>().sellerList[i].seller_rating ?? '0.0',
+                                
+                              ),),
+
+
+                          ],
+                        )
+                    ),
+                  ),
+                );
+              }),
+        ),
+      ],
+    );
+
+
+  }
+
 }
 
 class SingleSectionContainer extends StatelessWidget {

@@ -169,6 +169,7 @@ class OrderItem {
       downloadAllowed,
       downloadLink,
       userReviewRating,
+  cancelIdentity,cancelReason,
       userReviewComment;
 
   List<String>? listStatus = [];
@@ -176,11 +177,13 @@ class OrderItem {
 
   OrderItem({
     this.qty,
+    this.cancelIdentity,
     this.id,
     this.name,
     this.price,
     this.subTotal,
     this.status,
+    this.cancelReason,
     this.image,
     this.varientId,
     this.listDate,
@@ -221,6 +224,8 @@ class OrderItem {
     }
     return OrderItem(
       id: json[ID],
+      cancelReason: json['cancel_reason'],
+      cancelIdentity: json['cancel_identity'],
       qty: json[QUANTITY],
       name: json[NAME],
       image: json[IMAGE],

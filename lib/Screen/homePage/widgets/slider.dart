@@ -130,7 +130,7 @@ class _CustomSliderState extends State<CustomSlider> {
           imageUrl: slider.image!,
           placeholder: (context, url) {
             return SvgPicture.asset(
-              DesignConfiguration.setSvgPath('sliderph'),
+              DesignConfiguration.setSvgPath('titleicon'),
               fit: BoxFit.fill,
               height: height,
               color: colors.primary,
@@ -138,7 +138,7 @@ class _CustomSliderState extends State<CustomSlider> {
           },
           errorWidget: (context, error, stackTrace) {
             return SvgPicture.asset(
-              DesignConfiguration.setSvgPath('sliderph'),
+              DesignConfiguration.setSvgPath('titleicon'),
               fit: BoxFit.fill,
               height: height,
               color: colors.primary,

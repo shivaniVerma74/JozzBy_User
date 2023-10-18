@@ -60,11 +60,11 @@ class OrderProvider extends ChangeNotifier {
             Map<String, dynamic> result =
               await OrderRepository.fetchOrder(parameter: parameter);
           bool error = result['error'];
-          print('___________${result['error']}__________');
+          print('___________${result['error']}_____error_____');
 
           isGettingdata = false;
           if (OrderOffset == 0) isNodata = error;
-          print('___________${parameter}__________');
+          print('___________${parameter}_____pera_____');
           if (!error) {
             if (result.isNotEmpty) {
               List<OrderModel> allitems = [];

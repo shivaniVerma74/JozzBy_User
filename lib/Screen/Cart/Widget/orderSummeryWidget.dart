@@ -8,6 +8,7 @@ import '../../Language/languageSettings.dart';
 
 class OrderSummery extends StatelessWidget {
   List<SectionModel> cartList;
+
   OrderSummery({Key? key, required this.cartList}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,9 @@ class OrderSummery extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().deliveryCharge)!} ',
+                  '${DesignConfiguration.getPriceFormat(context,
+                      //double.parse(deliCharge!) ??
+                      context.read<CartProvider>().deliveryCharge)!} ',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.fontColor,
                     fontWeight: FontWeight.bold,

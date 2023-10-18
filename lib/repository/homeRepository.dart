@@ -63,6 +63,22 @@ class HomeRepository {
     }
   }
 
+  static Future<Map<String, dynamic>> fetchImageSliderImages() async {
+    try {
+      var sliderData = await ApiBaseHelper().postAPICall(getImageSliderApi, {});
+
+      return {
+        'error': sliderData['error'],
+        'message': sliderData['message'],
+        'sliderList': (sliderData['data'] as List)
+            .map((data) => Model.fromSlider(data))
+            .toList()
+      };
+    } catch (e) {
+      throw ApiException('$errorMesaage${e.toString()}');
+    }
+  }
+
 
 
 

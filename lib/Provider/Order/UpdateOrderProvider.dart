@@ -49,22 +49,31 @@ class UpdateOrdProvider extends ChangeNotifier {
   }
 
   Future<void> cancelOrder(
-      String ordId, Uri api, String status, BuildContext context) async {
+      String ordId, Uri api, String status, BuildContext context,{String? msg}) async {
+
+
     try {
       changeStatus(UpdateOrdStatus.inProgress);
-      var parameter = {ORDERID: ordId, STATUS: status};
+      var parameter = {ORDERID: ordId, STATUS: status, CANCEL_REASON: msg ?? '' };
 
       var result = await UpdateOrderRepository.cancelOrder(
           parameter: parameter, api: api);
 
+      print('___________${parameter}__________');
+      print('___________${result}__________');
+
       bool error = result['error'];
-      setSnackbar(result['message'], context);
-      if (!error) {
-        Future.delayed(const Duration(seconds: 1)).then(
+      if (error == false) {
+        Navigator.pop(context, 'update');
+        setSnackbar(result['message'], context);
+        /*Future.delayed(const Duration(seconds: 1)).then(
           (_) async {
-            Navigator.pop(context, 'update');
+
+
+           // setSnackbar(result['message'], context);
+
           },
-        );
+        );*/
       }
       isReturnClick = true;
       changeStatus(UpdateOrdStatus.isSuccsess);

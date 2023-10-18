@@ -7,7 +7,10 @@ import '../../../widgets/desing.dart';
 import '../../Language/languageSettings.dart';
 
 class GetContent extends StatelessWidget {
-  const GetContent({Key? key}) : super(key: key);
+  const GetContent({Key? key, this.deliveryCharge,this.isCshOnDeliveryDone}) : super(key: key);
+
+  final double? deliveryCharge ;
+  final bool? isCshOnDeliveryDone ;
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +45,16 @@ class GetContent extends StatelessWidget {
                           fontFamily: 'ubuntu',
                         ),
                   ),
-                  Text(
-                    DesignConfiguration.getPriceFormat(
-                        context, context.read<CartProvider>().oriPrice)!,
-                    style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                          color: Theme.of(context).colorScheme.fontColor,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'ubuntu',
-                        ),
-                  )
+                  Text("${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().oriPrice)!}")
+                  // Text(
+                  //   DesignConfiguration.getPriceFormat(
+                  //       context, context.read<CartProvider>().oriPrice)!,
+                  //   style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                  //         color: Theme.of(context).colorScheme.fontColor,
+                  //         fontWeight: FontWeight.bold,
+                  //         fontFamily: 'ubuntu',
+                  //       ),
+                  // )
                 ],
               ),
               Row(
@@ -63,18 +67,44 @@ class GetContent extends StatelessWidget {
                           fontFamily: 'ubuntu',
                         ),
                   ),
-                  Text(
-                    DesignConfiguration.getPriceFormat(
-                        context, context.read<CartProvider>().deliveryCharge)!,
-                    style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                          color: Theme.of(context).colorScheme.fontColor,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'ubuntu',
-                        ),
-                  )
+                  deliveryCharge== null ? Text("${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().deliveryCharge)}")
+                      : Text("${DesignConfiguration.getPriceFormat(context, deliveryCharge!)}")
+                  // Text(
+                  //   DesignConfiguration.getPriceFormat(
+                  //       context, context.read<CartProvider>().deliveryCharge)!,
+                  //   style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                  //         color: Theme.of(context).colorScheme.fontColor,
+                  //         fontWeight: FontWeight.bold,
+                  //         fontFamily: 'ubuntu',
+                  //       ),
+                  // )
                 ],
               ),
-              context.read<CartProvider>().isPromoValid!
+          isCshOnDeliveryDone ?? true ?  Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Advance Amount',
+                style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                  color: Theme.of(context).colorScheme.lightBlack2,
+                  fontFamily: 'ubuntu',
+                ),
+              ),
+              deliveryCharge == null ? Text("${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().deliveryCharge)}")
+                  : Text("${DesignConfiguration.getPriceFormat(context, deliveryCharge!)}")
+              // Text(
+              //   DesignConfiguration.getPriceFormat(
+              //       context, context.read<CartProvider>().deliveryCharge)!,
+              //   style: Theme.of(context).textTheme.subtitle2!.copyWith(
+              //         color: Theme.of(context).colorScheme.fontColor,
+              //         fontWeight: FontWeight.bold,
+              //         fontFamily: 'ubuntu',
+              //       ),
+              // )
+            ],
+          ) :SizedBox(),
+
+        context.read<CartProvider>().isPromoValid!
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

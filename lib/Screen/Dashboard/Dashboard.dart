@@ -61,7 +61,7 @@ class _DashboardPageState extends State<Dashboard>
 
     initDynamicLinks();
     _tabController = TabController(
-      length: 4,
+      length: 5,
       vsync: this,
     );
 

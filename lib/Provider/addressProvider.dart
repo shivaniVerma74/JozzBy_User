@@ -19,35 +19,46 @@ class AddressProvider extends ChangeNotifier {
       mobile,
       city,
       address,
+      address2,
       pincode,
       landmark,
       altMob,
       area,
       country,
       selectedCity = '',
+      selectedState = '',
+      selectedStateId = '',
       selectedArea = '';
   int areaOffset = 0;
   int? selCityPos = -1;
+  int? selStatePos = -1;
   bool cityLoading = true;
+  bool stateLoading = true;
   bool checkedDefault = false;
   bool? isLoadingMoreCity;
+  bool? isLoadingMoreState;
   bool isProgress = false;
   List<User> areaSearchList = [];
   List<User> areaList = [];
   AnimationController? buttonController;
   List<User> citySearchLIst = [];
+  List<User> stateSearchLIst = [];
   List<User> cityList = [];
+  List<User> stateList = [];
   User? selArea;
   int? selAreaPos = -1;
   bool? isLoadingMoreArea;
   StateSetter? areaState;
   StateSetter? cityState;
+  StateSetter? stateState;
   bool areaLoading = true;
   final TextEditingController cityController = TextEditingController();
+  final TextEditingController stateController = TextEditingController();
   final TextEditingController areaController = TextEditingController();
   TextEditingController? pincodeC;
   bool isArea = false;
   int cityOffset = 0;
+  int stateOffset = 0;
   setLatitude(String? value) {
     latitude = value;
     notifyListeners();
@@ -137,22 +148,28 @@ class AddressProvider extends ChangeNotifier {
 
   Future<void> getCities(
     bool isSearchCity,
+    String? state, bool clear,
     BuildContext context,
     Function updateNow,
     bool? update,
     int? index,
   ) async {
+    if (clear) {
+      citySearchLIst.clear();
+    }
     try {
       var parameter = {
         LIMIT: perPage.toString(),
-        OFFSET: cityOffset.toString(),
+       // OFFSET: cityOffset.toString(),
+        'state_id': state
       };
-
       if (isSearchCity) {
         parameter[SEARCH] = cityController.text;
         parameter[OFFSET] = '0';
         citySearchLIst.clear();
       }
+      print('___________${parameter}__________');
+
       dynamic result = await AddressRepository.getCitys(
         parameter: parameter,
       );
@@ -161,6 +178,12 @@ class AddressProvider extends ChangeNotifier {
       String? msg = result['message'];
       if (!error) {
         var data = result['data'];
+        cityList.clear();
+        if (clear) {
+          city = null;
+          selectedCity =null ;
+          selCityPos = -1;
+        }
         cityList = (data as List).map((data) => User.fromJson(data)).toList();
         citySearchLIst.addAll(cityList);
       } else {
@@ -168,6 +191,7 @@ class AddressProvider extends ChangeNotifier {
           setSnackbar(msg, context);
         }
       }
+
       cityLoading = false;
       isLoadingMoreCity = false;
       isProgress = false;
@@ -175,13 +199,70 @@ class AddressProvider extends ChangeNotifier {
       if (cityState != null) cityState!(() {});
       updateNow();
       if (update!) {
-        selCityPos = citySearchLIst.indexWhere((f) =>
-            f.id == context.read<CartProvider>().addressList[index!].cityId);
+        selCityPos = citySearchLIst.indexWhere((f) {
+          return f.id == context.read<CartProvider>().addressList[index!].cityId;
+        });
 
         if (selCityPos == -1) {
           selCityPos = null;
         }
         selectedCity = citySearchLIst[selCityPos!].name!;
+      }
+    } on TimeoutException catch (_) {
+      setSnackbar(getTranslated(context, 'somethingMSg')!, context);
+    }
+  }
+
+  Future<void> getState(
+      bool isSearchCity,
+      BuildContext context,
+      Function updateNow,
+      bool? update,
+      int? index,
+      ) async {
+    try {
+      var parameter = {
+        LIMIT: perPage.toString(),
+        OFFSET: stateOffset.toString(),
+      };
+
+      if (isSearchCity) {
+        parameter[SEARCH] = stateController.text;
+        parameter[OFFSET] = '0';
+        stateSearchLIst.clear();
+      }
+      dynamic result = await AddressRepository.getStats(
+        parameter: parameter,
+      );
+
+      bool error = result['error'];
+      String? msg = result['message'];
+      if (!error) {
+        var data = result['data'];
+
+        stateList = (data as List).map((data) => User.fromJson(data)).toList();
+        stateSearchLIst.addAll(stateList);
+      } else {
+        if (msg != null) {
+          setSnackbar(msg, context);
+        }
+      }
+      stateLoading = false;
+      isLoadingMoreState = false;
+      isProgress = false;
+      stateOffset += perPage;
+      if (stateState != null) stateState!(() {});
+      updateNow();
+      if (update!) {
+        selStatePos = stateSearchLIst.indexWhere((f) {
+
+          return f.state == context.read<CartProvider>().addressList[index!].state;
+        });
+
+        if (selStatePos == -1) {
+          selStatePos = null;
+        }
+        selectedState = stateSearchLIst[selStatePos!].name!;
       }
     } on TimeoutException catch (_) {
       setSnackbar(getTranslated(context, 'somethingMSg')!, context);
@@ -201,8 +282,9 @@ class AddressProvider extends ChangeNotifier {
         USER_ID: context.read<SettingProvider>().userId,
         NAME: name,
         MOBILE: mobile,
-        PINCODE: pincodeC!.text,
+        PINCODE: pincode,
         CITY_ID: city,
+        AREA:address2,
         // AREA_ID: area,
         ADDRESS: address,
         STATE: state,

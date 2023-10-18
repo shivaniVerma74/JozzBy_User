@@ -22,8 +22,10 @@ class SelectPayment extends StatelessWidget {
               context,
               CupertinoPageRoute(
                   builder: (BuildContext context) =>
-                      Payment(updateCheckout, '')));
-          context.read<CartProvider>().checkoutState!(() {});
+                      Payment(updateCheckout, ''))).then((value) {
+            context.read<CartProvider>().checkoutState!(() {});
+
+          });
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),

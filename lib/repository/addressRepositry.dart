@@ -28,6 +28,18 @@ class AddressRepository {
       throw ApiException('$errorMesaage${e.toString()}');
     }
   }
+  /// get state
+  static Future<Map<String, dynamic>> getStats({
+    required Map<String, dynamic> parameter,
+  }) async {
+    try {
+      var result = await ApiBaseHelper().postAPICall(getStatesApi, parameter);
+
+      return result;
+    } on Exception catch (e) {
+      throw ApiException('$errorMesaage${e.toString()}');
+    }
+  }
 
   /// add and update api
   static Future<Map<String, dynamic>> addAndUpdateAddress({

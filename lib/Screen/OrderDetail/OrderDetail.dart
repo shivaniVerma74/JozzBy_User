@@ -43,7 +43,7 @@ class StateOrder extends State<OrderDetail>
 
     context.read<UpdateOrdProvider>().files.clear();
     context.read<UpdateOrdProvider>().reviewPhotos.clear();
-    FlutterDownloader.registerCallback(downloadCallback);
+    //FlutterDownloader.registerCallback(downloadCallback);
     context.read<UpdateOrdProvider>().buttonController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     context.read<UpdateOrdProvider>().buttonSqueezeanimation = Tween(

@@ -26,6 +26,7 @@ class ApiBaseHelper {
               .timeout(const Duration(seconds: timeOut));
 
       responseJson = _response(response);
+      print('___________${responseJson}__________');
     } on SocketException catch (e) {
       throw ApiException('No Internet connection');
     } on TimeoutException {

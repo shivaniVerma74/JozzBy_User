@@ -86,7 +86,11 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
   }
 
   Future<void> getSingature() async {
-    signature = await SmsAutoFill().getAppSignature;
+     await SmsAutoFill().getAppSignature.then((value) {
+      setState(() {
+        signature = value;
+      });
+    });
     SmsAutoFill().listenForCode;
   }
 
@@ -253,7 +257,7 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
                                       context);
                                 }
                                 Routes.pop(context);
-                                await offCartAdd();
+                                await offCartAdd(userId.toString());
                                 db.clearSaveForLater();
                                 Navigator.pushNamedAndRemoveUntil(
                                   context,
@@ -386,6 +390,7 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
     );
   }
 
+  String? userId;
 
  Future<void> verifyuser() async {
 
@@ -433,6 +438,7 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
          getdata[IMAGE],
          context,
        );
+       userId = getdata[ID];
        offFavAdd().then(
              (value) async {
            db.clearFav();
@@ -440,13 +446,28 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
            List cartOffList = await db.getOffCart();
            if (singleSellerOrderSystem && cartOffList.isNotEmpty) {
              forLoginPageSingleSellerSystem = true;
-             offSaveAdd().then(
+             offCartAdd(userId.toString()).then(
                    (value) {
-                 clearYouCartDialog();
+                 db.clearCart();
+                 offSaveAdd().then(
+                       (value) {
+                     db.clearSaveForLater();
+                     Navigator.pushNamedAndRemoveUntil(
+                       context,
+                       '/home',
+                           (r) => false,
+                     );
+                   },
+                 );
                },
              );
+             // offSaveAdd().then(
+             //       (value) {
+             //     clearYouCartDialog();
+             //   },
+             // );
            } else {
-             offCartAdd().then(
+             offCartAdd(userId.toString()).then(
                    (value) {
                  db.clearCart();
                  offSaveAdd().then(
@@ -464,6 +485,37 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
            }
          },
        );
+       // offFavAdd().then(
+       //       (value) async {
+       //     db.clearFav();
+       //     context.read<FavoriteProvider>().setFavlist([]);
+       //     List cartOffList = await db.getOffCart();
+       //     if (singleSellerOrderSystem && cartOffList.isNotEmpty) {
+       //       forLoginPageSingleSellerSystem = true;
+       //       offSaveAdd().then(
+       //             (value) {
+       //           clearYouCartDialog();
+       //         },
+       //       );
+       //     } else {
+       //       offCartAdd().then(
+       //             (value) {
+       //           db.clearCart();
+       //           offSaveAdd().then(
+       //                 (value) {
+       //               db.clearSaveForLater();
+       //               Navigator.pushNamedAndRemoveUntil(
+       //                 context,
+       //                 '/home',
+       //                     (r) => false,
+       //               );
+       //             },
+       //           );
+       //         },
+       //       );
+       //     }
+       //   },
+       // );
      }
    }
    else {
@@ -492,28 +544,30 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
     }
   }
 
-  Future<void> offCartAdd() async {
+  Future<void> offCartAdd(String userID) async {
     List cartOffList = await db.getOffCart();
     if (cartOffList.isNotEmpty) {
       for (int i = 0; i < cartOffList.length; i++) {
-        addToCartCheckout(cartOffList[i]['VID'], cartOffList[i]['QTY']);
+        addToCartCheckout(cartOffList[i]['VID'], cartOffList[i]['QTY'], userID);
       }
     }
   }
 
-  Future<void> addToCartCheckout(String varId, String qty) async {
+  Future<void> addToCartCheckout(String varId, String qty, userID) async {
     isNetworkAvail = await isNetworkAvailable();
     if (isNetworkAvail) {
       try {
         var parameter = {
           PRODUCT_VARIENT_ID: varId,
-          USER_ID: CUR_USERID,
+          USER_ID: userID ?? CUR_USERID,
+          //CUR_USERID,
           QTY: qty,
         };
 
         Response response =
         await post(manageCartApi, body: parameter, headers: headers)
             .timeout(const Duration(seconds: timeOut));
+        print('this is add to cart------ $manageCartApi $parameter');
         if (response.statusCode == 200) {
           var getdata = json.decode(response.body);
           if (getdata['message'] == 'One of the product is out of stock.') {
@@ -764,11 +818,21 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
       ),
     );
   }
-
+final foucu = FocusNode();
   Widget otpLayout() {
     return Padding(
+
       padding: const EdgeInsetsDirectional.only(top: 30),
       child: PinFieldAutoFill(
+        //focusNode: foucu,
+        cursor: Cursor(
+          width: 2,
+          height: 40,
+          color: Colors.red,
+          radius: Radius.circular(1),
+          enabled: true,
+        ),
+        autoFocus: true,
         decoration: BoxLooseDecoration(
             textStyle: TextStyle(
                 fontSize: textFontSize20,
@@ -922,7 +986,7 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
               monoVarifyText(),
               otpText(),
               mobText(),
-             // otpTextVisible(),
+              //otpTextVisible(),
               otpLayout(),
               resendText(),
               verifyBtn(),

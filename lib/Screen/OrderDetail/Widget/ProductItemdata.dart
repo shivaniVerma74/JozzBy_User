@@ -84,7 +84,6 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
       att = widget.orderItem.attr_name!.split(',');
       val = widget.orderItem.varient_values!.split(',');
     }
-
     return Card(
       elevation: 0,
       child: Padding(
@@ -474,6 +473,52 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                 ),
               ],
             ),
+            const SizedBox(height: 10,),
+            widget.orderItem.status=='cancelled' ? Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Message : ",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.lightBlack,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Cancel by:',
+                        style: TextStyle(
+                            color:
+                            Theme.of(context).colorScheme.lightBlack,
+                            fontWeight: FontWeight.bold),
+                      )
+
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${widget.orderItem.cancelReason}',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.lightBlack2,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                      Text(
+                        '${widget.orderItem.cancelIdentity} ',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.lightBlack2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ) : SizedBox(),
             Consumer<UpdateOrdProvider>(
               builder: (context, value, child) {
                 return Container(
@@ -582,10 +627,10 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                     child: Align(
                       alignment: Alignment.bottomRight,
                       child: OutlinedButton(
-                        onPressed: context
+                        onPressed: /*context
                                 .read<UpdateOrdProvider>()
                                 .isReturnClick
-                            ? () {
+                            ?*/ () {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -598,15 +643,20 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                                                 .colorScheme
                                                 .fontColor),
                                       ),
-                                      content: Text(
-                                        getTranslated(context,
-                                            'Would you like to cancel this product?')!,
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .fontColor,
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                        Text(
+                                          getTranslated(context,
+                                              'Would you like to cancel this product?')!,
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .fontColor,
+                                          ),
                                         ),
-                                      ),
+                                          cancelReasonField()
+                                      ],),
                                       actions: [
                                         TextButton(
                                           child: Text(
@@ -615,30 +665,36 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                                                 color: colors.primary),
                                           ),
                                           onPressed: () {
-                                            Routes.pop(context);
-                                            context
-                                                .read<UpdateOrdProvider>()
-                                                .isReturnClick = false;
-                                            context
-                                                .read<UpdateOrdProvider>()
-                                                .changeStatus(
-                                                    UpdateOrdStatus.inProgress);
-                                            setSnackbar(
-                                                getTranslated(context,
-                                                    'Status Updated Successfully')!,
-                                                context);
-                                            Future.delayed(Duration.zero).then(
-                                              (value) => context
+                                            if(cancelReasonController.text.isNotEmpty) {
+                                              Routes.pop(context);
+                                              context
                                                   .read<UpdateOrdProvider>()
-                                                  .cancelOrder(
-                                                      widget.orderItem.id!,
-                                                      updateOrderItemApi,
-                                                      CANCLED,
-                                                      context)
+                                                  .isReturnClick = false;
+                                              /*context
+                                                  .read<UpdateOrdProvider>()
+                                                  .changeStatus(UpdateOrdStatus
+                                                      .inProgress);*/
+                                              /*setSnackbar(
+                                                  getTranslated(context,
+                                                      'Status Updated Successfully')!,
+                                                  context);*/
+                                              Future.delayed(Duration.zero)
                                                   .then(
-                                                    (value) {},
-                                                  ),
-                                            );
+                                                (value) => context
+                                                    .read<UpdateOrdProvider>()
+                                                    .cancelOrder(
+                                                        widget.orderItem.id!,
+                                                        updateOrderItemApi,
+                                                        CANCLED,
+                                                        context,msg: cancelReasonController.text)
+                                                    .then(
+                                                      (value) {},
+                                                    ),
+                                              );
+                                            }
+                                            else{
+                                              setSnackbar('Please enter cancel reason!', context);
+                                            }
                                           },
                                         ),
                                         TextButton(
@@ -655,8 +711,8 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                                     );
                                   },
                                 );
-                              }
-                            : null,
+                              },
+                           // : null,
                         child: Text(
                           getTranslated(context, 'ITEM_CANCEL')!,
                         ),
@@ -666,14 +722,14 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                 else
                   (widget.orderItem.listStatus!.contains(DELIVERD) &&
                           widget.orderItem.isReturn == '1' &&
-                          widget.orderItem.isAlrReturned == '0')
+                          widget.orderItem.isAlrReturned == '0' && widget.orderItem.status != 'return_request_approved' && widget.orderItem.status != 'return_request_pending')
                       ? Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: OutlinedButton(
-                            onPressed: context
+                            onPressed:/* context
                                     .read<UpdateOrdProvider>()
                                     .isReturnClick
-                                ? () {
+                                ?*/ () {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -740,8 +796,8 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                                         );
                                       },
                                     );
-                                  }
-                                : null,
+                                  },
+                                //: null,
                             child: Text(getTranslated(context, 'ITEM_RETURN')!),
                           ),
                         )
@@ -753,6 +809,46 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
       ),
     );
   }
+TextEditingController cancelReasonController = TextEditingController();
+ Widget cancelReasonField() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 40),
+      child: Container(
+        height: 53,
+        width: double.maxFinite,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.lightWhite,
+          borderRadius: BorderRadius.circular(circularBorderRadius10),
+        ),
+        alignment: Alignment.center,
+        child: TextFormField(
+          maxLines: 4,
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.fontColor.withOpacity(0.7),
+              fontWeight: FontWeight.bold,
+              fontSize: textFontSize13),
+          keyboardType: TextInputType.text,
+          textCapitalization: TextCapitalization.words,
+          controller: cancelReasonController,
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 13,
+                vertical: 5,
+              ),
+              hintText: 'Cancel Reason',
+              hintStyle: TextStyle(
+                  color:
+                  Theme.of(context).colorScheme.fontColor.withOpacity(0.3),
+                  fontWeight: FontWeight.bold,
+                  fontSize: textFontSize13),
+              fillColor: Theme.of(context).colorScheme.lightWhite,
+              border: InputBorder.none),
+        ),
+      ),
+    );
+  }
+
 
   Future<bool> Checkpermission(AsyncSnapshot snapshot) async {
     var status = await Permission.storage.status;

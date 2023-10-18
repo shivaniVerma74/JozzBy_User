@@ -45,6 +45,8 @@ class FavoriteProvider extends ChangeNotifier {
         USER_ID: CUR_USERID,
       };
 
+      print('___________${parameter}__________');
+
       Map<String, dynamic> result =
           await FavRepository.fetchFavorite(parameter: parameter);
       List<Product> tempList = [];
