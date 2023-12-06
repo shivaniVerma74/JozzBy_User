@@ -407,6 +407,7 @@ class _GridViewWidgetState extends State<GridViewWidget> {
       double width = deviceWidth! * 0.5 - 20;
       double price =
           double.parse(model.prVarientList![model.selVarient!].disPrice!);
+      double margin =  double.parse(model.prVarientList![0].price!) - double.parse(model.prVarientList![0].disPrice!);
       List att = [], val = [];
       if (model.prVarientList![model.selVarient!].attr_name != null) {
         att = model.prVarientList![model.selVarient!].attr_name!.split(',');
@@ -428,6 +429,10 @@ class _GridViewWidgetState extends State<GridViewWidget> {
       off = off *
           100 /
           double.parse(model.prVarientList![model.selVarient!].price!);
+      if(double.parse(model.prVarientList![model.selVarient!].disPrice!)== 0) {
+        off = 0.0 ;
+      }
+
       return Selector<CartProvider, Tuple2<List<String?>, String?>>(
         builder: (context, data, child) {
           if (data.item1.contains(model.prVarientList![model.selVarient!].id)) {
@@ -607,19 +612,12 @@ class _GridViewWidgetState extends State<GridViewWidget> {
                                                       child: Stack(
                                                         children: [
                                                           TextField(
-                                                            textAlign: TextAlign
-                                                                .center,
+                                                            textAlign: TextAlign.center,
                                                             readOnly: true,
                                                             style: TextStyle(
                                                                 fontSize: textFontSize12,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .colorScheme
-                                                                    .fontColor),
-                                                            controller:
-                                                                controllerText[
-                                                                    widget
-                                                                        .index!],
+                                                                color: Theme.of(context).colorScheme.fontColor),
+                                                            controller: controllerText[widget.index!],
                                                             decoration:
                                                                 const InputDecoration(
                                                               border:
@@ -817,6 +815,64 @@ class _GridViewWidgetState extends State<GridViewWidget> {
                       softWrap: true,
                     ),
                   ),
+                  double.parse(model
+                      .prVarientList![0].disPrice!) !=
+                      0
+                      ? Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 10.0,
+                      top: 5,
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          double.parse(model
+                              .prVarientList![0]
+                              .disPrice!) !=
+                              0
+                              ? 'MRP: ${DesignConfiguration.getPriceFormat(context, double.parse(model.prVarientList![0].price!))}'
+                              : '',
+                          style: Theme.of(context)
+                              .textTheme
+                              .overline!
+                              .copyWith(
+                            color: colors.darkColor3,
+                            fontFamily: 'ubuntu',
+                            decoration:
+                            TextDecoration.lineThrough,
+                            decorationColor: colors.darkColor3,
+                            decorationStyle:
+                            TextDecorationStyle.solid,
+                            decorationThickness: 2,
+                            letterSpacing: 0,
+                            fontSize: textFontSize14,
+                            fontWeight: FontWeight.normal,
+                            fontStyle: FontStyle.normal,
+                          ),
+                        ),
+                        // Flexible(
+                        //   child: Text(
+                        //     '   ${double.parse(offPer).round().toStringAsFixed(2)}%',
+                        //     maxLines: 1,
+                        //     overflow: TextOverflow.ellipsis,
+                        //     style: Theme.of(context)
+                        //         .textTheme
+                        //         .overline!
+                        //         .copyWith(
+                        //       fontFamily: 'ubuntu',
+                        //       color: colors.primary,
+                        //       letterSpacing: 0,
+                        //       fontSize: textFontSize10,
+                        //       fontWeight: FontWeight.w400,
+                        //       fontStyle: FontStyle.normal,
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  )
+                      : Container(),
+
                   Padding(
                     padding: const EdgeInsetsDirectional.only(
                       start: 8.0,
@@ -825,15 +881,15 @@ class _GridViewWidgetState extends State<GridViewWidget> {
                     child: Row(
                       children: [
                         Text(
-                          ' ${DesignConfiguration.getPriceFormat(context, price)!}',
+                          'Price: ${DesignConfiguration.getPriceFormat(context, price)!}',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.blue,
                             fontSize: textFontSize14,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w300,
                             fontStyle: FontStyle.normal,
                           ),
                         ),
-                        Expanded(
+                        /*Expanded(
                           child: Padding(
                             padding: const EdgeInsetsDirectional.only(
                               start: 10.0,
@@ -879,10 +935,47 @@ class _GridViewWidgetState extends State<GridViewWidget> {
                               ],
                             ),
                           ),
-                        )
+                        )*/
                       ],
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 8.0,
+                      top: 1,
+                    ),
+                    child: Text(
+                      'Margin: ${double.parse(off.toString()).round().toStringAsFixed(2)}%',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.green,
+                        fontSize: textFontSize14,
+                        fontWeight: FontWeight.normal,
+                        fontStyle: FontStyle.normal,
+                        fontFamily: 'ubuntu',
+
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 9.0,
+                      top: 1,
+                    ),
+                    child: Text(
+                      'Profit: ${DesignConfiguration.getPriceFormat(context, margin)!}',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.green,
+                        fontSize: textFontSize14,
+                        fontWeight: FontWeight.normal,
+                        fontStyle: FontStyle.normal,
+                        fontFamily: 'ubuntu',
+                      ),
+                    ),
+                  ),
+
                   Padding(
                     padding: const EdgeInsetsDirectional.only(
                       start: 10.0,

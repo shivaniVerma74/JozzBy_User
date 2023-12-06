@@ -136,7 +136,9 @@ class StateAddress extends State<ManageAddress> with TickerProviderStateMixin {
       key: _scaffoldKey,
       appBar:
           getSimpleAppBar(getTranslated(context, 'SHIPP_ADDRESS')!, context),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton:
+
+      FloatingActionButton(
         backgroundColor: colors.primary,
         onPressed: () async {
           await Navigator.push(
@@ -214,7 +216,9 @@ class StateAddress extends State<ManageAddress> with TickerProviderStateMixin {
                                       color: colors.primary,
                                       key: _refreshIndicatorKey,
                                       onRefresh: _refresh,
-                                      child: ListView.builder(
+                                      child:
+
+                                      ListView.builder(
                                         physics:
                                             const AlwaysScrollableScrollPhysics(),
                                         itemCount: context
@@ -222,7 +226,9 @@ class StateAddress extends State<ManageAddress> with TickerProviderStateMixin {
                                             .addressList
                                             .length,
                                         itemBuilder: (context, index) {
-                                          return InkWell(
+                                          return
+
+                                            InkWell(
                                             borderRadius: BorderRadius.circular(
                                                 circularBorderRadius4),
                                             onTap: () {
@@ -334,13 +340,17 @@ class StateAddress extends State<ManageAddress> with TickerProviderStateMixin {
                                                     .checkoutState!(() {});
                                               }
                                             },
-                                            child: Padding(
+                                            child:
+
+                                            Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       vertical: 5.0),
                                               child: RadioItem(addModel[index]),
                                             ),
                                           );
+
+
                                         },
                                       ),
                                     ),

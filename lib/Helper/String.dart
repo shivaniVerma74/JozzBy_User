@@ -19,6 +19,7 @@ final Uri getUserLoginApi = Uri.parse('${baseUrl}login');
 final Uri verifyOtp = Uri.parse("${baseUrl}verify_otp");
 final Uri getUserSignUpApi = Uri.parse('${baseUrl}register_user');
 final Uri getVerifyUserApi = Uri.parse('${baseUrl}verify_user');
+final Uri resendUserApi = Uri.parse('${baseUrl}resend_otp');
 final Uri sendOtpApi = Uri.parse('${baseUrl}send_otp');
 final Uri setFavoriteApi = Uri.parse('${baseUrl}add_to_favorites');
 final Uri removeFavApi = Uri.parse('${baseUrl}remove_from_favorites');

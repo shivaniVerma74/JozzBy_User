@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:eshop_multivendor/Provider/UserProvider.dart';
 import 'package:eshop_multivendor/Provider/explore_provider.dart';
 import 'package:eshop_multivendor/Provider/homePageProvider.dart';
@@ -114,9 +115,9 @@ class StateSection extends State<SectionList> with TickerProviderStateMixin {
     _animationController1!.dispose();
     _animationController!.dispose();
     listViewIconController.dispose();
-    for (int i = 0; i < controllerText.length; i++) {
-      controllerText[i].dispose();
-    }
+    // for (int i = 0; i < controllerText.length; i++) {
+    //   controllerText[i].dispose();
+    // }
     super.dispose();
   }
 
@@ -200,6 +201,7 @@ class StateSection extends State<SectionList> with TickerProviderStateMixin {
 
     return Scaffold(
       key: scaffoldKey,
+      backgroundColor: colors.primary1,
       appBar: getAppBar(
         widget.from == 1
             ? widget.section_model!.title!
@@ -893,6 +895,7 @@ class StateSection extends State<SectionList> with TickerProviderStateMixin {
         PSORT: sortBy,
         PORDER: orderBy,
       };
+      print("this is a parameter______>section${parameter}");
       if (CUR_USERID != null) parameter[USER_ID] = CUR_USERID;
       if (selId != null && selId != '') {
         parameter[ATTRIBUTE_VALUE_ID] = selId;
@@ -907,7 +910,6 @@ class StateSection extends State<SectionList> with TickerProviderStateMixin {
         parameter[MAXPRICE] = currentRangeValues!.end.round().toString();
       }
       context.read<ProductListProvider>().setSectionListParameter(parameter);
-
       Future.delayed(Duration.zero).then(
         (value) => context.read<ProductListProvider>().getSectionList().then(
           (
@@ -921,7 +923,7 @@ class StateSection extends State<SectionList> with TickerProviderStateMixin {
               minPrice = value[MINPRICE].toString();
               maxPrice = value[MAXPRICE].toString();
               currentRangeValues =
-                  RangeValues(double.parse(minPrice), double.parse(maxPrice));
+                  RangeValues(double.parse(minPrice ?? '0.0'), double.parse(maxPrice ?? '0.0'));
               offset = widget.section_model!.productList!.length;
               total = int.parse(data[0]['total']);
               if (offset! < total!) {

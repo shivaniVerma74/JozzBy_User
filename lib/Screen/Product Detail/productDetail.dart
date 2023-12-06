@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -138,7 +139,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
+    qty = double.parse(widget.model?.qtyStepSize ?? '0.0') ;
     context.read<ProductDetailProvider>().seeView = false;
     context.read<ProductDetailProvider>().isLoadingmore = true;
     allApiAndFun();
@@ -520,28 +521,39 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
   }
 
   Future<void> createDynamicLink() async {
+
+    Directory? directory ;
+    final status = await Permission.storage.request();
     String documentDirectory;
 
     if (Platform.isIOS) {
       documentDirectory = (await getApplicationDocumentsDirectory()).path;
     } else {
-      documentDirectory = (await getExternalStorageDirectory())!.path;
+      documentDirectory = (await getExternalStorageDirectory())?.path ?? '';
     }
 
-    final response1 = await get(Uri.parse(widget.model!.image!));
+    final response1 = await get(Uri.parse(widget.model?.image ?? ''));
     final bytes1 = response1.bodyBytes;
 
     final File imageFile = File('$documentDirectory/temp.png');
 
+
     imageFile.writeAsBytesSync(bytes1);
+
     shareLink =
     "\n$appName\n${getTranslated(context, 'APPFIND')}$androidLink$packageName\n${getTranslated(context, 'IOSLBL')}\n$iosLink";
+
+    print(shareLink);
+
     Share.shareXFiles(
       [XFile(imageFile.path)],
       text:
-          '${widget.model!.name}\n${shortenedLink!.shortUrl.toString()}\n$shareLink',
+          '${widget.model?.name}\n${shortenedLink?.shortUrl.toString()}\n$shareLink',
       sharePositionOrigin: Rect.largest,
     );
+
+    print('dffffsdfsdf');
+
   }
 
 
@@ -578,7 +590,6 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print('___________${widget.model?.qtyStepSize}__________');
 
     deviceHeight = MediaQuery.of(context).size.height;
     deviceWidth = MediaQuery.of(context).size.width;
@@ -861,9 +872,6 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
 
     if (CUR_USERID != null || CUR_USERID != '') {
       if (from == 1) {
-        print('----------from------${from}');
-        print('----------total length------${totalLen}');
-        print('----------quantity------${context.read<ProductDetailProvider>().qtyChange }');
 
 
         if (int.parse(qty) >= totalLen) {
@@ -1702,7 +1710,6 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
   }
 double qty = 0.0 ;
   _showContent() {
-    print('___________${widget.model?.brandImage}__________');
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -2300,7 +2307,12 @@ double qty = 0.0 ;
                                             ),
                                           ),
                                           onTap: () {
+                                            print('${double.parse(widget.model?.qtyStepSize ?? '0.0')}________qtySize');
+                                            print('${qty}________qty1');
+
                                             qty += double.parse(widget.model?.qtyStepSize ?? '0.0');
+                                            print('${qty}________qty2');
+
                                             setState(() {
 
                                             });
@@ -2679,7 +2691,6 @@ double qty = 0.0 ;
                               //   true,
                               //   widget.model!,
                               // );
-                              print('ddfsfsdffsffdfsd_____________');
 
                               addToCart(
                                 qty == 0.0 ? widget.model?.qtyStepSize ?? '' : qty.toStringAsFixed(0),
@@ -3828,9 +3839,9 @@ double qty = 0.0 ;
                   top: 0,
                   right: 0,
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.transparent,
-                      borderRadius: const BorderRadiusDirectional.only(
+                      borderRadius: BorderRadiusDirectional.only(
                         bottomStart: Radius.circular(circularBorderRadius10),
                         topEnd: Radius.circular(circularBorderRadius5),
                       ),
@@ -4185,23 +4196,23 @@ double qty = 0.0 ;
   Future<void> getShare() async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: deepLinkUrlPrefix,
-      link: Uri.parse(
+      link: Uri.parse(deepLinkUrlPrefix),
+      longDynamicLink: Uri.parse(
           'https://$deepLinkName/?index=${widget.index}&secPos=${widget.secPos}&list=${widget.list}&id=${widget.model!.id}'),
       androidParameters: const AndroidParameters(
         packageName: packageName,
         minimumVersion: 1,
       ),
-      iosParameters: const IOSParameters(
+      /*iosParameters: const IOSParameters(
         bundleId: iosPackage,
         minimumVersion: '1',
         appStoreId: appStoreId,
-      ),
+      ),*/
     );
-
-   print('------share linkkkkkk-----${shortenedLink}');
 
     shortenedLink =
         await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+
 
     Future.delayed(
       Duration.zero,

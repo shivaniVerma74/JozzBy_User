@@ -37,9 +37,11 @@ class ManageAddrProvider extends ChangeNotifier {
       var parameter = {
         USER_ID: CUR_USERID,
       };
+      print('${parameter}_____________');
 
       Map<String, dynamic> result =
           await ManageAddrRepository.fetchAddress(parameter: parameter);
+
       List<User> tempList = [];
 
       (result['addressList'] as List).forEach(
@@ -85,6 +87,8 @@ class ManageAddrProvider extends ChangeNotifier {
         ID: context.read<CartProvider>().addressList[index].id,
         ISDEFAULT: '1',
       };
+
+      print('====================${data}');
 
       Map<String, dynamic> result =
           await ManageAddrRepository.updateAddress(parameter: data);

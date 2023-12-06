@@ -284,7 +284,7 @@ class AddressProvider extends ChangeNotifier {
         MOBILE: mobile,
         PINCODE: pincode,
         CITY_ID: city,
-        AREA:address2,
+        AREA: address2,
         // AREA_ID: area,
         ADDRESS: address,
         STATE: state,
@@ -294,6 +294,8 @@ class AddressProvider extends ChangeNotifier {
         LATITUDE: latitude,
         LONGITUDE: longitude
       };
+
+      print('${parameter}______perameter___');
       if (update!) {
         parameter[ID] = context.read<CartProvider>().addressList[index].id;
       }

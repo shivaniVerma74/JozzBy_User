@@ -97,8 +97,8 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
                 getTranslated(context, 'CHANGE_PASS_LBL')!, 'pro_pass'),
         CUR_USERID == '' || CUR_USERID == null || !refer
             ? Container()
-            : /*_getDrawerItem(
-                getTranslated(context, 'REFEREARN')!, 'pro_referral'),*/
+            : _getDrawerItem(
+                getTranslated(context, 'REFEREARN')!, 'pro_referral'),
         _getDrawerItem(
             getTranslated(context, 'CUSTOMER_SUPPORT')!, 'pro_customersupport'),
         _getDrawerItem(getTranslated(context, 'ABOUT_LBL')!, 'pro_aboutus'),

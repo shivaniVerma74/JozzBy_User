@@ -10,6 +10,9 @@ class ManageAddrRepository {
     required Map<String, dynamic> parameter,
   }) async {
     try {
+
+      print('===============${parameter}===============');
+      print('===============${getAddressApi}===============');
       var addressList =
           await ApiBaseHelper().postAPICall(getAddressApi, parameter);
 
@@ -27,6 +30,9 @@ class ManageAddrRepository {
     required Map<String, dynamic> parameter,
   }) async {
     try {
+      print('===============${parameter}===============');
+      print('===============${updateAddressApi}===============');
+
       var response =
           await ApiBaseHelper().postAPICall(updateAddressApi, parameter);
 

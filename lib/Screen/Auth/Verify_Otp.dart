@@ -136,9 +136,13 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
           btnAnim: buttonSqueezeanimation,
           btnCntrl: buttonController,
           onBtnSelected: () async {
+
             if(widget.isMobile ==true){
+
               verifyuser();
             }else{
+
+
               _onFormSubmitted();
 
             }
@@ -403,6 +407,8 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
      'otp': '${otp}',
      'fcm_id': ''
    });
+
+
    print("otp patramater ${baseUrl}verify_otp ${request.fields}");
    request.headers.addAll(headers);
    http.StreamedResponse response = await request.send();
@@ -416,14 +422,18 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
 
      }else {
        var getdata = finalResult['data'][0];
+
        UserProvider userProvider =
        Provider.of<UserProvider>(context, listen: false);
+
        userProvider.setName(getdata[USERNAME] ?? '');
        userProvider.setEmail(getdata[EMAIL] ?? '');
        userProvider.setProfilePic(getdata[IMAGE] ?? '');
 
        SettingProvider settingProvider =
        Provider.of<SettingProvider>(context, listen: false);
+
+
        settingProvider.saveUserDetail(
          getdata[ID],
          getdata[USERNAME],
@@ -878,6 +888,7 @@ final foucu = FocusNode();
              //checkNetworkOtp();
             },
             child: Text(
+
               getTranslated(context, 'RESEND_OTP')!,
               style: Theme.of(context).textTheme.caption!.copyWith(
                     color: Theme.of(context).colorScheme.primary,
@@ -919,7 +930,7 @@ final foucu = FocusNode();
     isNetworkAvail = await isNetworkAvailable();
     if (isNetworkAvail) {
       Future.delayed(Duration.zero).then(
-            (value) => context.read<AuthenticationProvider>().getVerifyUser().then(
+            (value) => context.read<AuthenticationProvider>().resendOtpUser().then(
               (
               value,
               ) async {
@@ -932,11 +943,14 @@ final foucu = FocusNode();
             Provider.of<SettingProvider>(context, listen: false);
             if (widget.title == getTranslated(context, 'SEND_OTP_TITLE')) {
               if (!error!) {
+
                 setSnackbar(msg!, context);
               } else {
+
                 setSnackbar(msg!, context);
               }
             }
+
             if (widget.title == getTranslated(context, 'FORGOT_PASS_TITLE')) {
               if (error!) {
 

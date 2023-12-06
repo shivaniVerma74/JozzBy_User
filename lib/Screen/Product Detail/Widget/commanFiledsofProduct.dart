@@ -136,9 +136,9 @@ class GetPrice extends StatelessWidget {
               //const Icon(Icons.share),
               off != 0.00
                 ? Text(
-                    '${off.toStringAsFixed(2)}% OFF',
+                    'Margin: ${off.toStringAsFixed(2)}%',
                     style: Theme.of(context).textTheme.overline!.copyWith(
-                          color: colors.primary,
+                          color: Theme.of(context).colorScheme.green,
                           letterSpacing: 0,
                           fontWeight: FontWeight.w400,
                           fontStyle: FontStyle.normal,
@@ -192,7 +192,7 @@ class GetPrice extends StatelessWidget {
             ],
           ),
           Text(
-            'Margin: ${DesignConfiguration.getPriceFormat(context, margin)!} ',
+            'Profit: ${DesignConfiguration.getPriceFormat(context, margin)!} ',
             style: Theme.of(context).textTheme.headline6!.copyWith(
               color: Theme.of(context).colorScheme.green,
               fontWeight: FontWeight.normal,

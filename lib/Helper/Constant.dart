@@ -4,8 +4,8 @@ import 'package:eshop_multivendor/Helper/ApiBaseHelper.dart';
 const String appName = 'Jozzby Bazar';
 
 //Your package name
-const String packageName = 'jozzbyBazar.customer';
-const String iosPackage = 'jozzbyBazar.customer';
+const String packageName = 'jozzbybazaar.customer';
+const String iosPackage = 'jozzbybazaar.customer';
 
 //Playstore link of your application
 const String androidLink = 'https://play.google.com/store/apps/details?id=';
@@ -17,8 +17,8 @@ const String iosLink = 'your ios link here';
 const String appStoreId = '123456789';
 
 //Link for share product (get From Firebase)
-const String deepLinkUrlPrefix = 'https://jozzbybazaar.page.link';
-const String deepLinkName = 'jozzby_bazar_new';
+const String deepLinkUrlPrefix = 'https://jozzby.page.link/product';
+const String deepLinkName = 'jozzby_bazar';
 
 //Set labguage
 String defaultLanguage = 'en';
@@ -76,8 +76,11 @@ ApiBaseHelper apiBaseHelper = ApiBaseHelper();
 
 // for demo panels
 // const String imageUrl = 'https://alphawizzserver.com/jozzby_bazar_new/';
-const String imageUrl = 'https://alphawizzserver.com/jozzby_bazar_new/';
-const String baseUrl = 'https://alphawizzserver.com/jozzby_bazar_new/app/v1/api/';
+// const String imageUrl = 'https://admin.jossbuy.com/';
+//const String imageUrl = 'https://alphawizzserver.com/jozzby_bazar_new/';
+const String imageUrl = 'https://admin.jossbuy.com/';
 // const String baseUrl = 'https://alphawizzserver.com/jozzby_bazar_new/app/v1/api/';
+ const String baseUrl = 'https://admin.jossbuy.com/app/v1/api/';
+//const String baseUrl = 'https://alphawizzserver.com/jozzby_bazar_new/app/v1/api/';
 const String ecomExpressUrl = 'https://clbeta.ecomexpress.in/track_me/api/mawbd/';
 const String jwtKey = 'https://alphawizzserver.com/';

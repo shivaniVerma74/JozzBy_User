@@ -491,6 +491,7 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                       alignment: Alignment.bottomRight,
                       clipBehavior: Clip.none,
                       children: [
+
                         ClipRRect(
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(circularBorderRadius1),
@@ -636,14 +637,16 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                                                   }
                                                 },
                                               ),
+
+
                                               Container(
-                                                width: 37,
-                                                height: 20,
+                                                width: 60,
+                                                 height: 30,
                                                 decoration: BoxDecoration(
                                                   color: colors.white70,
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          circularBorderRadius5),
+                                                          5),
                                                 ),
                                                 child: Stack(
                                                   children: [
@@ -653,27 +656,38 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                                                             String?>>(
                                                       builder: (context, data,
                                                           child) {
-                                                        return TextField(
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          readOnly: true,
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                                  textFontSize12,
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .colorScheme
-                                                                  .fontColor),
-                                                          controller:
-                                                              controllerText[
-                                                                  widget
-                                                                      .index!],
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            border: InputBorder
-                                                                .none,
-                                                          ),
-                                                        );
+                                                        return
+
+                                                          SizedBox(
+                                                            width: 50,
+                                                            child: TextField(
+maxLines: 1,
+                                                            textAlign:
+                                                                TextAlign.center,
+                                                            readOnly: true,
+                                                            style: TextStyle(
+
+
+                                                                fontSize:
+                                                                    textFontSize12,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .fontColor),
+                                                            controller:
+                                                                controllerText[
+                                                                    widget
+                                                                        .index!],
+                                                            decoration:
+                                                                const InputDecoration(
+                                                                   contentPadding: EdgeInsets.only(bottom: 17),
+                                                              border: InputBorder
+                                                                  .none,
+                                                            ),
+                                                        ),
+                                                          );
+
+
                                                       },
                                                       selector: (_, provider) =>
                                                           Tuple2(
@@ -726,6 +740,8 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                                                   ],
                                                 ),
                                               ),
+
+
                                               InkWell(
                                                 child: Card(
                                                   shape: RoundedRectangleBorder(
@@ -874,62 +890,6 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                       top: 5,
                     ),
                     child: Row(
-                      children: [
-                        Text(
-                          'Price: ${DesignConfiguration.getPriceFormat(context, price)!}',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.blue,
-                            fontSize: textFontSize14,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.normal,
-                            fontFamily: 'ubuntu',
-                          ),
-                        ),
-                        /*Expanded(
-                          child: Padding(
-                            padding: const EdgeInsetsDirectional.only(
-                              start: 10.0,
-                              top: 5,
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  double.parse(widget
-                                              .productList![widget.index!]
-                                              .prVarientList![0]
-                                              .disPrice!) !=
-                                          0
-                                      ? '${DesignConfiguration.getPriceFormat(context, double.parse(widget.productList![widget.index!].prVarientList![0].price!))}'
-                                      : '',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .overline!
-                                      .copyWith(
-                                        fontFamily: 'ubuntu',
-                                        decoration: TextDecoration.lineThrough,
-                                        decorationColor: colors.darkColor3,
-                                        decorationStyle:
-                                            TextDecorationStyle.solid,
-                                        decorationThickness: 2,
-                                        letterSpacing: 0,
-                                        fontSize: textFontSize10,
-                                        fontWeight: FontWeight.w400,
-                                        fontStyle: FontStyle.normal,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )*/
-                      ],
-                    ),
-                  ),
-                  Padding(
-                      padding: const EdgeInsetsDirectional.only(
-                        start: 8.0,
-                        top: 5,
-                      ),
-                    child: Row(
                       children: <Widget>[
                         Text(
                           double.parse(widget
@@ -952,13 +912,14 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                             decorationThickness: 2,
                             letterSpacing: 0,
                             fontSize: textFontSize16,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w200,
                             fontStyle: FontStyle.normal,
                           ),
                         ),
                       ],
                     ),
                   ),
+
                   Padding(
                     padding: const EdgeInsetsDirectional.only(
                       start: 8.0,
@@ -967,11 +928,11 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                     child: Row(
                       children: [
                         Text(
-                          'Margin: ${DesignConfiguration.getPriceFormat(context, margin)!}',
+                          'Price: ${DesignConfiguration.getPriceFormat(context, price)!}',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.green,
+                            color: Theme.of(context).colorScheme.blue,
                             fontSize: textFontSize14,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w200,
                             fontStyle: FontStyle.normal,
                             fontFamily: 'ubuntu',
                           ),
@@ -1015,6 +976,125 @@ class _GridViewProductListWidgetState extends State<GridViewProductListWidget> {
                       ],
                     ),
                   ),
+
+
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 8.0,
+                      top: 5,
+                    ),
+                    child: Row(
+                      children: [
+
+                        Text(
+                          'Margin: ${off.toStringAsFixed(2)}%',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.green,
+                            fontSize: textFontSize14,
+                            fontWeight: FontWeight.w200,
+                            fontStyle: FontStyle.normal,
+                            fontFamily: 'ubuntu',
+                          ),
+                        ),
+                        /*Expanded(
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.only(
+                              start: 10.0,
+                              top: 5,
+                            ),
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  double.parse(widget
+                                              .productList![widget.index!]
+                                              .prVarientList![0]
+                                              .disPrice!) !=
+                                          0
+                                      ? '${DesignConfiguration.getPriceFormat(context, double.parse(widget.productList![widget.index!].prVarientList![0].price!))}'
+                                      : '',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .overline!
+                                      .copyWith(
+                                        fontFamily: 'ubuntu',
+                                        decoration: TextDecoration.lineThrough,
+                                        decorationColor: colors.darkColor3,
+                                        decorationStyle:
+                                            TextDecorationStyle.solid,
+                                        decorationThickness: 2,
+                                        letterSpacing: 0,
+                                        fontSize: textFontSize10,
+                                        fontWeight: FontWeight.w400,
+                                        fontStyle: FontStyle.normal,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )*/
+                      ],
+                    ),
+                  ),
+
+
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 8.0,
+                      top: 5,
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Profit: ${DesignConfiguration.getPriceFormat(context, margin)!}',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.green,
+                            fontSize: textFontSize14,
+                            fontWeight: FontWeight.w200,
+                            fontStyle: FontStyle.normal,
+                            fontFamily: 'ubuntu',
+                          ),
+                        ),
+                        /*Expanded(
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.only(
+                              start: 10.0,
+                              top: 5,
+                            ),
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  double.parse(widget
+                                              .productList![widget.index!]
+                                              .prVarientList![0]
+                                              .disPrice!) !=
+                                          0
+                                      ? '${DesignConfiguration.getPriceFormat(context, double.parse(widget.productList![widget.index!].prVarientList![0].price!))}'
+                                      : '',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .overline!
+                                      .copyWith(
+                                        fontFamily: 'ubuntu',
+                                        decoration: TextDecoration.lineThrough,
+                                        decorationColor: colors.darkColor3,
+                                        decorationStyle:
+                                            TextDecorationStyle.solid,
+                                        decorationThickness: 2,
+                                        letterSpacing: 0,
+                                        fontSize: textFontSize10,
+                                        fontWeight: FontWeight.w400,
+                                        fontStyle: FontStyle.normal,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )*/
+                      ],
+                    ),
+                  ),
+
+
                   Padding(
                     padding: const EdgeInsetsDirectional.only(
                         start: 10.0, top: 10, bottom: 5),

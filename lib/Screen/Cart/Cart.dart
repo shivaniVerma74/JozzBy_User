@@ -1059,7 +1059,9 @@ bool notForCheckout = false ;
         : context.read<CartProvider>().cartList.isEmpty &&
                 context.read<CartProvider>().saveLaterList.isEmpty
             ? const EmptyCart()
-            : Container(
+            :
+
+    Container(
               color: colors.primary1,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -1389,6 +1391,7 @@ bool notForCheckout = false ;
                   ],
                 ),
               );
+
   }
 
   checkout() {
@@ -1705,7 +1708,7 @@ bool notForCheckout = false ;
                                                           .read<CartProvider>()
                                                           .checkoutState!(
                                                         () {
-                                                          _placeOrder = true;
+                                                          _placeOrder = false;
                                                         },
                                                       );
                                                     }

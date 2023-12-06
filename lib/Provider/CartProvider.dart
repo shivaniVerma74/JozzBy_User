@@ -109,7 +109,6 @@ class CartProvider extends ChangeNotifier {
   get cartIdList => _cartList.map((fav) => fav.varientId).toList();
 
   String? qtyList(String id, String vId) {
-    print('______ssss1111111${qtyList}_____${cartList}______${id}_${vId}___');
     SectionModel? tempId =
         _cartList.firstWhereOrNull((cp) => cp.id == id && cp.varientId == vId);
    notifyListeners();
@@ -176,7 +175,6 @@ class CartProvider extends ChangeNotifier {
           if (!value['error']) {
             deliveryChargeList = value['deliveryCharge'];
 
-            print('___________${value['deliveryCharge']}__________');
 
 
           }
@@ -400,7 +398,6 @@ class CartProvider extends ChangeNotifier {
           if (!error) {
 
             var data = result['data'];
-            log('___________${data}__________');
             String qty = data['total_quantity'];
             context.read<UserProvider>().setCartCount(data['cart_count']);
             if (move == false) {
@@ -478,7 +475,6 @@ class CartProvider extends ChangeNotifier {
                 update();
               }
             } else {
-              print('___________else__________');
               if (qty == '0') remove = true;
 
               if (remove) {
@@ -660,7 +656,6 @@ class CartProvider extends ChangeNotifier {
              getDeliveryCharge();
 
             if(deliveryChargeList.isNotEmpty) {
-              print('___________${deliveryChargeList.length}__________');
               if (oriPrice <
                   double.parse(deliveryChargeList.first.maximum ?? '0.0')) {
                 deliveryCharge = double.parse(
@@ -870,21 +865,17 @@ class CartProvider extends ChangeNotifier {
         if (!error) {
           var data = result['data'];
 
-          log('_______log____${data}__________');
 
           String qty = data['total_quantity'];
 
-          print('______qty_____${qty}__________');
 
           context.read<UserProvider>().setCartCount(data['cart_count']);
           cartList[index].qty = qty;
           oriPrice = double.parse(data['sub_total']);
 
           controller[index].text = qty;
-          print('___________${controller[index].text}____fdfsdf______');
           totalPrice = 0;
 
-          print('___________${result['cart']}____fdfsdf______');
 
           var cart = result['cart'];
           List<SectionModel> uptcartList = (cart as List)

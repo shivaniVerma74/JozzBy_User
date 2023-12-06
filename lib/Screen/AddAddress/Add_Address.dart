@@ -48,7 +48,8 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       countryC,
       address2C,
       altMobC;
-  int? selectedType = 1;
+   int? selectedType = 1;
+
   Animation? buttonSqueezeanimation;
   FocusNode? nameFocus,
       monoFocus,
@@ -125,16 +126,38 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       print('_____city______${item.city}______${item.cityId}____');
       //address2C?.text = item.area ?? '';
       pincodeC?.text = item.pincode ?? '';
+print('=rajneesh============${context.read<AddressProvider>().type!}');
+print('=rajneesh============${item.type!}');
 
-      if (context.read<AddressProvider>().type!.toLowerCase() ==
+      if (item.type!.toLowerCase() ==
           HOME.toLowerCase()) {
-        selectedType = 1;
-      } else if (context.read<AddressProvider>().type!.toLowerCase() ==
+        setState(() {
+          print('=====1');
+          selectedType = 1;
+        });
+      } else if (item.type!.toLowerCase() ==
           OFFICE.toLowerCase()) {
-        selectedType = 2;
+        setState(() {
+          print('=====2');
+
+          selectedType = 2;
+        });
       } else {
-        selectedType = 3;
+        setState(() {
+          print('=====3');
+
+          selectedType = 3;
+        });
       }
+      // if (context.read<AddressProvider>().type!.toLowerCase() ==
+      //     HOME.toLowerCase()) {
+      //   selectedType = 1;
+      // } else if (context.read<AddressProvider>().type!.toLowerCase() ==
+      //     OFFICE.toLowerCase()) {
+      //   selectedType = 2;
+      // } else {
+      //   selectedType = 3;
+      // }
 
       context.read<AddressProvider>().checkedDefault =
           item.isDefault == '1' ? true : false;
@@ -374,11 +397,14 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
             horizontal: 10.0,
           ),
           child: TextFormField(
+            maxLength: 10,
+
             keyboardType: TextInputType.number,
             controller: mobileC,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             textInputAction: TextInputAction.next,
             focusNode: monoFocus,
+
             style: Theme.of(context)
                 .textTheme
                 .subtitle2!
@@ -394,6 +420,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
               _fieldFocusChange(context, monoFocus!, almonoFocus);
             },
             decoration: InputDecoration(
+              counterText: '',
               label: Text(
                 getTranslated(context, 'MOBILEHINT_LBL')!,
                 style: const TextStyle(
@@ -1331,10 +1358,11 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
             onChanged: (value){
 
                   context.read<AddressProvider>().address2 = value;
+                  print('${context.read<AddressProvider>().address2}__________');
 
             },
             onSaved: (String? value) {
-            //  context.read<AddressProvider>().address2= value;
+              context.read<AddressProvider>().address2= value;
             },
             validator: (val) => StringValidation.validateField(
               val!,
@@ -1475,12 +1503,11 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                           countryC?.text = placemark[0].locality ?? '' ;
                           //cityC?.text =  placemark[0].locality ?? "" ;
                           pincodeC?.text = placemark[0].postalCode ?? '';
+                          cityC?.text = placemark[0].locality ?? '';
                           context.read<AddressProvider>().state =
                               placemark[0].administrativeArea;
                           context.read<AddressProvider>().country =
                               placemark[0].country;
-
-
                           if (mounted) {
                             setState(
                               () {
@@ -1657,6 +1684,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       ),
     );
   }
+
   selectState() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -1702,6 +1730,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       ),
     );
   }
+
   selectCity() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -1747,6 +1776,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
       ),
     );
   }
+
   setCountry() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -1841,6 +1871,7 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                         setState(
                           () {
                             selectedType = val;
+                            print('======${selectedType}');
                             context.read<AddressProvider>().type = HOME;
                           },
                         );
@@ -1862,6 +1893,8 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                   setState(
                     () {
                       selectedType = 1;
+                      print('======${selectedType}');
+
                       context.read<AddressProvider>().type = HOME;
                     },
                   );
@@ -1884,6 +1917,8 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                         setState(
                           () {
                             selectedType = val;
+                            print('======${selectedType}');
+
                             context.read<AddressProvider>().type = OFFICE;
                           },
                         );
@@ -1905,6 +1940,8 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                   setState(
                     () {
                       selectedType = 2;
+                      print('======${selectedType}');
+
                       context.read<AddressProvider>().type = OFFICE;
                     },
                   );
@@ -1927,6 +1964,8 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                         setState(
                           () {
                             selectedType = val;
+                            print('======${selectedType}');
+
                             context.read<AddressProvider>().type = OTHER;
                           },
                         );
@@ -1948,6 +1987,8 @@ class StateAddress extends State<AddAddress> with TickerProviderStateMixin {
                   setState(
                     () {
                       selectedType = 3;
+                      print('======${selectedType}');
+
                       context.read<AddressProvider>().type = OTHER;
                     },
                   );

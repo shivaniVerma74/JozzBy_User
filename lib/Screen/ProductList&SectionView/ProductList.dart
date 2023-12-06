@@ -213,7 +213,11 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
               setStateNow,
             ),
       key: _scaffoldKey,
-      body: isNetworkAvail
+      body:
+
+
+
+      isNetworkAvail
           ? Stack(
               children: <Widget>[
                 _showForm(),
@@ -223,7 +227,8 @@ class StateProduct extends State<ProductList> with TickerProviderStateMixin {
                 ),
               ],
             )
-          : NoInterNet(
+          :
+      NoInterNet(
               setStateNoInternate: setStateNoInternate,
               buttonSqueezeanimation: buttonSqueezeanimation,
               buttonController: buttonController,

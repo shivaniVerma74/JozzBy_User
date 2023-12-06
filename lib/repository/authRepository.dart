@@ -9,6 +9,9 @@ class AuthRepository {
     required Map<String, dynamic> parameter,
   }) async {
     try {
+
+      print('=============${parameter}==============');
+      print('=============${getUserLoginApi}==============');
       var loginDetail =
           await ApiBaseHelper().postAPICall(getUserLoginApi, parameter);
 
@@ -31,10 +34,14 @@ class AuthRepository {
       throw ApiException('$errorMesaage${e.toString()}');
     }
   }
+
   static Future<Map<String, dynamic>> fetchverificationData({
     required Map<String, dynamic> parameter,
   }) async {
     try {
+
+      print('=========================${parameter}===================');
+      print('=========================${getVerifyUserApi}===================');
       var loginDetail =
           await ApiBaseHelper().postAPICall(getVerifyUserApi, parameter);
 
@@ -43,6 +50,26 @@ class AuthRepository {
       throw ApiException('$errorMesaage${e.toString()}');
     }
   }
+
+
+  //resendotp
+
+  static Future<Map<String, dynamic>> resendfetchverificationData({
+    required Map<String, dynamic> parameter,
+  }) async {
+    try {
+
+      print('=========================${parameter}===================');
+      print('=========================${resendUserApi}===================');
+      var loginDetail =
+      await ApiBaseHelper().postAPICall(resendUserApi, parameter);
+
+      return loginDetail;
+    } on Exception catch (e) {
+      throw ApiException('$errorMesaage${e.toString()}');
+    }
+  }
+
 
   static Future<Map<String, dynamic>> fetchOtpData({
     required Map<String, dynamic> parameter,

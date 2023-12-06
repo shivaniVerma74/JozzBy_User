@@ -134,6 +134,21 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
+
+  Future<Map<String, dynamic>> resendOtpUser() async {
+    try {
+      var parameter = {
+        MOBILE: mobilennumberPara,
+      };
+      var result =
+      await AuthRepository.resendfetchverificationData(parameter: parameter);
+      return result;
+    } catch (e) {
+      errorMessage = e.toString();
+      return {};
+    }
+  }
+
   Future<Map<String, dynamic>> senOtp() async {
     try {
       var parameter = {
@@ -169,6 +184,8 @@ class AuthenticationProvider extends ChangeNotifier {
         GSTKEY: gst ?? ''
       });
 
+      print('=============${request.fields}');
+      print('=============${request.url}');
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();

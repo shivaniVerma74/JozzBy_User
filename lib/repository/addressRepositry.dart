@@ -47,6 +47,9 @@ class AddressRepository {
     required bool update,
   }) async {
     try {
+
+      print('===============${parameter}===============');
+      print('===============${getAddAddressApi}===============');
       var result = await ApiBaseHelper().postAPICall(
         update ? updateAddressApi : getAddAddressApi,
         parameter,

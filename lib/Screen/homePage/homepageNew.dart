@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage>
                             CustomSlider(),
                             InkWell(
                             onTap: (){
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BrandList()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>const BrandList()));
                             },
                             child: Image.asset('assets/images/png/app products_1.gif')),
 
@@ -213,8 +213,6 @@ class _HomePageState extends State<HomePage>
                               color:Colors.grey,
                             ),*/
                             //getImagesModel2?.data?.isEmpty ?? true ? SizedBox() :  imageCard2(),
-
-
                             /*Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
@@ -407,9 +405,9 @@ class _HomePageState extends State<HomePage>
                 ),
                 child: const Center(child: Text('The brand List',style: TextStyle(fontWeight: FontWeight.bold,fontSize:20),)),
               ),
-              SizedBox(height: 10,),
-              Text('For Brands this is botton to redirect list',style: TextStyle(fontWeight: FontWeight.bold)),
-              SizedBox(height: 10,),
+              const SizedBox(height: 10,),
+              const Text('For Brands this is botton to redirect list',style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10,),
               InkWell(
                 onTap: () {
                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BrandList()));
@@ -428,12 +426,7 @@ class _HomePageState extends State<HomePage>
         ),
       ),
     );
-
-
-
   }
-
-
 
   imageCard(){
     return SizedBox(

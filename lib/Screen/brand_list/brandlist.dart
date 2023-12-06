@@ -21,6 +21,7 @@ class BrandList extends StatefulWidget {
 class _BrandListState extends State<BrandList> {
   String? brandId,brandName, brandImage;
   GetBrandsModel? getBrandsModel;
+
   getBrandApi() async {
     var headers = {
       'Cookie': 'ci_session=b458202437d40c57fd9d5ea22c70e00ddc4d2723'
@@ -57,78 +58,91 @@ class _BrandListState extends State<BrandList> {
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: colors.primary1,
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor:colors.whiteTemp,
-        title: Text('All Brand List',style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold),),
-        leading: InkWell(
-            onTap: () {
-              // Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard()));
-            },
-            child: Icon(Icons.arrow_back,color: colors.blackTemp,)),
-      ),
-      body: GridView.builder(
-        gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount:2,
-          childAspectRatio:1,
-            crossAxisSpacing:0,
-          mainAxisSpacing:5,
+    return WillPopScope(
+      onWillPop: onWillPopScope,
+      child: Scaffold(
+        backgroundColor: colors.primary1,
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor:colors.whiteTemp,
+          title: const Text('All Brand List',style: TextStyle(color: colors.blackTemp,fontWeight: FontWeight.bold),),
+          leading: InkWell(
+              onTap: () {
+
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const Dashboard()));
+              },
+              child: const Icon(Icons.arrow_back,color: colors.blackTemp,)),
         ),
-        itemCount: getBrandsModel?.data?.length,
-        itemBuilder: (context, index) {
-            return    Padding(
-              padding: const EdgeInsets.only(left: 10.0,right:10,top:20),
-              child: InkWell(
-                onTap: () async {
+        body:getBrandsModel == null ? const Center(child: CircularProgressIndicator(),) : GridView.builder(
+          gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount:2,
+            childAspectRatio:1,
+              crossAxisSpacing:0,
+            mainAxisSpacing:5,
+          ),
+          itemCount: getBrandsModel?.data?.length,
+          itemBuilder: (context, index) {
+              return    Padding(
+                padding: const EdgeInsets.only(left: 10.0,right:10,top:20),
+                child: InkWell(
+                  onTap: () async {
 
-                  setState(() {
-                    brandId =   getBrandsModel!.data![index].id;
-                    brandName = getBrandsModel?.data?[index].name;
-                    brandImage = getBrandsModel?.data?[index].image;
-                  });
-                  SharedPreferences pref = await SharedPreferences.getInstance();
-                  pref.setString('brand_name', brandName!);
-                  print('brandName------kkkk------------${getBrandsModel!.data![index].name}__________');
+                    setState(() {
+                      brandId =   getBrandsModel!.data![index].id;
+                      brandName = getBrandsModel?.data?[index].name;
+                      brandImage = getBrandsModel?.data?[index].image;
+                    });
+                    SharedPreferences pref = await SharedPreferences.getInstance();
+                    pref.setString('brand_name', brandName!);
+                    print('brandName------kkkk------------${getBrandsModel!.data![index].name}__________');
 
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => ProductList(getBrand: true, brandId: brandId,brandName: brandName,),
-                    ),
-                  );
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => ProductList(getBrand: true, brandId: brandId,brandName: brandName,),
+                      ),
+                    );
 
-                },
-                child: Container(
-                    decoration: BoxDecoration(
-                        color:Color(0xffEFEFEF),
-                        borderRadius: BorderRadius.circular(10)
-                    ),
-                    width: 140,
-                    height: 155,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                            height: 110,
-                            width: double.infinity,
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
-                                child:getBrandsModel?.data?[index].image==null||getBrandsModel?.data?[index].image==""?Image.asset('assets/images/png/placeholder.png'): Image.network("$imageUrl${getBrandsModel?.data?[index].image}",fit: BoxFit.fill,))),
-                        const SizedBox(height:10,),
-                        Container(
-                            width: 90,
-                            child: Center(child: Text("${getBrandsModel?.data?[index].name}",overflow: TextOverflow.ellipsis,maxLines: 2,textAlign: TextAlign.center,style:TextStyle(fontWeight: FontWeight.bold),))),
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                          color:Color(0xffEFEFEF),
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      width: 140,
+                      height: 155,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                              height: 110,
+                              width: double.infinity,
+                              child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
+                                  child:getBrandsModel?.data?[index].image==null||getBrandsModel?.data?[index].image==""?Image.asset('assets/images/png/placeholder.png'): Image.network("$imageUrl${getBrandsModel?.data?[index].image}",fit: BoxFit.fill,))),
+                          const SizedBox(height:10,),
+                          SizedBox(
+                              width: 90,
+                              child: Center(child: Text("${getBrandsModel?.data?[index].name}",overflow: TextOverflow.ellipsis,maxLines: 2,textAlign: TextAlign.center,style:TextStyle(fontWeight: FontWeight.bold),))),
 
-                      ],
-                    )
+                        ],
+                      )
+                  ),
                 ),
-              ),
-            );
-          },),
+              );
+            },),
+      ),
     );
+  }
+
+
+  Future<bool> onWillPopScope() {
+
+
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const Dashboard()));
+
+
+    return Future.value(true);
   }
 }

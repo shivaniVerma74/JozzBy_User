@@ -106,7 +106,9 @@ class _AllCategoryState extends State<AllCategory>
             10,
             0,
           ),
-          child: GestureDetector(
+          child:
+
+          GestureDetector(
             child: SizedBox(
               height: 50,
               child: Padding(
@@ -237,7 +239,12 @@ class _AllCategoryState extends State<AllCategory>
                                           .popularList
                                           .isNotEmpty)) {
                                     return GestureDetector(
-                                      child: Container(
+
+
+                                      child:
+
+
+                                      Container(
                                         height: 60,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.rectangle,
@@ -309,7 +316,9 @@ class _AllCategoryState extends State<AllCategory>
                                       },
                                     );
                                   } else {
-                                    return GestureDetector(
+                                    return
+
+                                      GestureDetector(
                                       child: Container(
                                         height: 60,
                                         decoration: BoxDecoration(
@@ -429,6 +438,8 @@ class _AllCategoryState extends State<AllCategory>
                                         }
                                       },
                                     );
+
+
                                   }
                                 },
                                 selector: (_, cat) => cat.curCat,
@@ -506,7 +517,9 @@ class _AllCategoryState extends State<AllCategory>
                                                 children: List.generate(
                                                   data.length,
                                                   (index) {
-                                                    return GestureDetector(
+                                                    return
+
+                                                      GestureDetector(
                                                       child: Stack(
                                                         children: [
                                                           Padding(
@@ -589,6 +602,7 @@ class _AllCategoryState extends State<AllCategory>
                                                                       index]
                                                                   .subList!
                                                                   .isEmpty) {
+
                                                             Navigator.push(
                                                               context,
                                                               CupertinoPageRoute(
@@ -679,6 +693,8 @@ class _AllCategoryState extends State<AllCategory>
                                                         }
                                                       },
                                                     );
+
+
                                                   },
                                                 ),
                                               ),

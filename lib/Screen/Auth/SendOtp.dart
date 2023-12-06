@@ -52,7 +52,7 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
       await buttonController!.forward();
     } on TickerCanceled {}
   }
-
+  int? receivedOTP;
   Future<void> checkNetwork() async {
     isNetworkAvail = await isNetworkAvailable();
     if (isNetworkAvail) {
@@ -63,13 +63,20 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
           ) async {
             bool? error = value['error'];
             String? msg = value['message'];
-            int? receivedOTP = value['data'];
-            print('____receivedOTP_______${receivedOTP}__________');
+            if(value['data']!="") {
+              receivedOTP = value['data'];
+              print('____receivedOTP_______${receivedOTP}__________');
+
+            }
+
             await buttonController!.reverse();
             SettingProvider settingsProvider =
                 Provider.of<SettingProvider>(context, listen: false);
             if (widget.title == getTranslated(context, 'SEND_OTP_TITLE')) {
+              print('1');
               if (!error!) {
+                print('2');
+
                 setSnackbar(msg!, context);
                 Future.delayed(const Duration(seconds: 1)).then(
                   (_) {
@@ -87,6 +94,7 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
                   },
                 );
               } else {
+                print('3');
                 setSnackbar(msg!, context);
               }
             }

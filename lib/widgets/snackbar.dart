@@ -16,6 +16,7 @@ setSnackbar(String msg, BuildContext context) {
       ),
       backgroundColor: Theme.of(context).colorScheme.white,
       elevation: 1.0,
+      duration: const Duration(milliseconds: 1000),
     ),
   );
 }

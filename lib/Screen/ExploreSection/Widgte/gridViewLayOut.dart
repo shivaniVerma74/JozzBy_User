@@ -167,7 +167,7 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
                       style: Theme.of(context).textTheme.caption!.copyWith(
                             color: Theme.of(context).colorScheme.lightBlack,
                             fontSize: textFontSize16,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w200,
                             fontFamily: 'ubuntu',
                             fontStyle: FontStyle.normal,
                           ),
@@ -183,54 +183,26 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              'Price: ${DesignConfiguration.getPriceFormat(context, price)!}',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.blue,
-                                fontSize: textFontSize14,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.normal,
-                                fontFamily: 'ubuntu',
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 5,),
-                        Text(
-                          'Margin: ${DesignConfiguration.getPriceFormat(context, margin)!}',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.green,
-                            fontSize: textFontSize14,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.normal,
-                            fontFamily: 'ubuntu',
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  double.parse(context
-                              .read<ExploreProvider>()
-                              .productList[index]
-                              .prVarientList![0]
-                              .disPrice!) !=
-                          0
-                      ? Padding(
+                        double.parse(context
+                            .read<ExploreProvider>()
+                            .productList[index]
+                            .prVarientList![0]
+                            .disPrice!) !=
+                            0
+                            ? Padding(
                           padding: const EdgeInsetsDirectional.only(
-                            start: 10.0,
+                            start: 0.0,
                             top: 5,
                           ),
                           child: Row(
                             children: <Widget>[
                               Text(
                                 double.parse(context
-                                            .read<ExploreProvider>()
-                                            .productList[index]
-                                            .prVarientList![0]
-                                            .disPrice!) !=
-                                        0
+                                    .read<ExploreProvider>()
+                                    .productList[index]
+                                    .prVarientList![0]
+                                    .disPrice!) !=
+                                    0
                                     ? 'MRP: ${DesignConfiguration.getPriceFormat(context, double.parse(context.read<ExploreProvider>().productList[index].prVarientList![0].price!))}'
                                     : '',
                                 style: Theme.of(context)
@@ -238,19 +210,19 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
                                     .overline!
                                     .copyWith(
                                   color: colors.darkColor3,
-                                      fontFamily: 'ubuntu',
-                                      decoration: TextDecoration.lineThrough,
-                                      decorationColor: colors.darkColor3,
-                                      decorationStyle:
-                                          TextDecorationStyle.solid,
-                                      decorationThickness: 2,
-                                      letterSpacing: 0,
-                                      fontSize: textFontSize16,
-                                      fontWeight: FontWeight.w400,
-                                      fontStyle: FontStyle.normal,
-                                    ),
+                                  fontFamily: 'ubuntu',
+                                  decoration: TextDecoration.lineThrough,
+                                  decorationColor: colors.darkColor3,
+                                  decorationStyle:
+                                  TextDecorationStyle.solid,
+                                  decorationThickness: 2,
+                                  letterSpacing: 0,
+                                  fontSize: textFontSize16,
+                                  fontWeight: FontWeight.w200,
+                                  fontStyle: FontStyle.normal,
+                                ),
                               ),
-                              Flexible(
+                              /*Flexible(
                                 child: Text(
                                   '   ${double.parse(offPer!).round().toStringAsFixed(2)}%',
                                   maxLines: 1,
@@ -259,19 +231,83 @@ class _GridViewLayOutState extends State<GridViewLayOut> {
                                       .textTheme
                                       .overline!
                                       .copyWith(
-                                        fontFamily: 'ubuntu',
-                                        color: colors.primary,
-                                        letterSpacing: 0,
-                                        fontSize: textFontSize10,
-                                        fontWeight: FontWeight.w400,
-                                        fontStyle: FontStyle.normal,
-                                      ),
+                                    fontFamily: 'ubuntu',
+                                    color: colors.primary,
+                                    letterSpacing: 0,
+                                    fontSize: textFontSize10,
+                                    fontWeight: FontWeight.w400,
+                                    fontStyle: FontStyle.normal,
+                                  ),
                                 ),
-                              ),
+                              ),*/
                             ],
                           ),
                         )
-                      : Container(),
+                            : Container(),
+                        Row(
+                          children: [
+
+                            Text(
+                              'Price: ${DesignConfiguration.getPriceFormat(context, price)!}',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.blue,
+                                fontSize: textFontSize14,
+                                fontWeight: FontWeight.w200,
+                                fontStyle: FontStyle.normal,
+                                fontFamily: 'ubuntu',
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5,),
+
+                        Row(
+                          children: [
+                            Text(
+                              'Margin:',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.green,
+                                fontSize: textFontSize14,
+                                fontWeight: FontWeight.w200,
+                                fontStyle: FontStyle.normal,
+                                fontFamily: 'ubuntu',
+                              ),
+                            ),
+                            Flexible(
+                              child: Text(
+                                '   ${double.parse(offPer!).round().toStringAsFixed(2)}%',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .overline!
+                                    .copyWith(
+                                  fontFamily: 'ubuntu',
+                                  color: Theme.of(context).colorScheme.green,
+                                  letterSpacing: 0,
+                                  fontSize: textFontSize14,
+                                  fontWeight: FontWeight.w200,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5,),
+                        Text(
+                          'Profit: ${DesignConfiguration.getPriceFormat(context, margin)!}',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.green,
+                            fontSize: textFontSize14,
+                            fontWeight: FontWeight.w200,
+                            fontStyle: FontStyle.normal,
+                            fontFamily: 'ubuntu',
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+
                   Padding(
                     padding: const EdgeInsetsDirectional.only(
                       start: 10.0,

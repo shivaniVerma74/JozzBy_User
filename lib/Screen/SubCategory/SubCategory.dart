@@ -18,7 +18,9 @@ class SubCategory extends StatelessWidget {
     return Scaffold(
       backgroundColor:colors.primary1,
       appBar: getAppBar(title, context, setStateNow),
-      body: GridView.count(
+      body:
+
+      GridView.count(
         padding: const EdgeInsets.all(20),
         crossAxisCount: 3,
         shrinkWrap: true,
@@ -68,6 +70,9 @@ class SubCategory extends StatelessWidget {
       onTap: () {
         if (subList![index].subList == null ||
             subList![index].subList!.isEmpty) {
+
+          print('11');
+
           Navigator.push(
             context,
             CupertinoPageRoute(
@@ -80,6 +85,7 @@ class SubCategory extends StatelessWidget {
             ),
           );
         } else {
+          print('12');
           Navigator.push(
             context,
             CupertinoPageRoute(
