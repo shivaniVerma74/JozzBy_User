@@ -48,6 +48,7 @@ class _ChangePasswordBottomSheetState extends State<ChangePasswordBottomSheet> {
               oldPassword: passwordController.text,
               username: '',
               userEmail: '',
+              shopname: ''
             )
             .then(
           (value) {
@@ -62,7 +63,6 @@ class _ChangePasswordBottomSheetState extends State<ChangePasswordBottomSheet> {
         passwordController.clear();
         newPasswordTextController.clear();
         confirmPasswordTextController.clear();
-
         Routes.pop(context);
       }
       return true;

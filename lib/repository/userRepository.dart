@@ -97,7 +97,7 @@ class UserRepository {
 
   //This method is used to update user profile
   static Future<Map<String, dynamic>> updateUser(
-      {required String userID, oldPwd, newPwd, username, userEmail}) async {
+      {required String userID, oldPwd, newPwd, username, userEmail, shopname}) async {
     try {
       var data = {USER_ID: userID};
       if ((oldPwd != '') && (newPwd != '')) {

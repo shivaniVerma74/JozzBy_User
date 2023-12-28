@@ -227,7 +227,6 @@ class _HomePageState extends State<HomePage>
                               thickness: 1,
                               color:Colors.grey,
                             ),
-
                             const MostLikeSection(),
                             const SizedBox(height: 10,),
                             getImagesModel3?.data?.isEmpty ?? true ? const SizedBox() :  imageCard3(),

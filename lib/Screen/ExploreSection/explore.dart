@@ -625,6 +625,7 @@ class _SearchState extends State<Explore> with TickerProviderStateMixin {
           ORDER: orderBy,
           TOP_RETAED: showTopRated,
         };
+        print("parararraarar ${parameter}");
         if (selId != '') {
           parameter[ATTRIBUTE_VALUE_ID] = selId;
         }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:eshop_multivendor/Provider/SettingProvider.dart';
 import 'package:eshop_multivendor/Screen/PrivacyPolicy/Privacy_Policy.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 import '../../Helper/Color.dart';
 import '../../Helper/Constant.dart';
 import '../../Helper/String.dart';
+import '../../Provider/UserProvider.dart';
 import '../../Provider/authenticationProvider.dart';
 import '../../widgets/ButtonDesing.dart';
 import '../../widgets/desing.dart';
@@ -19,6 +21,7 @@ import '../../widgets/systemChromeSettings.dart';
 import '../Language/languageSettings.dart';
 import '../../widgets/networkAvailablity.dart';
 import '../../widgets/validation.dart';
+import 'package:http/http.dart' as http;
 import '../NoInterNetWidget/NoInterNet.dart';
 
 class SendOtp extends StatefulWidget {
@@ -52,79 +55,153 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
       await buttonController!.forward();
     } on TickerCanceled {}
   }
+
+
+  forgetPass() async {
+    print("wokingg");
+    var headers = {
+      'Cookie': 'ci_session=03c6f9fffd7b185ae5fde3db348e854c047843c4'
+    };
+    var request = http.MultipartRequest('POST', Uri.parse('https://admin.jossbuy.com/app/v1/api/verify_user_forgot'));
+    request.fields.addAll({
+      'mobile': mobileController.text
+    });
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var finalResponse = await response.stream.bytesToString();
+      final jsonresponse = json.decode(finalResponse);
+      print('responsees ${jsonresponse} ${finalResponse}');
+      int? receivedOTP =  jsonresponse['data'];
+      print('optttt $receivedOTP');
+      Future.delayed(const Duration(seconds: 1)).then(
+            (_) {Navigator.pushReplacement(context, CupertinoPageRoute(
+            builder: (context) => VerifyOtp(
+              mobileNumber: mobileController.text,
+              // countryCode: countrycode,
+              responseOtp: receivedOTP.toString(),
+              title: getTranslated(context, 'FORGOT_PASS_TITLE'),
+            ),
+          ),
+          );
+        },
+      );
+      setSnackbar(jsonresponse['message'], context);
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+  }
+
   int? receivedOTP;
   Future<void> checkNetwork() async {
     isNetworkAvail = await isNetworkAvailable();
     if (isNetworkAvail) {
-      Future.delayed(Duration.zero).then(
-        (value) => context.read<AuthenticationProvider>().getVerifyUser().then(
-          (
-            value,
-          ) async {
-            bool? error = value['error'];
-            String? msg = value['message'];
-            if(value['data']!="") {
-              receivedOTP = value['data'];
-              print('____receivedOTP_______${receivedOTP}__________');
-
-            }
-
-            await buttonController!.reverse();
-            SettingProvider settingsProvider =
-                Provider.of<SettingProvider>(context, listen: false);
-            if (widget.title == getTranslated(context, 'SEND_OTP_TITLE')) {
-              print('1');
-              if (!error!) {
-                print('2');
-
-                setSnackbar(msg!, context);
-                Future.delayed(const Duration(seconds: 1)).then(
-                  (_) {
-                    Navigator.pushReplacement(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => VerifyOtp(
-                          mobileNumber: mobile!,
-                          countryCode: countrycode,
-                          responseOtp: receivedOTP.toString(),
-                          title: getTranslated(context, 'SEND_OTP_TITLE'),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              } else {
-                print('3');
-                setSnackbar(msg!, context);
+      if (widget.title == getTranslated(context, 'FORGOT_PASS_TITLE')){
+        var headers = {
+          'Cookie': 'ci_session=03c6f9fffd7b185ae5fde3db348e854c047843c4'
+        };
+        var request = http.MultipartRequest('POST', Uri.parse('https://admin.jossbuy.com/app/v1/api/verify_user_forgot'));
+        request.fields.addAll({
+          'mobile': mobileController.text
+        });
+        request.headers.addAll(headers);
+        http.StreamedResponse response = await request.send();
+        if (response.statusCode == 200) {
+          var finalResponse = await response.stream.bytesToString();
+          final jsonresponse = json.decode(finalResponse);
+          print("responsees ${jsonresponse} ${finalResponse}");
+          if(jsonresponse['error'] == false){
+            int? receivedOTP =  jsonresponse['data'];
+            print("optttt ${receivedOTP}");
+            Future.delayed(const Duration(seconds: 1)).then(
+                  (_) {Navigator.pushReplacement(context, CupertinoPageRoute(
+                builder: (context) => VerifyOtp(
+                  mobileNumber: mobileController.text,
+                  countryCode: countrycode,
+                  responseOtp: receivedOTP.toString(),
+                  title: getTranslated(context, 'FORGOT_PASS_TITLE'),
+                ),
+              ),
+              );
+              },
+            );
+            setSnackbar(jsonresponse['message'], context);
+          }
+        }
+        else {
+          print(response.reasonPhrase);
+        }
+      }  else {
+        Future.delayed(Duration.zero).then(
+          (value) => context.read<AuthenticationProvider>().getVerifyUser().then(
+            (value,) async {
+              bool? error = value['error'];
+              String? msg = value['message'];
+              if (value['data'] != "") {
+                receivedOTP = value['data'];
+                print('____receivedOTP_______${receivedOTP}__________');
               }
-            }
-            if (widget.title == getTranslated(context, 'FORGOT_PASS_TITLE')) {
-              print('${error} ------------terter-------');
-              if (error == false) {
-                settingsProvider.setPrefrence(MOBILE,
-                    context.read<AuthenticationProvider>().mobilenumbervalue);
-                settingsProvider.setPrefrence(COUNTRY_CODE, countrycode!);
-                Future.delayed(const Duration(seconds: 1)).then(
-                  (_) {
-                    Navigator.pushReplacement(context, CupertinoPageRoute(
-                        builder: (context) => VerifyOtp(
-                          mobileNumber: context.read<AuthenticationProvider>().mobilenumbervalue,
-                          countryCode: countrycode,
-                          responseOtp: receivedOTP.toString(),
-                          title: getTranslated(context, 'FORGOT_PASS_TITLE'),
+              await buttonController!.reverse();
+              SettingProvider settingsProvider =
+                  Provider.of<SettingProvider>(context, listen: false);
+              if (widget.title == getTranslated(context, 'SEND_OTP_TITLE')) {
+                print('1');
+                if (!error!) {
+                  print('2');
+                  // setSnackbar(msg!, context);
+                  Future.delayed(const Duration(seconds: 1)).then(
+                    (_) {
+                      Navigator.pushReplacement(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => VerifyOtp(
+                            mobileNumber: mobile!,
+                            countryCode: countrycode,
+                            responseOtp: receivedOTP.toString(),
+                            title: getTranslated(context, 'SEND_OTP_TITLE'),
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              } else {
-                setSnackbar(
-                    getTranslated(context, 'FIRSTSIGNUP_MSG')!, context);
+                      );
+                    },
+                  );
+                } else {
+                  print('3');
+                  setSnackbar(msg!, context);
+                }
               }
-            }
-          },
-        ),
-      );
+              // if (widget.title == getTranslated(context, 'FORGOT_PASS_TITLE')) {
+              //   print('${error} ------------terter-------');
+              //   if (error == false) {
+              //     settingsProvider.setPrefrence(MOBILE,
+              //         context.read<AuthenticationProvider>().mobilenumbervalue);
+              //     settingsProvider.setPrefrence(COUNTRY_CODE, countrycode!);
+              //     Future.delayed(const Duration(seconds: 1)).then(
+              //       (_) {
+              //         Navigator.pushReplacement(
+              //           context,
+              //           CupertinoPageRoute(
+              //             builder: (context) => VerifyOtp(
+              //               mobileNumber: context
+              //                   .read<AuthenticationProvider>()
+              //                   .mobilenumbervalue,
+              //               countryCode: countrycode,
+              //               responseOtp: receivedOTP.toString(),
+              //               title: getTranslated(context, 'FORGOT_PASS_TITLE'),
+              //             ),
+              //           ),
+              //         );
+              //       },
+              //     );
+              //   } else {
+              //     setSnackbar(
+              //         getTranslated(context, 'FIRSTSIGNUP_MSG')!, context);
+              //   }
+              // }
+            },
+          ),
+        );
+      }
     } else {
       Future.delayed(const Duration(seconds: 2)).then(
         (_) async {
@@ -248,9 +325,8 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
       dialogSize: Size(width, height),
       alignLeft: true,
       textStyle: TextStyle(
-          color: Theme.of(context).colorScheme.fontColor,
-          fontWeight: FontWeight.bold),
-      onChanged: (CountryCode countryCode) {
+          color: Theme.of(context).colorScheme.fontColor, fontWeight: FontWeight.bold),
+        onChanged: (CountryCode countryCode) {
         countrycode = countryCode.toString().replaceFirst('+', '');
         countryName = countryCode.name;
       },
@@ -280,7 +356,7 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
       },
       decoration: InputDecoration(
         border: InputBorder.none,
-         counterText: "",
+        counterText: "",
         hintText: getTranslated(context, 'MOBILEHINT_LBL'),
         hintStyle: Theme.of(context).textTheme.subtitle2!.copyWith(
             color: Theme.of(context).colorScheme.fontColor,
@@ -297,6 +373,12 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
         ),
       ),
     );
+    // return Selector<UserProvider, String>(selector: (_, provider) => provider.mob,
+    //   builder: (context, userMobile, child) {
+    //     mobileController.text = userMobile;
+    //
+    //   },
+    // );
   }
 
   Widget verifyBtn() {
@@ -311,14 +393,12 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
           btnCntrl: buttonController,
           onBtnSelected: () async {
             validateAndSubmit();
+            // forgetPass();
           },
         ),
       ),
     );
   }
-
-
-
 
   Widget termAndPolicyTxt() {
     return widget.title == getTranslated(context, 'SEND_OTP_TITLE')
@@ -417,11 +497,9 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
   void initState() {
     SystemChromeSettings.setSystemButtomNavigationBarithTopAndButtom();
     SystemChromeSettings.setSystemUIOverlayStyleWithNoSpecification();
-
     super.initState();
-    buttonController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
-
+    // mobileController.text =
+    buttonController = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
     buttonSqueezeanimation = Tween(
       begin: deviceWidth! * 0.7,
       end: 50.0,

@@ -422,7 +422,6 @@ List <String> itemIdList = [] ;
   }
 
 
-
   dwnInvoice(
     Future<List<Directory>?>? _externalStorageDirectories,
     OrderModel model,
@@ -481,14 +480,10 @@ List <String> itemIdList = [] ;
               var targetFileName = 'Invoice_${model.id!}';
               var generatedPdfFile, filePath;
               try {
-                generatedPdfFile =
-                    await FlutterHtmlToPdf.convertFromHtmlContent(
-                        model.invoice ?? '<br>NO DATA</br>', directory?.path ?? '', targetFileName);
+                generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
+                    model.invoice ?? '<br>NO DATA</br>', directory?.path ?? '', targetFileName);
                 filePath = generatedPdfFile.path;
-
-
               } catch (e) {
-
                 context
                     .read<UpdateOrdProvider>()
                     .changeStatus(UpdateOrdStatus.inProgress);

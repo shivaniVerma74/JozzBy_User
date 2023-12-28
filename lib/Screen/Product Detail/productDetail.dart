@@ -14,6 +14,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -1786,19 +1787,15 @@ double qty = 0.0 ;
                                                         fromSeller: false,
                                                       )));
                                         }else {
-
                                           await Navigator.push(
-                                            context,
-                                            CupertinoPageRoute(
+                                            context, CupertinoPageRoute(
                                               builder: (context) => SubCategory(
                                                 title: widget.model?.catName ?? '',
                                                 subList: widget.model?.subList,
                                               ),
                                             ),
                                           );
-
                                         }
-
                                         // Navigator.push(context,MaterialPageRoute(builder: (context)=>AllCategory()));
                                       },
                                       child: Padding(
@@ -1809,7 +1806,8 @@ double qty = 0.0 ;
                                     GetTitleWidget(
                                       title: widget.model!.name!,
                                     ),
-
+                                    _desc(widget.model),
+                                     Divider(),
                                     available! || outOfStock!
                                         ? GetPrice(
                                             pos: selectIndex,
@@ -1834,7 +1832,6 @@ double qty = 0.0 ;
                                   ],
                                 ),
                               ),
-
                               widget.model!.attributeList!.isNotEmpty
                                   ? getDivider(2, context)
                                   : Container(),
@@ -3939,6 +3936,31 @@ double qty = 0.0 ;
     }
   }
 
+  _desc(Product? model) {
+    return model!.shortDescription != '' && model.shortDescription != null
+        ? Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: HtmlWidget(
+          model.shortDescription ?? '',
+        )
+      //  Html(
+      //   data: model.shortDescription,
+      //   onLinkTap: (String? url, RenderContext context,
+      //       Map<String, String> attributes, dom.Element? element) async {
+      //     if (await canLaunchUrl(Uri.parse(url!))) {
+      //       await launchUrl(
+      //         Uri.parse(url),
+      //         mode: LaunchMode.platformDefault,
+      //       );
+      //     } else {
+      //       throw 'Could not launch $url';
+      //     }
+      //   },
+      // ),
+    )
+        : Container();
+  }
+
   Future getProduct() async {
     try {
       isNetworkAvail = await isNetworkAvailable();
@@ -4179,7 +4201,7 @@ double qty = 0.0 ;
                 Icons.keyboard_arrow_right,
                 size: 30,
                 color: Theme.of(context).colorScheme.black,
-              )
+              ),
             ],
           ),
         ),

@@ -118,11 +118,13 @@ class Product {
       tax,
       categoryId,
       shortDescription,
+      description,
+      extraDescription,
       codAllowed,
       brandName,
       sku,
       brandImage,
-  brandId,
+       brandId,
       qtyStepSize;
   List<String>? itemsCounter;
   List<String>? otherImage;
@@ -228,6 +230,8 @@ class Product {
     this.seller_id,
     this.store_name,
     this.is_attch_req,
+    this.description,
+    this.extraDescription
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -269,6 +273,8 @@ class Product {
 
     return Product(
       id: json[ID],
+      description: json['short_description'],
+      extraDescription: json['extra_description'],
       name: json[NAME],
       desc: json[DESC],
       image: json[IMAGE],
