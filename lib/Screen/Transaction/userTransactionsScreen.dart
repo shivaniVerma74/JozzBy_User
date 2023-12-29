@@ -92,7 +92,9 @@ class _UserTransactionsState extends State<UserTransactions>
                 itemCount: transactionsList.length,
                 physics: const AlwaysScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return ListIteamOfTransaction(
+                  return
+
+                    ListIteamOfTransaction(
                     transactionModelData: transactionsList,
                     index: index,
                     isLoadingMore: isLoadingMore,

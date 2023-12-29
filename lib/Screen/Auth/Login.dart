@@ -731,6 +731,7 @@ class _LoginPageState extends State<Login> with TickerProviderStateMixin {
           textInputAction: TextInputAction.next,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           decoration: InputDecoration(
+            counterText: "",
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 13,

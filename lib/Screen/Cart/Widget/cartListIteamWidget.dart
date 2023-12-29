@@ -7,6 +7,7 @@ import '../../../Model/Section_Model.dart';
 import '../../../Provider/CartProvider.dart';
 import '../../../Provider/SettingProvider.dart';
 import '../../../widgets/desing.dart';
+import '../../../widgets/snackbar.dart';
 import '../../Language/languageSettings.dart';
 import '../../Dashboard/Dashboard.dart';
 
@@ -297,10 +298,13 @@ class _CartListViewLayOutState extends State<CartListViewLayOut> {
                                         ),
                                         onTap: () {
 
+
                                           if (context
                                               .read<CartProvider>()
                                               .isProgress ==
                                               false) {
+
+
                                             if (CUR_USERID != null) {
 
                                               context
@@ -321,7 +325,13 @@ class _CartListViewLayOutState extends State<CartListViewLayOut> {
                                                     .text,
                                                 isRemove: true
                                               );
-                                            } else {
+                                              setSnackbar(getTranslated(context, 'Minimum Order is Fix')!, context);
+
+                                            }
+
+                                            else {
+
+
                                               if ((int.parse(
                                                   cartList[index]
                                                       .productList![0]
@@ -329,6 +339,9 @@ class _CartListViewLayOutState extends State<CartListViewLayOut> {
                                                   selectedPos]
                                                       .cartCount!)) >
                                                   1) {
+
+
+
                                                 context
                                                     .read<CartProvider>()
                                                     .addAndRemoveQty(
@@ -369,6 +382,8 @@ class _CartListViewLayOutState extends State<CartListViewLayOut> {
                                               }
                                             }
                                           }
+
+
                                         },
                                       ),
                                       cartList[index].productList![0].type ==

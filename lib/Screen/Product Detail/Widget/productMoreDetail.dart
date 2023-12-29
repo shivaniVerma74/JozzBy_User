@@ -258,8 +258,8 @@ class ProductMoreDetail extends StatelessWidget {
                           padding: const EdgeInsetsDirectional.only(start: 15, top: 10, end: 2, bottom: 15),
                           child: Text(
                             !context.read<ProductDetailProvider>().seeView
-                                ? getTranslated(context, 'See More')!
-                                : getTranslated(context, 'See Less')!,
+                                ? getTranslated(context, 'See Less')!
+                                : getTranslated(context, 'See More')!,
                             style: Theme.of(context).textTheme.caption!.copyWith(
                                       color: colors.primary,
                                       fontWeight: FontWeight.w400,

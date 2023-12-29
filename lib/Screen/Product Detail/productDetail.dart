@@ -1371,9 +1371,12 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
   }
 
   _setFav(int index, int from) async {
+    print("is contain");
     try {
       isNetworkAvail = await isNetworkAvailable();
       if (isNetworkAvail) {
+
+        print("net work avaiable");
         try {
           if (mounted) {
             setState(
@@ -1386,12 +1389,16 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
               },
             );
           }
+          print("api call ");
           var parameter = {
             USER_ID: CUR_USERID,
             PRODUCT_ID: from == 1 ? productList[index].id : widget.model!.id
           };
+
           ApiBaseHelper().postAPICall(setFavoriteApi, parameter).then(
+
             (getdata) {
+
               bool error = getdata['error'];
               String? msg = getdata['message'];
               if (!error) {
@@ -1440,6 +1447,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
   }
 
   _removeFav(int index, int from) async {
+    print("is remove");
     try {
       isNetworkAvail = await isNetworkAvailable();
       if (isNetworkAvail) {
@@ -1657,7 +1665,14 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                 height: 33,
                 child: InkWell(
                   onTap: () {
+
+
+
                     if (CUR_USERID != null) {
+                      print('ttt1');
+                      print(widget.model!.id);
+
+
                       !data.contains(widget.model!.id)
                           ? _setFav(-1, -1)
                           : _removeFav(-1, -1);
@@ -2143,11 +2158,22 @@ double qty = 0.0 ;
                                           ),
 
                                           onTap: () {
+
+
                                             if(qty > double.parse(widget.model?.qtyStepSize ?? '0.0'))
                                             {
                                               setState(() {
                                                 qty -= double.parse(widget.model?.qtyStepSize ?? '0.0');
                                               });
+
+
+                                            }
+
+                                            else{
+print("jjjj");
+                                              setSnackbar(getTranslated(context, 'Minimum Order is Fix')!, context);
+
+
                                             }
                                             // if (context
                                             //     .read<CartProvider>()

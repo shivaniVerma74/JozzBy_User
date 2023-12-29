@@ -298,6 +298,7 @@ class _DashboardPageState extends State<Dashboard>
               },
               child: Icon(
                 Icons.search,color:colors.blackTemp,
+                size: 25,
 
               ),
             ),
