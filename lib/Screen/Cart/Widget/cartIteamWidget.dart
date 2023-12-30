@@ -566,13 +566,17 @@ class _CartIteamState extends State<CartIteam> {
                       )
                     : Container(),
                 Text(
-                  DesignConfiguration.getPriceFormat(
-                    context,
-                    (((double.parse(cartList[index].singleItemNetAmount!)) *
-                            double.parse(cartList[index].qty!)) +
-                        (((double.parse(cartList[index].singleItemTaxAmount!)) *
-                            double.parse(cartList[index].qty!)))),
-                  )!,
+                  "${ (((double.parse(cartList[index].singleItemNetAmount!)) *
+    double.parse(cartList[index].qty!)) +
+    (((double.parse(cartList[index].singleItemTaxAmount!)) *
+    double.parse(cartList[index].qty!))))}",
+                  // DesignConfiguration.getPriceFormat(
+                  //   context,
+                  //   (((double.parse(cartList[index].singleItemNetAmount!)) *
+                  //           double.parse(cartList[index].qty!)) +
+                  //       (((double.parse(cartList[index].singleItemTaxAmount!)) *
+                  //           double.parse(cartList[index].qty!)))),
+                  // )!,
                   style: TextStyle(
                     fontFamily: 'ubuntu',
                     fontWeight: FontWeight.bold,

@@ -102,7 +102,7 @@
 
         <!--After Adding Key, Uncomment below lines-->
       <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="PLACE_HERE_YOUR_GOOGLE_APP_ANDROID_API_KEY"/>
+            android:value="AIzaSyDPsdTq-a4AHYHSNvQsdAlZgWvRu11T9pM"/>
 
         <meta-data
             android:name="vn.hunghd.flutterdownloader.NOTIFICATION_ICON"

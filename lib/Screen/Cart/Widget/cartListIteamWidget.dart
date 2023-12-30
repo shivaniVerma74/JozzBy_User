@@ -233,6 +233,22 @@ class _CartListViewLayOutState extends State<CartListViewLayOut> {
                                     letterSpacing: 0.7),
 
                               ),
+                              Text(
+                                'Tax ${cartList[index].tax_percentage}%',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .overline!
+                                    .copyWith(
+                                    fontFamily: 'ubuntu',
+
+                                    decorationColor: colors.darkColor3,
+                                    decorationStyle:
+                                    TextDecorationStyle.solid,
+                                    fontSize: textFontSize12,
+                                    decorationThickness: 2,
+                                    letterSpacing: 0.7),
+
+                              ),
                             ],
                           ),
                         ),

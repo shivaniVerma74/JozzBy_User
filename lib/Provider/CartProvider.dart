@@ -161,6 +161,9 @@ class CartProvider extends ChangeNotifier {
         (value) {
           if (!value['error']) {
             _cartList = value['cartList'];
+
+
+            print(_cartList[0].title.toString()+"++++++++++++++++++++++++");
           }
         },
       );

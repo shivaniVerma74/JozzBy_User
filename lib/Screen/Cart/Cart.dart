@@ -83,6 +83,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
   String? rozorpayMsg;
   String orderId = '';
   double deliveryCharge = 0;
+  double deliveryCharge1 = 0;
   List<DeliveryChargeData> deliveryChargeList = [];
 
   Future<void> cartFun({
@@ -216,7 +217,8 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                   ),
                 ),
                 Text(
-                  '${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().oriPrice)!} ',
+                  //'${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().oriPrice)!} ',
+                  '${context.read<CartProvider>().oriPrice}',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.fontColor,
                     fontWeight: FontWeight.bold,
@@ -238,7 +240,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                 Text(
                   '${DesignConfiguration.getPriceFormat(context,
                       //double.parse(deliCharge!) ??
-                      deliveryCharge
+                      deliveryCharge1
                       // context.read<CartProvider>().deliveryCharge
                       )!} ',
                   style: TextStyle(
@@ -513,7 +515,8 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
 
             if (context.read<CartProvider>().oriPrice <
                 double.parse(deliveryChargeList.first.maximum ?? '0.0')) {
-              context.read<CartProvider>().deliveryCharge = double.parse(
+              context.read<CartProvider>().deliveryCharge =
+                  double.parse(
                   deliveryChargeList.first.deliveryCharge ?? '0.0');
               deliveryCharge = double.parse(
                   deliveryChargeList.first.deliveryCharge ?? '0.0');
@@ -522,11 +525,12 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
 
               context.read<CartProvider>().totalPrice =
                   context.read<CartProvider>().deliveryCharge +
-                      context.read<CartProvider>().oriPrice;
+                      context.read<CartProvider>().oriPrice-context.read<CartProvider>().promoAmt;
 
               // print('___________${context.read<CartProvider>().deliveryCharge}__________');
               //  print('___________${context.read<CartProvider>().totalPrice}__________');
-            } else {
+            }
+            else {
               for (var i = 1; i < deliveryChargeList.length; i++) {
                 if (double.parse(deliveryChargeList[i].minimum ?? '0.0') <
                         context.read<CartProvider>().oriPrice &&
@@ -543,10 +547,12 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
 
               print(
                   'this is my delivery charge--->>> ${context.read<CartProvider>().oriPrice}');
+              print(
+                  'this is my promocode charge--->>> ${context.read<CartProvider>().promoAmt}');
 
               context.read<CartProvider>().totalPrice =
-                  context.read<CartProvider>().deliveryCharge +
-                      context.read<CartProvider>().oriPrice;
+                  deliveryCharge1 +
+                      context.read<CartProvider>().oriPrice-context.read<CartProvider>().promoAmt;
               setState(() {});
             }
             checkout();
@@ -575,7 +581,12 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                 double.parse(getdata[SUB_TOTAL]);
             context.read<CartProvider>().taxPer =
                 double.parse(getdata[TAX_PER]);
-            /*context.read<CartProvider>().totalPrice =
+            deliveryCharge1=double.parse("${getdata['delivery_charge']}");
+            setState(() {
+
+            });                  
+            print("${getdata['TAX_PER']}"+"_____________________");
+       /*context.read<CartProvider>().totalPrice =
                 context.read<CartProvider>().deliveryCharge +
                     context.read<CartProvider>().oriPrice;*/
             // await getDeliveryCharge();
@@ -988,8 +999,9 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                                 context, 'TOTAL_PRICE')!,
                                           ),
                                           Text(
-                                            '${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().oriPrice)!} ',
-                                            style: Theme.of(context)
+                                            //'${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().oriPrice)!} ',
+                                            "${double.parse("${context.read<CartProvider>().oriPrice}")-double.parse("${context.read<CartProvider>().promoAmt}")}"
+                                           , style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle1!
                                                 .copyWith(
@@ -1447,7 +1459,8 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                '${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().totalPrice)!} ',
+                                                //'${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().totalPrice)!} ',
+                                                '${double.parse("${context.read<CartProvider>().totalPrice}")}',
                                                 style: TextStyle(
                                                   color: Theme.of(context).colorScheme.fontColor,
                                                   fontWeight: FontWeight.bold,

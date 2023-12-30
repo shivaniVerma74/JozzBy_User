@@ -3215,6 +3215,7 @@ print("jjjj");
                   for (int i = 0; i < att.length; i++) {
                     Widget itemLabel;
                     if (attSType[i] == '1') {
+
                       String clr = (attSValue[i].substring(1));
                       String color = '0xff$clr';
                       itemLabel = Container(
@@ -3322,6 +3323,7 @@ print("jjjj");
                         ),
                         child: InkWell(
                           onTap: () async {
+                            print("_______________________________");
                             if (att.length != 1) {
                               if (mounted) {
                                 setState(

@@ -145,6 +145,50 @@ class GetOrderDetails extends StatelessWidget {
                 ],
               ),
             ),
+
+            // Padding(
+            //   padding: const EdgeInsetsDirectional.only(start: 15.0, end: 15.0),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Text(
+            //         //'${getTranslated(context, 'WALLET_BAL')!} :',
+            //         'Advance Amount:',
+            //         style: Theme.of(context).textTheme.button!.copyWith(
+            //           color: Theme.of(context).colorScheme.lightBlack2,
+            //         ),
+            //       ),
+            //       Text(
+            //         '${DesignConfiguration.getPriceFormat(context, double.parse(model.advanceAmt!))!}',
+            //         style: Theme.of(context).textTheme.button!.copyWith(
+            //           color: Theme.of(context).colorScheme.lightBlack2,
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsetsDirectional.only(start: 15.0, end: 15.0),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Text(
+            //         //'${getTranslated(context, 'WALLET_BAL')!} :',
+            //         'Remaining Amount:',
+            //         style: Theme.of(context).textTheme.button!.copyWith(
+            //           color: Theme.of(context).colorScheme.lightBlack2,
+            //         ),
+            //       ),
+            //       Text(
+            //         '${DesignConfiguration.getPriceFormat(context, double.parse(model.remaingAmt!))!}',
+            //         style: Theme.of(context).textTheme.button!.copyWith(
+            //           color: Theme.of(context).colorScheme.lightBlack2,
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // ),
+
             Padding(
               padding: const EdgeInsetsDirectional.only(
                   start: 15.0, end: 15.0, top: 5.0),
@@ -167,6 +211,8 @@ class GetOrderDetails extends StatelessWidget {
                 ],
               ),
             ),
+
+
             Padding(
               padding: const EdgeInsetsDirectional.only(
                 start: 15.0,
@@ -189,6 +235,50 @@ class GetOrderDetails extends StatelessWidget {
                           color: Theme.of(context).colorScheme.lightBlack,
                           fontWeight: FontWeight.bold,
                         ),
+                  )
+                ],
+              ),
+            ),
+
+            SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(start: 15.0, end: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    //'${getTranslated(context, 'WALLET_BAL')!} :',
+                    'Advance Amount:',
+                    style: Theme.of(context).textTheme.button!.copyWith(
+                      color: Theme.of(context).colorScheme.lightBlack2,
+                    ),
+                  ),
+                  Text(
+                    '${DesignConfiguration.getPriceFormat(context, double.parse(model.advanceAmt!))!}',
+                    style: Theme.of(context).textTheme.button!.copyWith(
+                      color: Theme.of(context).colorScheme.lightBlack2,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(start: 15.0, end: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    //'${getTranslated(context, 'WALLET_BAL')!} :',
+                    'Remaining Amount:',
+                    style: Theme.of(context).textTheme.button!.copyWith(
+                      color: Theme.of(context).colorScheme.lightBlack2,
+                    ),
+                  ),
+                  Text(
+                    '${DesignConfiguration.getPriceFormat(context, double.parse(model.remaingAmt!))!}',
+                    style: Theme.of(context).textTheme.button!.copyWith(
+                      color: Theme.of(context).colorScheme.lightBlack2,
+                    ),
                   )
                 ],
               ),

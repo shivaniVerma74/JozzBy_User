@@ -5,6 +5,7 @@ class SectionModel {
   String? id,
       title,
       varientId,
+      tax_percentage,
       qty,
       productId,
       perItemTotal,
@@ -19,6 +20,7 @@ class SectionModel {
   double? perItemTaxPriceOnItemsTotal,
       perItemTaxPriceOnItemAmount,
       perItemTaxPercentage = 0.0;
+
   List<Product>? productList;
   List<Promo>? promoList;
   List<Filter>? filterList;
@@ -28,6 +30,7 @@ class SectionModel {
   SectionModel({
     this.id,
     this.title,
+    this.tax_percentage,
     this.shortDesc,
     this.productList,
     this.varientId,
@@ -87,6 +90,7 @@ class SectionModel {
         perItemPrice: '0',
         productList: productList,
         singleItemNetAmount: parsedJson['net_amount'].toString(),
+        tax_percentage: parsedJson['tax_percentage'].toString(),
         productType: parsedJson["type"],
         singleIteamSubTotal: parsedJson['sub_total'].toString(),
         singleItemTaxAmount: parsedJson['tax_amount'].toString());
