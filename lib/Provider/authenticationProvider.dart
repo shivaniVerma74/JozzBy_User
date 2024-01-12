@@ -7,6 +7,8 @@ import '../Helper/String.dart';
 import '../repository/authRepository.dart';
 import 'package:http/http.dart' as http;
 
+import 'UserProvider.dart';
+
 class AuthenticationProvider extends ChangeNotifier {
   // value for parameter
   String? mobilennumberPara, passwordPara;
@@ -88,13 +90,17 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   //get System Policies
-  Future<Map<String, dynamic>> getLoginData() async {
+  Future<Map<String, dynamic>> getLoginData(BuildContext context) async {
     try {
       var parameter = {MOBILE: mobilennumberPara, PASSWORD: passwordPara};
       var result = await AuthRepository.fetchLoginData(parameter: parameter);
 
       errorMessage = result['message'];
+
       error = result['error'];
+
+      print(result.toString()+"_______________________++++++++++++++");
+      UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
       if (!error!) {
         var getdata = result['data'][0];
         id = getdata[ID];
@@ -108,6 +114,9 @@ class AuthenticationProvider extends ChangeNotifier {
         latitude = getdata[LATITUDE];
         longitude = getdata[LONGITUDE];
         image = getdata[IMAGE];
+        print("${getdata["gst_number"]}"+"+++++++++++++++++++++++=");
+        userProvider.setShopName(getdata[SHOPNAME] ?? '');
+        userProvider.setGstnumber(getdata["gst_number"] ?? '');
         CUR_USERID = id;
         return result;
       } else {

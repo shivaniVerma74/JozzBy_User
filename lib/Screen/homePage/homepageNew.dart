@@ -42,6 +42,7 @@ import '../../Model/Get_brands_model.dart';
 
 import '../../Provider/Favourite/FavoriteProvider.dart';
 import '../../Provider/homePageProvider.dart';
+import '../../deeplinking/deeplinking_service.dart';
 import '../../widgets/desing.dart';
 import '../Language/languageSettings.dart';
 import '../../widgets/networkAvailablity.dart';
@@ -111,6 +112,7 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     //_handleIncomingLinks();
+    // DynamicLinkHandler().initDynamicLinks(context);
     //getImagesApi();
     getImagesThirdSliderApi();
     getImagesFourthdSliderApi();
@@ -126,6 +128,8 @@ class _HomePageState extends State<HomePage>
     user.setName(setting.userName);
     user.setEmail(setting.email);
     user.setProfilePic(setting.profileUrl);
+    user.setGstnumber(setting.gstNumber);
+    user.setShopName(setting.shopName);
     Future.delayed(Duration.zero).then(
       (value) {
         callApi();

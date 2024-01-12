@@ -238,7 +238,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                   ),
                 ),
                 Text(
-                  '${DesignConfiguration.getPriceFormat(context,
+                  '+ ${DesignConfiguration.getPriceFormat(context,
                       //double.parse(deliCharge!) ??
                       deliveryCharge1
                       // context.read<CartProvider>().deliveryCharge
@@ -263,7 +263,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                         ),
                       ),
                       Text(
-                        '${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().promoAmt)!} ',
+                        '- ${DesignConfiguration.getPriceFormat(context, context.read<CartProvider>().promoAmt)!} ',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.fontColor,
                           fontWeight: FontWeight.bold,
@@ -914,6 +914,31 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                       index: index,
                                       setState: setStateNow,
                                       saveForLatter: saveForLaterFun,
+                                      delete: (){
+                                        print("Delete+++++++++++=");
+                                        context.read<CartProvider>().setprescriptionImages([]);
+                                        context.read<CartProvider>().selectedMethod = null;
+                                        context.read<CartProvider>().selectedMethod = null;
+                                        context.read<CartProvider>().payMethod = null;
+                                        context.read<CartProvider>().deliverable = false;
+                                        callApi();
+                                        buttonController = AnimationController(
+                                            duration: const Duration(milliseconds: 2000), vsync: this);
+                                        buttonSqueezeanimation = Tween(
+                                          begin: deviceWidth! * 0.7,
+                                          end: 50.0,
+                                        ).animate(
+                                          CurvedAnimation(
+                                            parent: buttonController!,
+                                            curve: const Interval(
+                                              0.0,
+                                              0.150,
+                                            ),
+                                          ),
+                                        );
+                                        getDeliveryCharge();
+                                      },
+
                                     );
                                   },
                                 ),
@@ -1087,6 +1112,33 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                         index: index,
                                         setState: setStateNow,
                                         saveForLatter: saveForLaterFun,
+                                        delete: () async {
+
+                                          context.read<CartProvider>().setprescriptionImages([]);
+                                          context.read<CartProvider>().selectedMethod = null;
+                                          context.read<CartProvider>().selectedMethod = null;
+                                          context.read<CartProvider>().payMethod = null;
+                                          context.read<CartProvider>().deliverable = false;
+                                          callApi();
+                                          buttonController = AnimationController(
+                                              duration: const Duration(milliseconds: 2000), vsync: this);
+                                          buttonSqueezeanimation = Tween(
+                                            begin: deviceWidth! * 0.7,
+                                            end: 50.0,
+                                          ).animate(
+                                            CurvedAnimation(
+                                              parent: buttonController!,
+                                              curve: const Interval(
+                                                0.0,
+                                                0.150,
+                                              ),
+                                            ),
+                                          );
+                                          print("Delete+++++++++++=");
+
+
+
+                                        },
                                       );
                                     },
                                   ),

@@ -15,11 +15,13 @@ class CartListViewLayOut extends StatefulWidget {
   int index;
   Function setState;
   Function saveForLatter;
+  VoidCallback delete;
   CartListViewLayOut({
     Key? key,
     required this.index,
     required this.setState,
     required this.saveForLatter,
+     required this.delete,
   }) : super(key: key);
 
   @override
@@ -233,6 +235,7 @@ class _CartListViewLayOutState extends State<CartListViewLayOut> {
                                     letterSpacing: 0.7),
 
                               ),
+                              cartList[index].tax_percentage!="0" ?
                               Text(
                                 'Tax ${cartList[index].tax_percentage}%',
                                 style: Theme.of(context)
@@ -248,7 +251,7 @@ class _CartListViewLayOutState extends State<CartListViewLayOut> {
                                     decorationThickness: 2,
                                     letterSpacing: 0.7),
 
-                              ),
+                              ):SizedBox.shrink(),
                             ],
                           ),
                         ),
@@ -683,6 +686,8 @@ class _CartListViewLayOutState extends State<CartListViewLayOut> {
                                     ),
                                   ),
                                   onTap: () async {
+                                    print("Delete+++++++++++=");
+                                    widget.delete();
                                     if (context.read<CartProvider>().isProgress ==
                                         false) {
                                       if (CUR_USERID != null) {
@@ -699,6 +704,7 @@ class _CartListViewLayOutState extends State<CartListViewLayOut> {
                                               .promoC
                                               .text,
                                         );
+
                                       } else {
                                         if (singleSellerOrderSystem) {
                                           if (cartList.length == 1) {

@@ -110,7 +110,7 @@ class _ProductItemWidgetState extends State<ProductItemWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.orderItem.name!,
+                          widget.orderItem.name??"",
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1!

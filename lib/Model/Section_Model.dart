@@ -382,6 +382,76 @@ class Product {
 
     return parsedJson.map((data) => Product.fromCat(data)).toList();
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'desc': desc,
+      'image': image,
+      'catName': catName,
+      'type': type,
+      'rating': rating,
+      'noOfRating': noOfRating,
+      'attrIds': attrIds,
+      'tax': tax,
+      'categoryId': categoryId,
+      'shortDescription': shortDescription,
+      'description': description,
+      'extraDescription': extraDescription,
+      'codAllowed': codAllowed,
+      'brandName': brandName,
+      'sku': sku,
+      'brandImage': brandImage,
+      'brandId': brandId,
+      'qtyStepSize': qtyStepSize,
+      'itemsCounter': itemsCounter,
+      'otherImage': otherImage,
+      'prVarientList': prVarientList?.map((varient) => varient.toJson()).toList(),
+      'attributeList': attributeList?.map((attribute) => attribute.toJson()).toList(),
+      'selectedId': selectedId,
+      'tagList': tagList,
+      'minOrderQuntity': minOrderQuntity,
+      'isFav': isFav,
+      'isReturnable': isReturnable,
+      'isCancelable': isCancelable,
+      'isPurchased': isPurchased,
+      'availability': availability,
+      'madein': madein,
+      'indicator': indicator,
+      'stockType': stockType,
+      'cancleTill': cancleTill,
+      'total': total,
+      'banner': banner,
+      'totalAllow': totalAllow,
+      'video': video,
+      'videType': videType,
+      'warranty': warranty,
+      'gurantee': gurantee,
+      'is_attch_req': is_attch_req,
+      'minPrice': minPrice,
+      'maxPrice': maxPrice,
+      'totalImg': totalImg,
+      'reviewList': reviewList?.map((review) => review.toJson()).toList(),
+      'isFavLoading': isFavLoading,
+      'isFromProd': isFromProd,
+      'offset': offset,
+      'totalItem': totalItem,
+      'selVarient': selVarient,
+      'subList': subList?.map((subProduct) => subProduct.toJson()).toList(),
+      'filterList': filterList?.map((filter) => filter.toJson()).toList(),
+      'history': history,
+      'store_description': store_description,
+      'seller_rating': seller_rating,
+      'noOfRatingsOnSeller': noOfRatingsOnSeller,
+      'seller_profile': seller_profile,
+      'seller_name': seller_name,
+      'seller_id': seller_id,
+      'store_name': store_name,
+      'totalProductsOfSeller': totalProductsOfSeller,
+    };
+  }
+
 }
 
 class Product_Varient {
@@ -410,6 +480,7 @@ class Product_Varient {
     this.images,
   });
 
+
   factory Product_Varient.fromJson(Map<String, dynamic> json) {
    // List<String> images = List<String>.from(json[IMAGES]);
 
@@ -426,6 +497,23 @@ class Product_Varient {
       images: []
         //json['images'] !=[] ?  (json['images'] as List).map((item) => item as String).toList() :  null
     );
+
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'productId': productId,
+      'attribute_value_ids': attribute_value_ids,
+      'price': price,
+      'disPrice': disPrice,
+      'type': type,
+      'attr_name': attr_name,
+      'varient_value': varient_value,
+      'availability': availability,
+      'cartCount': cartCount,
+      'images': images,
+    };
   }
 }
 
@@ -443,6 +531,16 @@ class Attribute {
       sValue: json[SVALUE],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'value': value,
+      'name': name,
+      'sType': sType,
+      'sValue': sValue,
+    };
+  }
+
 }
 
 class Filter {
@@ -465,6 +563,15 @@ class Filter {
       swatchValue: json[SVALUE],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'attributeValues': attributeValues,
+      'attributeValId': attributeValId,
+      'name': name,
+      'swatchType': swatchType,
+      'swatchValue': swatchValue,
+    };
+  }
 }
 
 class ReviewImg {
@@ -486,6 +593,12 @@ class ReviewImg {
       totalImg: json[TOTALIMG],
       productRating: reviewList,
     );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'totalImg': totalImg,
+      'productRating': productRating?.map((user) => user.toJson()).toList(),
+    };
   }
 }
 

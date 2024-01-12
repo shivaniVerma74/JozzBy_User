@@ -22,6 +22,7 @@ class UserProvider extends ChangeNotifier {
       _mob = '',
       _profilePic = '',
       _shopName = '',
+  _gstNumber='',
       _email = '';
   String? _userId = '';
 
@@ -39,6 +40,7 @@ class UserProvider extends ChangeNotifier {
 
   String get mob => _mob;
   String get shopName => _shopName;
+  String get gstNumber => _gstNumber;
 
   String get profilePic => _profilePic;
 
@@ -75,6 +77,10 @@ class UserProvider extends ChangeNotifier {
     _shopName = count;
     notifyListeners();
   }
+  void setGstnumber(String count) {
+    _gstNumber = count;
+    notifyListeners();
+  }
 
   void setProfilePic(String count) {
     _profilePic = count;
@@ -103,6 +109,7 @@ class UserProvider extends ChangeNotifier {
         newPassword,
         username,
         shopname,
+        gstnumber,
         userEmail}) async {
        try {
         changeStatus(UserStatus.inProgress);
@@ -113,6 +120,7 @@ class UserProvider extends ChangeNotifier {
           userEmail: userEmail,
           username: username,
           shopname: shopname,
+          gstnumber: gstnumber
       );
       changeStatus(UserStatus.isSuccsess);
       return {'error': result['error'], 'message': result['message']};

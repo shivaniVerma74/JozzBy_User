@@ -28,13 +28,14 @@ import '../Language/languageSettings.dart';
 import '../../widgets/networkAvailablity.dart';
 
 class VerifyOtp extends StatefulWidget {
-  final String? mobileNumber, countryCode, title;
+  final String? mobileNumber, countryCode, title,otp;
   String? responseOtp ;
   bool? isMobile ;
    VerifyOtp(
       {Key? key,
       required String this.mobileNumber,
       this.countryCode,this.isMobile,
+      this.otp,
       this.title,this.responseOtp})
       : super(key: key);
 
@@ -136,7 +137,7 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
           btnAnim: buttonSqueezeanimation,
           btnCntrl: buttonController,
           onBtnSelected: () async {
-
+               print(widget.isMobile);
             if(widget.isMobile ==true){
 
               verifyuser();
@@ -400,7 +401,7 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl}verify_otp'));
    request.fields.addAll({
      'mobile': '${widget.mobileNumber}',
-     'otp': '$otp',
+     'otp': '${widget.otp}',
      'fcm_id': ''
    });
 
@@ -421,10 +422,12 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
        userProvider.setName(getdata[USERNAME] ?? '');
        userProvider.setEmail(getdata[EMAIL] ?? '');
        userProvider.setProfilePic(getdata[IMAGE] ?? '');
-       // userProvider.setShopName(getdata[SHOPNAME] ?? '');
+        userProvider.setShopName(getdata[SHOPNAME] ?? '');
+       userProvider.setGstnumber(getdata["gst_number"] ?? '');
        SettingProvider settingProvider = Provider.of<SettingProvider>(context, listen: false);
        settingProvider.saveUserDetail(
-         // getdata[SHOPNAME],
+         getdata[SHOPNAME],
+         getdata["gst_number"] ,
          getdata[ID],
          getdata[USERNAME],
          getdata[EMAIL],
@@ -732,15 +735,30 @@ class _MobileOTPState extends State<VerifyOtp> with TickerProviderStateMixin {
       padding: const EdgeInsetsDirectional.only(
         top: 60.0,
       ),
-      child: Text(
-        getTranslated(context, 'MOBILE_NUMBER_VARIFICATION')!,
-        style: Theme.of(context).textTheme.headline6!.copyWith(
+      child: Column(
+        children: [
+          Text(
+            getTranslated(context, 'MOBILE_NUMBER_VARIFICATION')!,
+            style: Theme.of(context).textTheme.headline6!.copyWith(
+                  color: Theme.of(context).colorScheme.fontColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: textFontSize23,
+                  letterSpacing: 0.8,
+                  fontFamily: 'ubuntu',
+                ),
+          ),
+          Text(
+            "${widget.otp}",
+            // getTranslated(context, 'MOBILE_NUMBER_VARIFICATION')!,
+            style: Theme.of(context).textTheme.headline6!.copyWith(
               color: Theme.of(context).colorScheme.fontColor,
               fontWeight: FontWeight.bold,
               fontSize: textFontSize23,
               letterSpacing: 0.8,
               fontFamily: 'ubuntu',
             ),
+          ),
+        ],
       ),
     );
   }

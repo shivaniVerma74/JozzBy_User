@@ -111,6 +111,7 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
           var finalResponse = await response.stream.bytesToString();
           final jsonresponse = json.decode(finalResponse);
           print("responsees ${jsonresponse} ${finalResponse}");
+          setSnackbar(jsonresponse['message'], context);
           if(jsonresponse['error'] == false){
             int? receivedOTP =  jsonresponse['data'];
             print("optttt ${receivedOTP}");
@@ -119,6 +120,7 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
                 builder: (context) => VerifyOtp(
                   mobileNumber: mobileController.text,
                   countryCode: countrycode,
+                  otp: receivedOTP.toString(),
                   responseOtp: receivedOTP.toString(),
                   title: getTranslated(context, 'FORGOT_PASS_TITLE'),
                 ),
@@ -126,10 +128,13 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
               );
               },
             );
-            setSnackbar(jsonresponse['message'], context);
+
+          }else{
+            await buttonController!.reverse();
           }
         }
         else {
+          await buttonController!.reverse();
           print(response.reasonPhrase);
         }
       }  else {
@@ -158,6 +163,7 @@ class _SendOtpState extends State<SendOtp> with TickerProviderStateMixin {
                           builder: (context) => VerifyOtp(
                             mobileNumber: mobile!,
                             countryCode: countrycode,
+                            otp:receivedOTP.toString() ,
                             responseOtp: receivedOTP.toString(),
                             title: getTranslated(context, 'SEND_OTP_TITLE'),
                           ),

@@ -610,6 +610,7 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
 
                            ///------------
                              onBtnSelected: (){
+
                             print("paymentIndex______$paymentIndex  isPhonePayPaymentSuccess________$isPhonePayPaymentSuccess    razorAdvancePaySuccess_____ $razorAdvancePaySuccess");
                             if(paymentIndex== 3   && (isPhonePayPaymentSuccess ?? false)){
                               Routes.pop(context);
@@ -620,7 +621,20 @@ class StatePayment extends State<Payment> with TickerProviderStateMixin {
                             }else if(razorAdvancePaySuccess!= true && paymentIndex==1){
                               print('___________${razorAdvancePaySuccess}__________');
                               setSnackbar('Please pay first advance payment in case on cash on delivery', context);
+
+
+
                             }
+                            else if(context
+                                .read<CartProvider>()
+                                .isUseWallet==true){
+
+
+                              print("sdffffffsfsfsf");
+                            }
+
+                        //    fsfsf
+
                              }
                         ),
                       ],
@@ -1043,11 +1057,12 @@ bool razorAdvancePaySuccess = false;
             .assignmentId
             .toString(),
         response.paymentId);*/
+    print("++++++++++++++++++++++++++++++++++++++");
     isAdvancePaymentSuccess = false;
     razorAdvancePaySuccess = true;
     context.read<CartProvider>().totalPrice = context.read<CartProvider>().totalPrice - deductAmount!;
     context.read<CartProvider>().deductAmount = deductAmount!;
-    print("+++++++++++++++++++++++++++++");
+
     //ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Payment Success')));
     setState(() {});
     Navigator.pop(context, true);

@@ -258,7 +258,9 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
             oldPassword: '',
             username: nameController.text,
             userEmail: emailController.text,
-            shopname: shopeNameController.text
+            shopname: shopeNameController.text,
+        gstnumber: gstController.text
+
           ).then(
         (value) {
           if (value['error'] == false) {
@@ -266,7 +268,9 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
             var userProvider = Provider.of<UserProvider>(context, listen: false);
             settingProvider.setPrefrence(USERNAME, nameController.text);
             settingProvider.setPrefrence(SHOPNAME, shopeNameController.text);
-            userProvider.setShopName(shopeNameController.text);
+           userProvider.setShopName(shopeNameController.text);
+            userProvider.setGstnumber(shopeNameController.text);
+            settingProvider.setPrefrence("gst_number",gstController.text);
             userProvider.setName(nameController.text);
             settingProvider.setPrefrence(EMAIL, emailController.text);
             userProvider.setEmail(emailController.text);
@@ -289,6 +293,7 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
         nameController.text = context.read<UserProvider>().curUserName;
         emailController.text = context.read<UserProvider>().email;
         shopeNameController.text = context.read<UserProvider>().shopName;
+        gstController.text=context.read<UserProvider>().gstNumber;
       },
     );
     super.initState();

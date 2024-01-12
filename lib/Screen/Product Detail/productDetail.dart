@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:eshop_multivendor/Helper/ApiBaseHelper.dart';
@@ -30,6 +31,7 @@ import '../../Provider/SettingProvider.dart';
 import '../../Provider/paymentProvider.dart';
 import '../../Provider/productDetailProvider.dart';
 import '../../Provider/Favourite/FavoriteProvider.dart';
+import '../../deeplinking/deeplinking_service.dart';
 import '../../repository/cartRepository.dart';
 import '../../widgets/desing.dart';
 import '../Language/languageSettings.dart';
@@ -522,7 +524,9 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
   }
 
   Future<void> createDynamicLink() async {
-
+    print("_______________________-");
+   var url= await DynamicLinkHandler().createdeeplinking(jsonEncode(widget.model?.toJson()),widget.secPos.toString(),widget.index.toString(),);
+   print(url.toString()+"deeeeeeeeeeeeeeeeeee");
     Directory? directory ;
     final status = await Permission.storage.request();
     String documentDirectory;
@@ -544,12 +548,13 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
     shareLink =
     "\n$appName\n${getTranslated(context, 'APPFIND')}$androidLink$packageName\n${getTranslated(context, 'IOSLBL')}\n$iosLink";
 
-    print(shareLink);
+    print(shortenedLink?.shortUrl.toString());
 
     Share.shareXFiles(
       [XFile(imageFile.path)],
       text:
-          '${widget.model?.name}\n${shortenedLink?.shortUrl.toString()}\n$shareLink',
+          '${widget.model?.name}\n'
+              '$url',
       sharePositionOrigin: Rect.largest,
     );
 
@@ -664,6 +669,7 @@ class StateItem extends State<ProductDetail> with TickerProviderStateMixin {
                   controller: _pageController,
                   reverse: false,
                   onPageChanged: (index) {
+                    print(sliderList[index].toString()+"________________");
                     setState(
                       () {
                         _curSlider = index;
@@ -1821,7 +1827,7 @@ double qty = 0.0 ;
                                     GetTitleWidget(
                                       title: widget.model!.name!,
                                     ),
-                                    _desc(widget.model),
+                                    // _desc(widget.model),
                                      Divider(),
                                     available! || outOfStock!
                                         ? GetPrice(
@@ -1860,7 +1866,7 @@ double qty = 0.0 ;
                               context.read<CartProvider>().promoList.isNotEmpty
                                   ? getDivider(2, context)
                                   : Container(),
-
+                              _desc(widget.model),
                               ProductMoreDetail(
                                 model: widget.model,
                                 update: update,
@@ -4244,6 +4250,7 @@ print("jjjj");
   }
 
   Future<void> getShare() async {
+    print("_________________________________");
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: deepLinkUrlPrefix,
       link: Uri.parse(deepLinkUrlPrefix),
@@ -4262,6 +4269,9 @@ print("jjjj");
 
     shortenedLink =
         await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+    setState(() {
+
+    });
 
 
     Future.delayed(
